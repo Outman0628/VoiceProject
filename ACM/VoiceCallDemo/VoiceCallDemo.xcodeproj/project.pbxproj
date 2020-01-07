@@ -1,0 +1,668 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		63B356DD23BE67A80034F54B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B356DC23BE67A80034F54B /* AppDelegate.m */; };
+		63B356E023BE67A80034F54B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B356DF23BE67A80034F54B /* ViewController.m */; };
+		63B356E323BE67A80034F54B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63B356E123BE67A80034F54B /* Main.storyboard */; };
+		63B356E523BE67A90034F54B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63B356E423BE67A90034F54B /* Assets.xcassets */; };
+		63B356E823BE67A90034F54B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63B356E623BE67A90034F54B /* LaunchScreen.storyboard */; };
+		63B356EB23BE67A90034F54B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B356EA23BE67A90034F54B /* main.m */; };
+		63B356F523BE67A90034F54B /* VoiceCallDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B356F423BE67A90034F54B /* VoiceCallDemoTests.m */; };
+		63B3570023BE67A90034F54B /* VoiceCallDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B356FF23BE67A90034F54B /* VoiceCallDemoUITests.m */; };
+		63B3571823BE68450034F54B /* AgoraRtmKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3571723BE68450034F54B /* AgoraRtmKit.framework */; };
+		63B3571A23BE68760034F54B /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3571923BE68760034F54B /* libc++.tbd */; };
+		63B3571C23BE687E0034F54B /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3571B23BE687E0034F54B /* libresolv.tbd */; };
+		63B3571E23BE68850034F54B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3571D23BE68850034F54B /* SystemConfiguration.framework */; };
+		63B3572023BE688E0034F54B /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3571F23BE688E0034F54B /* CoreTelephony.framework */; };
+		63B3572723BEEE190034F54B /* BasicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B3572623BEEE190034F54B /* BasicViewController.m */; };
+		63B3573423BF316D0034F54B /* AgoraRtcEngineKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3573323BF316D0034F54B /* AgoraRtcEngineKit.framework */; };
+		63B3573623BF31790034F54B /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3573523BF31790034F54B /* Accelerate.framework */; };
+		63B3573823BF31880034F54B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3573723BF31880034F54B /* AudioToolbox.framework */; };
+		63B3573A23BF31940034F54B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3573923BF31940034F54B /* AVFoundation.framework */; };
+		63B3573C23BF31A30034F54B /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3573B23BF31A30034F54B /* CoreMedia.framework */; };
+		63B3573E23BF31AE0034F54B /* CoreML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3573D23BF31AE0034F54B /* CoreML.framework */; };
+		63B3574023BF31C60034F54B /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3573F23BF31C60034F54B /* VideoToolbox.framework */; };
+		63B3574223BF57350034F54B /* ACM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3574123BF57340034F54B /* ACM.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		63B356F123BE67A90034F54B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63B356D023BE67A80034F54B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 63B356D723BE67A80034F54B;
+			remoteInfo = VoiceCallDemo;
+		};
+		63B356FC23BE67A90034F54B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63B356D023BE67A80034F54B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 63B356D723BE67A80034F54B;
+			remoteInfo = VoiceCallDemo;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		63B356D823BE67A80034F54B /* VoiceCallDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VoiceCallDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		63B356DB23BE67A80034F54B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		63B356DC23BE67A80034F54B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		63B356DE23BE67A80034F54B /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		63B356DF23BE67A80034F54B /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		63B356E223BE67A80034F54B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		63B356E423BE67A90034F54B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		63B356E723BE67A90034F54B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		63B356E923BE67A90034F54B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		63B356EA23BE67A90034F54B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		63B356F023BE67A90034F54B /* VoiceCallDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VoiceCallDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		63B356F423BE67A90034F54B /* VoiceCallDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoiceCallDemoTests.m; sourceTree = "<group>"; };
+		63B356F623BE67A90034F54B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		63B356FB23BE67A90034F54B /* VoiceCallDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VoiceCallDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		63B356FF23BE67A90034F54B /* VoiceCallDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoiceCallDemoUITests.m; sourceTree = "<group>"; };
+		63B3570123BE67A90034F54B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		63B3571723BE68450034F54B /* AgoraRtmKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AgoraRtmKit.framework; path = libs/AgoraRtmKit.framework; sourceTree = "<group>"; };
+		63B3571923BE68760034F54B /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		63B3571B23BE687E0034F54B /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
+		63B3571D23BE68850034F54B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		63B3571F23BE688E0034F54B /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		63B3572523BEEE190034F54B /* BasicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BasicViewController.h; path = ../../Demo/Demo/Demo/BasicViewController.h; sourceTree = "<group>"; };
+		63B3572623BEEE190034F54B /* BasicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BasicViewController.m; path = ../../Demo/Demo/Demo/BasicViewController.m; sourceTree = "<group>"; };
+		63B3573323BF316D0034F54B /* AgoraRtcEngineKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AgoraRtcEngineKit.framework; path = ../Demo/Demo/libs/AgoraRtcEngineKit.framework; sourceTree = "<group>"; };
+		63B3573523BF31790034F54B /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		63B3573723BF31880034F54B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		63B3573923BF31940034F54B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		63B3573B23BF31A30034F54B /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		63B3573D23BF31AE0034F54B /* CoreML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreML.framework; path = System/Library/Frameworks/CoreML.framework; sourceTree = SDKROOT; };
+		63B3573F23BF31C60034F54B /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		63B3574123BF57340034F54B /* ACM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ACM.framework; path = "../../../../../../../Users/David/Library/Developer/Xcode/DerivedData/ACMSDK-gkyfgsakhfozmmbwqwitqewlbmhq/Build/Products/Debug-iphonesimulator/ACM.framework"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		63B356D523BE67A80034F54B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63B3574023BF31C60034F54B /* VideoToolbox.framework in Frameworks */,
+				63B3573E23BF31AE0034F54B /* CoreML.framework in Frameworks */,
+				63B3573C23BF31A30034F54B /* CoreMedia.framework in Frameworks */,
+				63B3573A23BF31940034F54B /* AVFoundation.framework in Frameworks */,
+				63B3573823BF31880034F54B /* AudioToolbox.framework in Frameworks */,
+				63B3573623BF31790034F54B /* Accelerate.framework in Frameworks */,
+				63B3573423BF316D0034F54B /* AgoraRtcEngineKit.framework in Frameworks */,
+				63B3572023BE688E0034F54B /* CoreTelephony.framework in Frameworks */,
+				63B3574223BF57350034F54B /* ACM.framework in Frameworks */,
+				63B3571E23BE68850034F54B /* SystemConfiguration.framework in Frameworks */,
+				63B3571C23BE687E0034F54B /* libresolv.tbd in Frameworks */,
+				63B3571A23BE68760034F54B /* libc++.tbd in Frameworks */,
+				63B3571823BE68450034F54B /* AgoraRtmKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		63B356ED23BE67A90034F54B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		63B356F823BE67A90034F54B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		63B356CF23BE67A80034F54B = {
+			isa = PBXGroup;
+			children = (
+				63B3574123BF57340034F54B /* ACM.framework */,
+				63B356DA23BE67A80034F54B /* VoiceCallDemo */,
+				63B356F323BE67A90034F54B /* VoiceCallDemoTests */,
+				63B356FE23BE67A90034F54B /* VoiceCallDemoUITests */,
+				63B356D923BE67A80034F54B /* Products */,
+				63B3571623BE68450034F54B /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		63B356D923BE67A80034F54B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				63B356D823BE67A80034F54B /* VoiceCallDemo.app */,
+				63B356F023BE67A90034F54B /* VoiceCallDemoTests.xctest */,
+				63B356FB23BE67A90034F54B /* VoiceCallDemoUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		63B356DA23BE67A80034F54B /* VoiceCallDemo */ = {
+			isa = PBXGroup;
+			children = (
+				63B3572523BEEE190034F54B /* BasicViewController.h */,
+				63B3572623BEEE190034F54B /* BasicViewController.m */,
+				63B356DB23BE67A80034F54B /* AppDelegate.h */,
+				63B356DC23BE67A80034F54B /* AppDelegate.m */,
+				63B356DE23BE67A80034F54B /* ViewController.h */,
+				63B356DF23BE67A80034F54B /* ViewController.m */,
+				63B356E123BE67A80034F54B /* Main.storyboard */,
+				63B356E423BE67A90034F54B /* Assets.xcassets */,
+				63B356E623BE67A90034F54B /* LaunchScreen.storyboard */,
+				63B356E923BE67A90034F54B /* Info.plist */,
+				63B356EA23BE67A90034F54B /* main.m */,
+			);
+			path = VoiceCallDemo;
+			sourceTree = "<group>";
+		};
+		63B356F323BE67A90034F54B /* VoiceCallDemoTests */ = {
+			isa = PBXGroup;
+			children = (
+				63B356F423BE67A90034F54B /* VoiceCallDemoTests.m */,
+				63B356F623BE67A90034F54B /* Info.plist */,
+			);
+			path = VoiceCallDemoTests;
+			sourceTree = "<group>";
+		};
+		63B356FE23BE67A90034F54B /* VoiceCallDemoUITests */ = {
+			isa = PBXGroup;
+			children = (
+				63B356FF23BE67A90034F54B /* VoiceCallDemoUITests.m */,
+				63B3570123BE67A90034F54B /* Info.plist */,
+			);
+			path = VoiceCallDemoUITests;
+			sourceTree = "<group>";
+		};
+		63B3571623BE68450034F54B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				63B3573F23BF31C60034F54B /* VideoToolbox.framework */,
+				63B3573D23BF31AE0034F54B /* CoreML.framework */,
+				63B3573B23BF31A30034F54B /* CoreMedia.framework */,
+				63B3573923BF31940034F54B /* AVFoundation.framework */,
+				63B3573723BF31880034F54B /* AudioToolbox.framework */,
+				63B3573523BF31790034F54B /* Accelerate.framework */,
+				63B3573323BF316D0034F54B /* AgoraRtcEngineKit.framework */,
+				63B3571F23BE688E0034F54B /* CoreTelephony.framework */,
+				63B3571D23BE68850034F54B /* SystemConfiguration.framework */,
+				63B3571B23BE687E0034F54B /* libresolv.tbd */,
+				63B3571923BE68760034F54B /* libc++.tbd */,
+				63B3571723BE68450034F54B /* AgoraRtmKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		63B356D723BE67A80034F54B /* VoiceCallDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 63B3570423BE67A90034F54B /* Build configuration list for PBXNativeTarget "VoiceCallDemo" */;
+			buildPhases = (
+				63B356D423BE67A80034F54B /* Sources */,
+				63B356D523BE67A80034F54B /* Frameworks */,
+				63B356D623BE67A80034F54B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VoiceCallDemo;
+			productName = VoiceCallDemo;
+			productReference = 63B356D823BE67A80034F54B /* VoiceCallDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		63B356EF23BE67A90034F54B /* VoiceCallDemoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 63B3570723BE67A90034F54B /* Build configuration list for PBXNativeTarget "VoiceCallDemoTests" */;
+			buildPhases = (
+				63B356EC23BE67A90034F54B /* Sources */,
+				63B356ED23BE67A90034F54B /* Frameworks */,
+				63B356EE23BE67A90034F54B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				63B356F223BE67A90034F54B /* PBXTargetDependency */,
+			);
+			name = VoiceCallDemoTests;
+			productName = VoiceCallDemoTests;
+			productReference = 63B356F023BE67A90034F54B /* VoiceCallDemoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		63B356FA23BE67A90034F54B /* VoiceCallDemoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 63B3570A23BE67A90034F54B /* Build configuration list for PBXNativeTarget "VoiceCallDemoUITests" */;
+			buildPhases = (
+				63B356F723BE67A90034F54B /* Sources */,
+				63B356F823BE67A90034F54B /* Frameworks */,
+				63B356F923BE67A90034F54B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				63B356FD23BE67A90034F54B /* PBXTargetDependency */,
+			);
+			name = VoiceCallDemoUITests;
+			productName = VoiceCallDemoUITests;
+			productReference = 63B356FB23BE67A90034F54B /* VoiceCallDemoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		63B356D023BE67A80034F54B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1020;
+				ORGANIZATIONNAME = genetek;
+				TargetAttributes = {
+					63B356D723BE67A80034F54B = {
+						CreatedOnToolsVersion = 10.2.1;
+					};
+					63B356EF23BE67A90034F54B = {
+						CreatedOnToolsVersion = 10.2.1;
+						TestTargetID = 63B356D723BE67A80034F54B;
+					};
+					63B356FA23BE67A90034F54B = {
+						CreatedOnToolsVersion = 10.2.1;
+						TestTargetID = 63B356D723BE67A80034F54B;
+					};
+				};
+			};
+			buildConfigurationList = 63B356D323BE67A80034F54B /* Build configuration list for PBXProject "VoiceCallDemo" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 63B356CF23BE67A80034F54B;
+			productRefGroup = 63B356D923BE67A80034F54B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				63B356D723BE67A80034F54B /* VoiceCallDemo */,
+				63B356EF23BE67A90034F54B /* VoiceCallDemoTests */,
+				63B356FA23BE67A90034F54B /* VoiceCallDemoUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		63B356D623BE67A80034F54B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63B356E823BE67A90034F54B /* LaunchScreen.storyboard in Resources */,
+				63B356E523BE67A90034F54B /* Assets.xcassets in Resources */,
+				63B356E323BE67A80034F54B /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		63B356EE23BE67A90034F54B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		63B356F923BE67A90034F54B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		63B356D423BE67A80034F54B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63B356E023BE67A80034F54B /* ViewController.m in Sources */,
+				63B3572723BEEE190034F54B /* BasicViewController.m in Sources */,
+				63B356EB23BE67A90034F54B /* main.m in Sources */,
+				63B356DD23BE67A80034F54B /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		63B356EC23BE67A90034F54B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63B356F523BE67A90034F54B /* VoiceCallDemoTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		63B356F723BE67A90034F54B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63B3570023BE67A90034F54B /* VoiceCallDemoUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		63B356F223BE67A90034F54B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 63B356D723BE67A80034F54B /* VoiceCallDemo */;
+			targetProxy = 63B356F123BE67A90034F54B /* PBXContainerItemProxy */;
+		};
+		63B356FD23BE67A90034F54B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 63B356D723BE67A80034F54B /* VoiceCallDemo */;
+			targetProxy = 63B356FC23BE67A90034F54B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		63B356E123BE67A80034F54B /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				63B356E223BE67A80034F54B /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		63B356E623BE67A90034F54B /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				63B356E723BE67A90034F54B /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		63B3570223BE67A90034F54B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		63B3570323BE67A90034F54B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		63B3570523BE67A90034F54B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KK25MC3SMT;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libs",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = VoiceCallDemo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libs",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = genetek.com.VoiceCallDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		63B3570623BE67A90034F54B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KK25MC3SMT;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libs",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = VoiceCallDemo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libs",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = genetek.com.VoiceCallDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		63B3570823BE67A90034F54B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KK25MC3SMT;
+				INFOPLIST_FILE = VoiceCallDemoTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = genetek.com.VoiceCallDemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VoiceCallDemo.app/VoiceCallDemo";
+			};
+			name = Debug;
+		};
+		63B3570923BE67A90034F54B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KK25MC3SMT;
+				INFOPLIST_FILE = VoiceCallDemoTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = genetek.com.VoiceCallDemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VoiceCallDemo.app/VoiceCallDemo";
+			};
+			name = Release;
+		};
+		63B3570B23BE67A90034F54B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KK25MC3SMT;
+				INFOPLIST_FILE = VoiceCallDemoUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = genetek.com.VoiceCallDemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = VoiceCallDemo;
+			};
+			name = Debug;
+		};
+		63B3570C23BE67A90034F54B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KK25MC3SMT;
+				INFOPLIST_FILE = VoiceCallDemoUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = genetek.com.VoiceCallDemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = VoiceCallDemo;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		63B356D323BE67A80034F54B /* Build configuration list for PBXProject "VoiceCallDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				63B3570223BE67A90034F54B /* Debug */,
+				63B3570323BE67A90034F54B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		63B3570423BE67A90034F54B /* Build configuration list for PBXNativeTarget "VoiceCallDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				63B3570523BE67A90034F54B /* Debug */,
+				63B3570623BE67A90034F54B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		63B3570723BE67A90034F54B /* Build configuration list for PBXNativeTarget "VoiceCallDemoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				63B3570823BE67A90034F54B /* Debug */,
+				63B3570923BE67A90034F54B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		63B3570A23BE67A90034F54B /* Build configuration list for PBXNativeTarget "VoiceCallDemoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				63B3570B23BE67A90034F54B /* Debug */,
+				63B3570C23BE67A90034F54B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 63B356D023BE67A80034F54B /* Project object */;
+}

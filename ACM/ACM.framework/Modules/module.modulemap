@@ -1,0 +1,6 @@
+framework module ACM {
+  umbrella header "ACM.h"
+
+  export *
+  module * { export * }
+}
