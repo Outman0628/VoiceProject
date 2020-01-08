@@ -55,12 +55,24 @@ FOUNDATION_EXPORT const unsigned char ACMVersionString[];
 + (void) agreeCall: ( nullable NSString *)channelId;
 
 /**
- 结束电话
+ 拒接电话
  
- @param channelId 电话通话频道
+ @param channel 通话渠道号
+ 
+ @param peerId 通话id.
  
  */
-+ (void) leaveCall: (nullable NSString *)channelId;
++ (void) rejectCall: ( nullable NSString *)channel fromPeer:( nullable NSString * )peerId;
+
+/**
+ 结束电话
+ 
+ @param channel 通话渠道号
+ 
+ @param peerId 通话id.
+ 
+ */
++ (void) leaveCall: ( nullable NSString *)channel fromPeer:( nullable NSString * )peerId;
 
 /**
  拨打电话

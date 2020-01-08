@@ -41,6 +41,24 @@
  */
 - (void)onCallReceived:(NSString * _Nonnull)channel fromPeer:(NSString * _Nonnull)peerId;
 
+/**
+ 接收到对方挂断请求
+ 
+ @param channel 通话渠道号
+ 
+ @param peerId 发送者id.
+ */
+- (void)onRemoteRejectCall:(NSString * _Nonnull)channel fromPeer:(NSString * _Nonnull)peerId;
+
+/**
+ 接收到对方结束通话
+ 
+ @param channel 通话渠道号
+ 
+ @param peerId 发送者id.
+ */
+- (void)onRemoteLeaveCall:(NSString * _Nonnull)channel fromPeer:(NSString * _Nonnull)peerId;
+
 @end
 
 

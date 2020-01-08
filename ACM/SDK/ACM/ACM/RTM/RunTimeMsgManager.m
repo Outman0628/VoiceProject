@@ -10,6 +10,7 @@
  #import<objc/runtime.h>
 #import "RunTimeMsgManager.h"
 #import "IACMCallBack.h"
+#import "../Action/ActionManager.h"
 
 
 static AgoraRtmKit *_kit = nil;
@@ -17,6 +18,7 @@ static id<IACMCallBack> acmCallBack = nil;
 static NSString *_userId = nil;
 static Boolean _loginStatus = false;
 static RunTimeMsgManager *instance = nil;
+static ActionManager *actionMgr = nil;
 
 @interface RunTimeMsgManager ()  <AgoraRtmDelegate>
 @end
@@ -24,21 +26,24 @@ static RunTimeMsgManager *instance = nil;
 @implementation RunTimeMsgManager
 
 // 注册服务
-+ (void) init: ( nullable NSString *) appId  acmCallback:(id <IACMCallBack> _Nullable)delegate{
++ (BOOL) init: ( nullable NSString *) appId  acmCallback:(id <IACMCallBack> _Nullable)delegate actionMgr:(nonnull ActionManager *)mgr{
     acmCallBack = delegate;
     if(_kit == nil)
     {
         instance = [RunTimeMsgManager alloc];
-        _kit = [[AgoraRtmKit alloc] initWithAppId:appId delegate:instance];        
+        _kit = [[AgoraRtmKit alloc] initWithAppId:appId delegate:instance];
+        actionMgr = mgr;
     }
     
     if(_kit == nil)
     {
-        NSLog(@"Agora Rtm kit init returned nil");
+        NSLog(@"Error: Agora Rtm kit init returned nil");
+        return NO;
     }
     else
     {
         NSLog(@"Agora Rtm kit init succeed!");
+        return YES;
     }
 }
 
@@ -54,28 +59,16 @@ static RunTimeMsgManager *instance = nil;
     
     [_kit loginByToken:nil user:userId completion:^(AgoraRtmLoginErrorCode errorCode) {
         
-        if (errorCode != AgoraRtmLoginErrorOk) {
-          
-            NSLog(@"ACM Login failed:%ld", errorCode);
-             if(completionBlock != nil)
-             {
-                 completionBlock(errorCode);
-             }
-        }
-        else{
-            _userId = userId;
-            _loginStatus = true;
-            NSLog(@"ACM Login succeeed!");
-            if(completionBlock != nil)
-            {
-                completionBlock(errorCode);
-            }
-        }
+        EventData eventData = {EventRTMLoginResult, errorCode,0,0,completionBlock};
+        [actionMgr HandleEvent:eventData];
+        
+        
+        
     }];
 }
 
 // 发送消息
-+ (void)sendP2PMessage: (nullable NSString *)msg remoteUid:( nullable NSString *)peerId completion:(IACMSendPeerMessageBlock _Nullable)completionBlock{
++ (void)sendP2PMessage: (nullable NSString *)msg  userAccount:( nullable NSString *)userId remoteUid:( nullable NSString *)peerId completion:(IACMSendPeerMessageBlock _Nullable)completionBlock{
     if(_kit == nil || peerId == nil || msg == nil || peerId.length == 0 || msg.length == 0)
     {
         NSLog(@"Error send msg Invalid parameters");
@@ -88,9 +81,9 @@ static RunTimeMsgManager *instance = nil;
     
     NSDictionary * rtmNotifyBean =
     @{@"title":@"textmsg",
-      @"accountCaller": _userId,
+      @"accountCaller": userId,
       @"accountRemote":peerId,
-      @"channel":  [NSString stringWithFormat:@"%@%@", _userId, peerId],
+      @"channel":  [NSString stringWithFormat:@"%@%@", userId, peerId],
       @"data": msg
       };
     
@@ -151,7 +144,75 @@ static RunTimeMsgManager *instance = nil;
     return rtmNotifyBean[@"channel"];
 }
 
+// 拒绝邀请
++ (void)rejectPhoneCall: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID{
+    NSDictionary * rtmNotifyBean =
+    @{@"title":@"reject",
+      @"accountCaller": userID,
+      @"accountRemote":remoteUid,
+      @"channel":  channelID,
+      };
+    
+    NSError *error;
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:rtmNotifyBean options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    
+    AgoraRtmMessage *rtmMessage = [[AgoraRtmMessage alloc] initWithText:jsonStr];
+    
+    [_kit sendMessage:rtmMessage toPeer:remoteUid
+     
+           completion:^(AgoraRtmSendPeerMessageErrorCode errorCode) {
+               
+               //sent((int)errorCode);
+               if(errorCode == AgoraRtmSendPeerMessageErrorOk)
+               {
+                   // [self showAlert: @"消息已发送!"];
+                   NSLog(@"Send phone call succeed!");
+               }
+               else
+               {
+                   NSString *errNote =  [[NSString alloc] initWithString:[NSString stringWithFormat:@"Send phone call failed:%d", (int)errorCode]];
+                   //[self showAlert: errNote];
+                   NSLog(@"%@",errNote);
+               }
+           }];
+}
 
+// 结束通话
++ (void) leaveCall: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID{
+    NSDictionary * rtmNotifyBean =
+    @{@"title":@"leave",
+      @"accountCaller": userID,
+      @"accountRemote":remoteUid,
+      @"channel":  channelID,
+      };
+    
+    NSError *error;
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:rtmNotifyBean options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    
+    AgoraRtmMessage *rtmMessage = [[AgoraRtmMessage alloc] initWithText:jsonStr];
+    
+    [_kit sendMessage:rtmMessage toPeer:remoteUid
+     
+           completion:^(AgoraRtmSendPeerMessageErrorCode errorCode) {
+               
+               //sent((int)errorCode);
+               if(errorCode == AgoraRtmSendPeerMessageErrorOk)
+               {
+                   // [self showAlert: @"消息已发送!"];
+                   NSLog(@"Send phone call succeed!");
+               }
+               else
+               {
+                   NSString *errNote =  [[NSString alloc] initWithString:[NSString stringWithFormat:@"Send phone call failed:%d", (int)errorCode]];
+                   //[self showAlert: errNote];
+                   NSLog(@"%@",errNote);
+               }
+           }];
+}
 
 
 #pragma mark - AgoraRtmDelegate
@@ -186,17 +247,37 @@ static RunTimeMsgManager *instance = nil;
     {
         NSLog( @"%@",dic[@"data"]);
         
+        /*
         if(acmCallBack != nil){
             [acmCallBack messageReceived:dic[@"data"] fromPeer:peerId];
         }
+         */
+        
+        EventData eventData = {EventGotRtmTextMsg, 0,0,0,dic[@"data"],peerId,acmCallBack};
+        [actionMgr HandleEvent:eventData];
     }
     else if( [title isEqualToString:@"audiocall"] )
     {
         //- (void)onCallReceived:(NSString * _Nonnull)channel fromPeer:(NSString * _Nonnull)peerId;
         NSLog(@"audio call from:%@", peerId );
+        /*
         if(acmCallBack != nil){
             [acmCallBack onCallReceived:dic[@"channel"] fromPeer:peerId];
         }
+         */
+        
+        EventData eventData = {EventGotRtmAudioCall, 0,0,0,dic[@"channel"],peerId,acmCallBack};
+        [actionMgr HandleEvent:eventData];
+    }
+    else if( [title isEqualToString:@"reject"] )
+    {
+        EventData eventData = {EventRtmRejectAudioCall, 0,0,0,dic[@"channel"],peerId,acmCallBack};
+        [actionMgr HandleEvent:eventData];
+    }
+    else if( [title isEqualToString:@"leave"] )
+    {
+        EventData eventData = {EventRtmLeaveCall, 0,0,0,dic[@"channel"],peerId,acmCallBack};
+        [actionMgr HandleEvent:eventData];
     }
 }
 
