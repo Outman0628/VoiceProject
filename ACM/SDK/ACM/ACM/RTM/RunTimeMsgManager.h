@@ -22,7 +22,7 @@
 
 + (void)sendP2PMessage: (nullable NSString *)msg  userAccount:( nullable NSString *)userId remoteUid:( nullable NSString *)peerId completion:(IACMSendPeerMessageBlock _Nullable)completionBlock;
 
-+ (nullable NSString *)invitePhoneCall: (nullable NSString *)remoteUid;
++ (nullable NSString *)invitePhoneCall: (nullable NSString *)remoteUid acountRemote:(nullable NSString *)userId;
 
 + (void)rejectPhoneCall: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID;
 

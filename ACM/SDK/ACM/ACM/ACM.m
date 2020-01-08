@@ -15,8 +15,8 @@
 #import "Action/ActionManager.h"
 #import "Action/EventData.h"
 
-static NSString *AppId = nil;
-static NSString *UserId = nil;
+//static NSString *AppId = nil;
+//static NSString *UserId = nil;
 static ActionManager *actionMgr = nil;
 
 @implementation  ACM
@@ -63,7 +63,7 @@ static ActionManager *actionMgr = nil;
     //[AudioCallManager startAudioCall:AppId user:UserId channel:channelId rtcCallback:nil];
     if(actionMgr != nil)
     {
-        EventData eventData = {EventAgreeAudioCall, 0,0,0,AppId,UserId,channelId,nil};
+        EventData eventData = {EventAgreeAudioCall, 0,0,0,actionMgr.appId,actionMgr.userId,channelId,nil};
         [actionMgr HandleEvent:eventData];
     }
 }
@@ -85,9 +85,10 @@ static ActionManager *actionMgr = nil;
    // [AudioCallManager endAudioCall];
 }
 
-+ (void) ringAudioCall: ( nullable NSString *)peerId{
-    NSString *channelId = [RunTimeMsgManager invitePhoneCall:peerId];
-    [AudioCallManager startAudioCall:AppId user:UserId channel:channelId rtcCallback:nil];
++ (nullable NSString*) ringAudioCall: ( nullable NSString *)peerId{
+    NSString *channelId = [RunTimeMsgManager invitePhoneCall:peerId acountRemote:actionMgr.userId];
+    [AudioCallManager startAudioCall:actionMgr.appId user:actionMgr.userId channel:channelId rtcCallback:nil];
+    return channelId;
 }
 
 

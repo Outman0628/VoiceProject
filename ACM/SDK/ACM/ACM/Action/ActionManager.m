@@ -17,7 +17,6 @@
 @interface ActionManager()
 // 当前Action
 @property  ACMAction *activeAction;
-@property NSString* appId;
 @property id<IACMCallBack>  icmCallBack;
 @end
 

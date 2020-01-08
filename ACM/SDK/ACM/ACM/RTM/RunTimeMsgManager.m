@@ -15,7 +15,7 @@
 
 static AgoraRtmKit *_kit = nil;
 static id<IACMCallBack> acmCallBack = nil;
-static NSString *_userId = nil;
+//static NSString *_userId = nil;
 static Boolean _loginStatus = false;
 static RunTimeMsgManager *instance = nil;
 static ActionManager *actionMgr = nil;
@@ -108,12 +108,12 @@ static ActionManager *actionMgr = nil;
 }
 
 // 发起邀请
-+ (nullable NSString *)invitePhoneCall: (nullable NSString *)remoteUid{
++ (nullable NSString *)invitePhoneCall: (nullable NSString *)remoteUid acountRemote:(nullable NSString *)userId{
     NSDictionary * rtmNotifyBean =
     @{@"title":@"audiocall",
-      @"accountCaller": _userId,
+      @"accountCaller": userId,
       @"accountRemote":remoteUid,
-      @"channel":  [NSString stringWithFormat:@"%@%@", _userId, remoteUid]
+      @"channel":  [NSString stringWithFormat:@"%@%@", userId, remoteUid]
       };
     
     NSError *error;

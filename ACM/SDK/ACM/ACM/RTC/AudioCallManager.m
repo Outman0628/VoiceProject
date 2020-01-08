@@ -55,4 +55,20 @@ static AudioCallManager *instance = nil;
     }
 }
 
+//////////////// delegate
+
+- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didOccurWarning:(AgoraWarningCode)warningCode
+{
+    NSLog(@"RTC warning:%ld", (long)warningCode);
+}
+- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didOccurError:(AgoraErrorCode)errorCode
+{
+    NSLog(@"RTC error:%ld", (long)errorCode);
+}
+
+- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didJoinChannel:(NSString * _Nonnull)channel withUid:(NSUInteger)uid elapsed:(NSInteger) elapsed
+{
+    NSLog(@"RTC didJoinChannel:channel%@, userID:%@, elapsed:%ld", channel,uid,(long)elapsed);
+}
+
 @end

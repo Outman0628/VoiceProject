@@ -15,6 +15,7 @@
 @interface ActionManager : NSObject
 
 @property (nonatomic) NSString * _Nullable userId;
+@property NSString* _Nullable appId;
 
 /*
  处理事件

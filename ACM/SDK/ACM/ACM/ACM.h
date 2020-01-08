@@ -78,8 +78,9 @@ FOUNDATION_EXPORT const unsigned char ACMVersionString[];
  拨打电话
  
  @param peerId 对方ID
+ 注意：该接口以后要更改，通话接口channel id 将由服务器来生成，以后会由回调通知APP
  
  */
-+ (void) ringAudioCall: (nullable NSString *)peerId;
++ (nullable NSString*) ringAudioCall: (nullable NSString *)peerId;
 
 @end
