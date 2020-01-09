@@ -18,7 +18,7 @@
 /*
  初始化
  */
--(id _Nullable )init: (nullable ActionManager *) mgr;
+-(id _Nullable )init: (nonnull ActionManager *) mgr apnsToken:(nonnull NSString *)token;
 
 /**
  Action 事件处理

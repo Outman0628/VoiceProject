@@ -17,7 +17,7 @@ static AudioCallManager *instance = nil;
 
 @implementation AudioCallManager
 
-+ (void) startAudioCall: ( nullable NSString *) appId  user:(nullable NSString *)userID  channel:(nullable NSString *)channelId rtcCallback:(id <IRTCCallBack> _Nullable)delegate{
++ (void) startAudioCall: ( nullable NSString *) appId  user:(nullable NSString *)userID  channel:(nullable NSString *)channelId rtcToken:(nullable NSString *)token  rtcCallback:(id <IRTCCallBack> _Nullable)delegate{
     
     if(_rtcKit == nil)
     {
@@ -38,7 +38,13 @@ static AudioCallManager *instance = nil;
                                          orientationMode:AgoraVideoOutputOrientationModeAdaptative];
     [_rtcKit setVideoEncoderConfiguration:encoderConfiguration];
     
-    [_rtcKit joinChannelByToken:nil channelId:channelId info:nil uid:0 joinSuccess:^(NSString *channel, NSUInteger uid, NSInteger elapsed) {
+    /*
+    [_rtcKit joinChannelByToken:token channelId:channelId info:nil uid:userInfo.uid joinSuccess:^(NSString *channel, NSUInteger uid, NSInteger elapsed) {
+        NSLog(@"Succeed to join RTC channel");
+    }];
+     */
+    
+    [_rtcKit joinChannelByUserAccount:userID token:token channelId:channelId joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {
         NSLog(@"Succeed to join RTC channel");
     }];
     

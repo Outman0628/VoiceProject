@@ -16,7 +16,7 @@
 static AgoraRtmKit *_kit = nil;
 static id<IACMCallBack> acmCallBack = nil;
 //static NSString *_userId = nil;
-static Boolean _loginStatus = false;
+//static Boolean _loginStatus = false;
 static RunTimeMsgManager *instance = nil;
 static ActionManager *actionMgr = nil;
 
@@ -53,7 +53,7 @@ static ActionManager *actionMgr = nil;
     if(_kit == nil && completionBlock != nil)
     {
         NSLog(@"Err ACM not inited!");
-        completionBlock(AgoraRtmLoginErrorUnknown);
+        completionBlock(AcmRtmLoginErrorUnknown);
         return;
     }
     
@@ -65,6 +65,14 @@ static ActionManager *actionMgr = nil;
         
         
     }];
+}
+
+// 登出RTM
++ (void) logoutACM{
+    if(_kit != nil)
+    {
+        [_kit logoutWithCompletion:nil];
+    }
 }
 
 // 发送消息
@@ -108,12 +116,12 @@ static ActionManager *actionMgr = nil;
 }
 
 // 发起邀请
-+ (nullable NSString *)invitePhoneCall: (nullable NSString *)remoteUid acountRemote:(nullable NSString *)userId{
++ (nullable NSString *)invitePhoneCall: (nullable NSString *)remoteUid acountRemote:(nullable NSString *)userId channelInfo:(nullable NSString *)channelId{
     NSDictionary * rtmNotifyBean =
     @{@"title":@"audiocall",
       @"accountCaller": userId,
       @"accountRemote":remoteUid,
-      @"channel":  [NSString stringWithFormat:@"%@%@", userId, remoteUid]
+      @"channel":  channelId,
       };
     
     NSError *error;
@@ -261,13 +269,27 @@ static ActionManager *actionMgr = nil;
         //- (void)onCallReceived:(NSString * _Nonnull)channel fromPeer:(NSString * _Nonnull)peerId;
         NSLog(@"audio call from:%@", peerId );
         /*
-        if(acmCallBack != nil){
-            [acmCallBack onCallReceived:dic[@"channel"] fromPeer:peerId];
-        }
-         */
-        
         EventData eventData = {EventGotRtmAudioCall, 0,0,0,dic[@"channel"],peerId,acmCallBack};
         [actionMgr HandleEvent:eventData];
+         */
+        
+        
+        
+        //- (void)onCallReceived:(NSString * _Nonnull)channel fromPeer:(NSString * _Nonnull)peerId;
+        NSLog(@"rtm audio call from:%@", peerId );
+        
+        
+        if([actionMgr.callMgr IsActiveCall:dic[@"channel"]] == YES) // 通话已经在处理中，丢弃后到的通话
+        {
+            NSLog(@"Drop phone call:%@ from RTM as same call already exist!", dic[@"channel"]);
+           
+        }
+        else
+        {
+            Call *instance = [actionMgr.callMgr createReceveCall:dic];
+            EventData eventData = {EventGotRtmAudioCall, 0,0,0,instance};
+            [actionMgr HandleEvent:eventData];
+        }
     }
     else if( [title isEqualToString:@"reject"] )
     {

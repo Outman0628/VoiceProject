@@ -19,6 +19,12 @@ typedef NS_ENUM(NSInteger, ActionType) {
     
     // 登录 Action
     ActionLogin = 2,
+    
+    // 监听 Action
+    ActionMonitor = 3,
+    
+    // 拨号 Action
+    ActionDial = 4,
 };
 
 

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "SDKInitAction.h"
-#import "../RTM/RunTimeMsgManager.h"
+#import "../Message/RunTimeMsgManager.h"
 #import "ActionManager.h"
 
 @interface SDKInitAction()
@@ -42,5 +42,4 @@
         }
     }
 }
-
 @end

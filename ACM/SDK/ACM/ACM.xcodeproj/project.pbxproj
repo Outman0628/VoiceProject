@@ -33,6 +33,14 @@
 		63B357AA23C4B1C40034F54B /* LoginAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B357A923C4B1C40034F54B /* LoginAction.m */; };
 		63B357AC23C4C7480034F54B /* MonitorAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B357AB23C4C7480034F54B /* MonitorAction.h */; };
 		63B357AE23C4C75B0034F54B /* MonitorAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B357AD23C4C75B0034F54B /* MonitorAction.m */; };
+		63B357B123C5E69C0034F54B /* DialAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B357B023C5E69C0034F54B /* DialAction.h */; };
+		63B357B323C5E6AE0034F54B /* DialAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B357B223C5E6AE0034F54B /* DialAction.m */; };
+		63B357B723C6D2CF0034F54B /* ApnsMessageManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B357B623C6D2CF0034F54B /* ApnsMessageManager.h */; };
+		63B357B923C6D2E40034F54B /* ApnsMessageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B357B823C6D2E40034F54B /* ApnsMessageManager.m */; };
+		63B357BC23C6D8630034F54B /* Call.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B357BB23C6D8630034F54B /* Call.h */; };
+		63B357BE23C6D8770034F54B /* Call.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B357BD23C6D8770034F54B /* Call.m */; };
+		63B357C023C6D88B0034F54B /* CallManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B357BF23C6D88B0034F54B /* CallManager.h */; };
+		63B357C223C6D89C0034F54B /* CallManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B357C123C6D89C0034F54B /* CallManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +84,14 @@
 		63B357A923C4B1C40034F54B /* LoginAction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginAction.m; sourceTree = "<group>"; };
 		63B357AB23C4C7480034F54B /* MonitorAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MonitorAction.h; sourceTree = "<group>"; };
 		63B357AD23C4C75B0034F54B /* MonitorAction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MonitorAction.m; sourceTree = "<group>"; };
+		63B357B023C5E69C0034F54B /* DialAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DialAction.h; sourceTree = "<group>"; };
+		63B357B223C5E6AE0034F54B /* DialAction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DialAction.m; sourceTree = "<group>"; };
+		63B357B623C6D2CF0034F54B /* ApnsMessageManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApnsMessageManager.h; sourceTree = "<group>"; };
+		63B357B823C6D2E40034F54B /* ApnsMessageManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ApnsMessageManager.m; sourceTree = "<group>"; };
+		63B357BB23C6D8630034F54B /* Call.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Call.h; sourceTree = "<group>"; };
+		63B357BD23C6D8770034F54B /* Call.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Call.m; sourceTree = "<group>"; };
+		63B357BF23C6D88B0034F54B /* CallManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CallManager.h; sourceTree = "<group>"; };
+		63B357C123C6D89C0034F54B /* CallManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CallManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,11 +139,13 @@
 		63B3565323BDE3900034F54B /* ACM */ = {
 			isa = PBXGroup;
 			children = (
+				63B357BA23C6D8080034F54B /* Call */,
 				63B3578F23C45EBA0034F54B /* Action */,
 				63B3572A23BF24140034F54B /* RTC */,
-				63B356BC23BE55050034F54B /* RTM */,
+				63B356BC23BE55050034F54B /* Message */,
 				63B3565423BDE3900034F54B /* ACM.h */,
 				63B3565523BDE3900034F54B /* Info.plist */,
+				63B356C123BE56B20034F54B /* IACMCallBack.h */,
 				63B356AB23BE38970034F54B /* ACM.m */,
 				63B3579A23C46C8C0034F54B /* ACMCommon.h */,
 			);
@@ -155,14 +173,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		63B356BC23BE55050034F54B /* RTM */ = {
+		63B356BC23BE55050034F54B /* Message */ = {
 			isa = PBXGroup;
 			children = (
 				63B356BD23BE55290034F54B /* RunTimeMsgManager.m */,
 				63B356BF23BE553B0034F54B /* RunTimeMsgManager.h */,
-				63B356C123BE56B20034F54B /* IACMCallBack.h */,
+				63B357B623C6D2CF0034F54B /* ApnsMessageManager.h */,
+				63B357B823C6D2E40034F54B /* ApnsMessageManager.m */,
 			);
-			path = RTM;
+			path = Message;
 			sourceTree = "<group>";
 		};
 		63B3572A23BF24140034F54B /* RTC */ = {
@@ -189,8 +208,21 @@
 				63B357A923C4B1C40034F54B /* LoginAction.m */,
 				63B357AB23C4C7480034F54B /* MonitorAction.h */,
 				63B357AD23C4C75B0034F54B /* MonitorAction.m */,
+				63B357B023C5E69C0034F54B /* DialAction.h */,
+				63B357B223C5E6AE0034F54B /* DialAction.m */,
 			);
 			path = Action;
+			sourceTree = "<group>";
+		};
+		63B357BA23C6D8080034F54B /* Call */ = {
+			isa = PBXGroup;
+			children = (
+				63B357BB23C6D8630034F54B /* Call.h */,
+				63B357BD23C6D8770034F54B /* Call.m */,
+				63B357BF23C6D88B0034F54B /* CallManager.h */,
+				63B357C123C6D89C0034F54B /* CallManager.m */,
+			);
+			path = Call;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -202,11 +234,15 @@
 			files = (
 				63B3579123C45F290034F54B /* ACMAction.h in Headers */,
 				63B356C223BE56B20034F54B /* IACMCallBack.h in Headers */,
+				63B357B723C6D2CF0034F54B /* ApnsMessageManager.h in Headers */,
 				63B3579523C4692F0034F54B /* ActionManager.h in Headers */,
 				63B3572C23BF247C0034F54B /* AudioCallManager.h in Headers */,
+				63B357BC23C6D8630034F54B /* Call.h in Headers */,
+				63B357B123C5E69C0034F54B /* DialAction.h in Headers */,
 				63B357A823C4B1B30034F54B /* LoginAction.h in Headers */,
 				63B3573023BF24AD0034F54B /* IRTCCallBack.h in Headers */,
 				63B3579923C46BE30034F54B /* EventData.h in Headers */,
+				63B357C023C6D88B0034F54B /* CallManager.h in Headers */,
 				63B3566223BDE3900034F54B /* ACM.h in Headers */,
 				63B3579D23C474C50034F54B /* SDKInitAction.h in Headers */,
 				63B356C023BE553B0034F54B /* RunTimeMsgManager.h in Headers */,
@@ -312,13 +348,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				63B357AE23C4C75B0034F54B /* MonitorAction.m in Sources */,
+				63B357BE23C6D8770034F54B /* Call.m in Sources */,
 				63B3579F23C475B80034F54B /* SDKInitAction.m in Sources */,
 				63B357AA23C4B1C40034F54B /* LoginAction.m in Sources */,
+				63B357B923C6D2E40034F54B /* ApnsMessageManager.m in Sources */,
 				63B356BE23BE55290034F54B /* RunTimeMsgManager.m in Sources */,
 				63B3579323C468730034F54B /* ACMAction.m in Sources */,
 				63B356AC23BE38970034F54B /* ACM.m in Sources */,
+				63B357B323C5E6AE0034F54B /* DialAction.m in Sources */,
 				63B3579723C469400034F54B /* ActionManager.m in Sources */,
 				63B3572E23BF24920034F54B /* AudioCallManager.m in Sources */,
+				63B357C223C6D89C0034F54B /* CallManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

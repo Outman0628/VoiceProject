@@ -8,14 +8,18 @@
 
 #import <Foundation/Foundation.h>
 #import "LoginAction.h"
-#import "../RTM/RunTimeMsgManager.h"
+#import "../Message/RunTimeMsgManager.h"
 #import "ActionManager.h"
-#import "../RTM/IACMCallBack.h"
+#import "IACMCallBack.h"
+
+static NSString *BackLoginApi = @"/dapi/account/update";
 
 @interface LoginAction()
 
 @property ActionManager* actionMgr;
 @property NSString* userId;
+@property NSString* apnsToken;
+@property IACMLoginBlock  completionBlock;
 
 @end
 
@@ -23,11 +27,12 @@
 
 
 
--(id _Nullable)init: (nullable ActionManager *) mgr{
+-(id _Nullable )init: (nonnull ActionManager *) mgr apnsToken:(nonnull NSString *)token{
     if (self = [super init]) {
         
         self.type = ActionLogin;
         self.actionMgr = mgr;
+        self.apnsToken = token;
     }
     return self;
 }
@@ -54,31 +59,99 @@
     [RunTimeMsgManager loginACM:eventData.param4 completion:eventData.param5];
 }
 
+- (void) BackendLogin{
+    NSString *stringUrl = [NSString stringWithFormat:@"%@%@",self.actionMgr.host, BackLoginApi];
+    
+    NSURL *url = [NSURL URLWithString:stringUrl];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    
+    request.timeoutInterval = 5.0;
+    
+    request.HTTPMethod = @"POST";
+    
+    NSString *bodyString = [NSString stringWithFormat:@"uid=%@&device=%@&apns_token=%@", self.userId,@"ios",self.apnsToken]; //带一个参数key传给服务器
+    
+    request.HTTPBody = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    
+    [[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+        if([(NSHTTPURLResponse *)response statusCode] == 200){
+            NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSData *jsonData = [str dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+            
+            BOOL ret = dic[@"success"];
+            AcmLoginErrorCode errCode;
+            
+            if(ret == YES)
+            {
+                
+                [self.actionMgr setUserId:self.userId];
+                [self.actionMgr actionDone:self];
+                
+                errCode = AcmRtmLoginErrorOk;
+            }
+            else
+            {
+                self.userId = nil;
+                [RunTimeMsgManager logoutACM];
+                errCode = AcmLoginBackendErrorUnknow;
+         
+            }
+            
+            if(self.completionBlock != nil)
+            {
+                
+                dispatch_async(dispatch_get_main_queue(),^{
+                    self.completionBlock(errCode);
+                });
+            }
+            
+        }
+        else{
+            self.userId = nil;
+            [RunTimeMsgManager logoutACM];
+            dispatch_async(dispatch_get_main_queue(),^{
+                self.completionBlock(AcmLoginBackendErrorUnknow);
+            });
+        }
+    }] resume];
+    
+
+}
+
 -(void) onRTMLoginResult:(EventData) eventData
 {
-    AgoraRtmLoginErrorCode errorCode = eventData.param1;
-    IACMLoginBlock  completionBlock = eventData.param4;
+    AcmLoginErrorCode errorCode = eventData.param1;
+    self.completionBlock = eventData.param4;
     
     
      if (errorCode != AgoraRtmLoginErrorOk) {
      
-         
+         [self.actionMgr actionFailed:self];
          NSLog(@"ACM Login failed:%ld", errorCode);
-         if(completionBlock != nil)
+         if(self.completionBlock != nil)
          {
-             completionBlock(errorCode);
+             self.completionBlock(errorCode);
          }
      }
      else{
          NSLog(@"ACM Login succeeed!");
+         
+         /*
          [self.actionMgr setUserId:self.userId];
          [self.actionMgr actionDone:self];
          if(completionBlock != nil)
          {
-         completionBlock(errorCode);
+             completionBlock(errorCode);
          }
+          */
+         // Continue backend login
+         [self BackendLogin];
      }
-    
 }
 @end
 

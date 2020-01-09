@@ -12,21 +12,33 @@
 #import "SDKInitAction.h"
 #import "LoginAction.h"
 #import "MonitorAction.h"
-#import "../RTM/RunTimeMsgManager.h"
+#import "../Message/RunTimeMsgManager.h"
+#import "../Call/CallManager.h"
 
 @interface ActionManager()
 // 当前Action
 @property  ACMAction *activeAction;
-@property id<IACMCallBack>  icmCallBack;
+@property NSString *apnsToken;
 @end
 
 @implementation ActionManager
+
+-(id _Nullable )init
+{
+    if (self = [super init]) {
+        
+        self.callMgr = [[CallManager alloc]init];
+    }
+    return self;
+}
 
 - (void) HandleEvent: (EventData) eventData{
     if(eventData.type == EventInitSDK && _activeAction == nil)
     {
         self.appId = eventData.param4;
         self.icmCallBack = eventData.param5;
+        self.host = eventData.param6;
+        self.apnsToken = eventData.param7;
         
         self.activeAction = [[SDKInitAction alloc]init:self];
         
@@ -67,7 +79,7 @@
     ACMAction *nextAction = nil;
     if(action.type == ActionSDKInit)
     {
-        nextAction = [[LoginAction alloc]init:self];
+        nextAction = [[LoginAction alloc]init:self apnsToken:self.apnsToken];
 
     }
     else if(action.type == ActionLogin)
@@ -83,6 +95,19 @@
         [nextAction EnterEntry];
     }
     self.activeAction = nextAction;
+}
+
+/*
+ 处理Action 跳转
+ @param EventData 事件数据
+ */
+- (void)actionChange:(nullable ACMAction *)curAction destAction:(nullable ACMAction *)nextAction{
+    [curAction ExitEntry];
+    [nextAction EnterEntry];
+    if(curAction == self.activeAction)
+    {
+        self.activeAction = nextAction;
+    }
 }
 
 - (void)actionFailed:(nullable ACMAction *)action

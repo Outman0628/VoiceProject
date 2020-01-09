@@ -10,7 +10,7 @@
 
 @interface AudioCallManager : NSObject
 
-+ (void) startAudioCall: ( nullable NSString *) appId  user:(nullable NSString *)userID  channel:(nullable NSString *)channelId rtcCallback:(id <IRTCCallBack> _Nullable)delegate;
++ (void) startAudioCall: ( nullable NSString *) appId  user:(nullable NSString *)userID  channel:(nullable NSString *)channelId rtcToken:(nullable NSString *)token rtcCallback:(id <IRTCCallBack> _Nullable)delegate;
 
 + (void) endAudioCall;
 

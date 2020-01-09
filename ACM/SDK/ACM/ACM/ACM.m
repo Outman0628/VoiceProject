@@ -10,10 +10,11 @@
 #import "ACM.h"
 
 #import <AgoraRtmKit/AgoraRtmKit.h>
-#import "RTM/RunTimeMsgManager.h"
+#import "Message/RunTimeMsgManager.h"
 #import "RTC/AudioCallManager.h"
 #import "Action/ActionManager.h"
 #import "Action/EventData.h"
+#import "Message/ApnsMessageManager.h"
 
 //static NSString *AppId = nil;
 //static NSString *UserId = nil;
@@ -23,16 +24,16 @@ static ActionManager *actionMgr = nil;
 
 
 
-+ (void) initManager: ( nullable NSString *) appId  acmCallback:(id <IACMCallBack> _Nullable)delegate{
-     NSLog(@"init manager3");
++ (void) initManager: ( nullable NSString *) appId backendHost:(nullable NSString *)host apnsToken:(nullable NSString *)token acmCallback:(id <IACMCallBack> _Nullable)delegate{
+     NSLog(@"init manager4");
     /*
     AppId = appId;
     [RunTimeMsgManager init:appId acmCallback:delegate];
      */
     if(actionMgr == nil)
     {
-        EventData eventData = {EventInitSDK, 0,0,0,appId,delegate,nil};
-        actionMgr = [ActionManager alloc];
+        EventData eventData = {EventInitSDK, 0,0,0,appId,delegate,host,token};
+        actionMgr = [[ActionManager alloc]init];
         [actionMgr HandleEvent:eventData];
     }
 }
@@ -86,9 +87,41 @@ static ActionManager *actionMgr = nil;
 }
 
 + (nullable NSString*) ringAudioCall: ( nullable NSString *)peerId{
+    /*
     NSString *channelId = [RunTimeMsgManager invitePhoneCall:peerId acountRemote:actionMgr.userId];
     [AudioCallManager startAudioCall:actionMgr.appId user:actionMgr.userId channel:channelId rtcCallback:nil];
     return channelId;
+     */
+    
+    if(actionMgr != nil)
+    {
+        //EventData eventData = {EventDial, 0,0,0,peerId};
+        
+        EventData eventData = {EventDial, 0,0,0,peerId};
+        [actionMgr HandleEvent:eventData];
+    }
+    return nil;
+}
+
++ (void) ringRobotAudioCall
+{
+    if(actionMgr != nil)
+    {
+        EventData eventData = {EventDialRobotDemo, 0,0,0,nil};
+        [actionMgr HandleEvent:eventData];
+    }    
+}
+
++ (BOOL) handleApnsMessage:(nonnull NSDictionary *)message{
+    
+    BOOL ret = NO;
+    if(actionMgr != nil)
+    {
+        [ApnsMessageManager handleApnsMessage:message actionManager:actionMgr];
+        ret = YES;
+    }
+    
+    return ret;
 }
 
 

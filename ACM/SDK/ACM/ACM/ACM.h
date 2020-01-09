@@ -22,10 +22,11 @@ FOUNDATION_EXPORT const unsigned char ACMVersionString[];
  初始化通话监听服务
  
  @param appId 声网项目APP ID
- 
+ @param host  音视频通话后台服务地址
+ @param token 苹果消息推送token
  @param delegate 通过后监听回调.
  */
-+ (void) initManager: ( nullable NSString *) appId  acmCallback:(id <IACMCallBack> _Nullable)delegate;
++ (void) initManager: ( nullable NSString *) appId backendHost:(nullable NSString *)host apnsToken:(nullable NSString *)token acmCallback:(id <IACMCallBack> _Nullable)delegate;
 
 /**
  在通过监听服务中登录注册本机用户
@@ -82,5 +83,22 @@ FOUNDATION_EXPORT const unsigned char ACMVersionString[];
  
  */
 + (nullable NSString*) ringAudioCall: (nullable NSString *)peerId;
+
+/*
+ 处理APNS 推送消息
+ 
+ @param message apns 推送消息
+ @return YES 已处理，No 还未初始化，处理失败
+ */
+
++ (BOOL) handleApnsMessage:(nonnull NSDictionary *)message;
+
+/**
+ 拨打给语音助手  // 测试接口
+ 
+ */
++ (void) ringRobotAudioCall;
+
+
 
 @end

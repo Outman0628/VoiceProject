@@ -9,7 +9,7 @@
 #ifndef ACMCommon_h
 #define ACMCommon_h
 
-#import "RTM/IACMCallBack.h"
+#import "IACMCallBack.h"
 
 /**
  Connection states between the SDK and the Agora RTM system.
@@ -48,6 +48,21 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     
     // 结束通话
     EventRtmLeaveCall = 11,
+    
+    // 拨号
+    EventDial = 12,
+    
+    // 拨号方结束拨号
+    EventCancelCall = 13,
+    
+    // 拨号方结束拨号(接收方处理)
+    EventRTMCancelCall = 14,
+    
+    // 获取到Apns 电话推送消息
+    EventGotApnsAudioCall = 15,
+    
+    // 拨号
+    EventDialRobotDemo = 10000,
 };
 
 typedef struct _AcmParam {
