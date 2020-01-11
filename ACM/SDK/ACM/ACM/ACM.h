@@ -16,6 +16,8 @@ FOUNDATION_EXPORT const unsigned char ACMVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <ACM/PublicHeader.h>
 #import "IACMCallBack.h"
+#import "IRTCCallBack.h"
+#import "ACMEnums.h"
 
 @interface ACM : NSObject
 /**
@@ -51,38 +53,35 @@ FOUNDATION_EXPORT const unsigned char ACMVersionString[];
  接听电话
  
  @param channelId 通话请求频道
- 
+ @param delegate 通话回调
  */
-+ (void) agreeCall: ( nullable NSString *)channelId;
++ (void) agreeCall: ( nullable NSString *)channelId ircmCallback:(id <IRTCCallBack> _Nullable)delegate;
 
 /**
  拒接电话
  
  @param channel 通话渠道号
  
- @param peerId 通话id.
- 
  */
-+ (void) rejectCall: ( nullable NSString *)channel fromPeer:( nullable NSString * )peerId;
++ (void) rejectCall: ( nullable NSString *)channel;
 
 /**
  结束电话
  
  @param channel 通话渠道号
  
- @param peerId 通话id.
- 
  */
-+ (void) leaveCall: ( nullable NSString *)channel fromPeer:( nullable NSString * )peerId;
++ (void) leaveCall: ( nullable Call *)call;
 
 /**
  拨打电话
  
  @param peerId 对方ID
- 注意：该接口以后要更改，通话接口channel id 将由服务器来生成，以后会由回调通知APP
+ @param delegate 通话回调
+ @return 拨打对象
  
  */
-+ (nullable NSString*) ringAudioCall: (nullable NSString *)peerId;
++ (nullable Call *) ringAudioCall: (nullable NSString *)peerId ircmCallback:(id <IRTCCallBack> _Nullable)delegate;
 
 /*
  处理APNS 推送消息

@@ -22,6 +22,8 @@
 @property id<IACMCallBack> _Nullable  icmCallBack;
 
 
++(ActionManager *_Nullable)instance;
+
 /*
  初始化
  */

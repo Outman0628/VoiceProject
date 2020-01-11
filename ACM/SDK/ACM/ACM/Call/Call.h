@@ -8,7 +8,7 @@
 
 #ifndef Call_h
 #define Call_h
-
+#import "IRTCCallBack.h"
 @class ActionManager;
 
 // 电话类型
@@ -59,11 +59,32 @@ typedef NS_ENUM(NSInteger, RoleType) {
 // 发起者uid
 @property NSString * _Nonnull callerId;
 // 接听者列表
-@property NSArray *  _Nonnull subscriberList;
+@property NSMutableArray *  _Nonnull subscriberList;
 // 本机uid
 @property NSString * _Nonnull selfId;
 // 通话频道
 @property NSString * _Nullable channelId;
+// 通话token 只属于本机uid
+@property NSString * _Nullable token;
+// 本通话所使用的声网app id
+@property NSString * _Nullable appId;
+// 状态回调
+@property id <IRTCCallBack> _Nullable callback;
+
+/*
+ *对象初始化
+ */
+-(id _Nullable )init;
+
+/*
+ *添加接听对象
+ */
+-(void)addSubscriber: (nonnull NSString *)subscriberId;
+
+/*
+ *添加接听对象
+ */
+-(void)updateStage: (CallStage) stage;
 
 @end
 

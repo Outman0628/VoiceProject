@@ -61,6 +61,21 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     // 获取到Apns 电话推送消息
     EventGotApnsAudioCall = 15,
     
+    // RTM 拨号消息失败
+    EventRtmDialFailed = 16,
+    
+    // 自己进入RTC 成功
+    EventSelfInChannelSucceed = 17,
+    
+    // 用户进入RTC 成功
+    EventDidJoinedOfUid = 18,
+    
+    // RTC warning
+    EventDidRtcOccurWarning = 19,
+    
+    // RTC Error
+    EventDidRtcOccurError = 20,
+    
     // 拨号
     EventDialRobotDemo = 10000,
 };

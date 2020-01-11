@@ -15,6 +15,8 @@
 #import "../Message/RunTimeMsgManager.h"
 #import "../Call/CallManager.h"
 
+static ActionManager* actionMgrInstance = nil;
+
 @interface ActionManager()
 // 当前Action
 @property  ACMAction *activeAction;
@@ -23,10 +25,15 @@
 
 @implementation ActionManager
 
++(ActionManager *_Nullable)instance
+{
+    return actionMgrInstance;
+}
+
 -(id _Nullable )init
 {
     if (self = [super init]) {
-        
+        actionMgrInstance = self;
         self.callMgr = [[CallManager alloc]init];
     }
     return self;

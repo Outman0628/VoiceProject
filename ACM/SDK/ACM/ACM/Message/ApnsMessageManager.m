@@ -17,7 +17,7 @@
 @implementation ApnsMessageManager
 
 + (BOOL) handleApnsMessage:(nonnull NSDictionary *)message actionManager:(nonnull ActionManager *)actionMgr
-{
+{         
     BOOL ret = YES;
     
     if(message != nil && message[@"aps"] != nil && message[@"aps"][@"userInfo"] != nil)
@@ -36,7 +36,7 @@
             }
             else
             {
-                Call *instance = [actionMgr.callMgr createReceveCall:userInfo];
+                Call *instance = [actionMgr.callMgr createReceveCall:userInfo userAccount:[ActionManager instance].userId];
                 EventData eventData = {EventGotApnsAudioCall, 0,0,0,instance};
                 [actionMgr HandleEvent:eventData];
             }

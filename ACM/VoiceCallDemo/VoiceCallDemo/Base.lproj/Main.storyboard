@@ -94,6 +94,14 @@
                                             <action selector="audioCall:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SYJ-HK-hbr"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="32G-Ww-sCH">
+                                        <rect key="frame" x="161" y="90" width="92" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="拨打语音助手"/>
+                                        <connections>
+                                            <action selector="callRobot:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ud0-eh-MIf"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
@@ -117,6 +125,17 @@
                                         </state>
                                         <connections>
                                             <action selector="answerCall:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DsC-6T-qm6"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5K8-hM-XFv">
+                                        <rect key="frame" x="114" y="280" width="184" height="51"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="32"/>
+                                        <state key="normal" title="挂断">
+                                            <color key="titleColor" red="0.91372549020000005" green="0.23529411759999999" blue="0.058823529409999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="rejectCall:" destination="BYZ-38-t0r" eventType="touchUpInside" id="vDt-EF-2IG"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Moy-mX-8hd">
@@ -173,10 +192,12 @@
                         <outlet property="answerCallBtn2" destination="EiK-kK-ATJ" id="3If-bo-tdW"/>
                         <outlet property="answerPanel" destination="4t7-15-lu5" id="bkE-jk-Xed"/>
                         <outlet property="callPanel" destination="4PM-SR-UDR" id="EG4-e0-4Sl"/>
+                        <outlet property="callRobotBtn" destination="32G-Ww-sCH" id="xkz-eI-ahh"/>
                         <outlet property="endCallBtn" destination="WZ2-oS-yVD" id="jw5-di-PUt"/>
                         <outlet property="endCallBtn2" destination="Moy-mX-8hd" id="31o-B1-9NI"/>
                         <outlet property="msgTextField" destination="yIo-lf-BlW" id="kqQ-qB-gOq"/>
                         <outlet property="regBtn" destination="qhP-ot-XAC" id="NRM-C1-sKw"/>
+                        <outlet property="rejectBtn" destination="5K8-hM-XFv" id="74V-jJ-qEN"/>
                         <outlet property="remoteMsgLabel" destination="Qp4-4m-a0L" id="pdw-JI-4v5"/>
                         <outlet property="remoteUserIdLabel" destination="QHj-Et-KOY" id="exs-Hc-WRX"/>
                         <outlet property="remoteUserIdLabel2" destination="IZz-7A-lYL" id="fiQ-6E-Hvc"/>

@@ -13,6 +13,7 @@
 #import "ActionManager.h"
 #import "IACMCallBack.h"
 #import "../RTC/AudioCallManager.h"
+#import "InComeDialAction.h"
 
 @interface MonitorAction()
 
@@ -40,26 +41,18 @@
     if(eventData.type == EventGotRtmAudioCall){
         [self HandleRtmCallReq:eventData];
     }
-    else if(eventData.type == EventAgreeAudioCall)
-    {
-         [self HandleAnswerCall:eventData];
-    }
-    else if(eventData.type == EventRejectAudioCall)
-    {
-        [self HandleRejectCall:eventData];
-    }
+    /*
     else if(eventData.type == EventRtmRejectAudioCall)
     {
         [self HandleRemoteRejectcall:eventData];
     }
-    else if(eventData.type == EventLeaveCall)
-    {
-        [self leaveCall:eventData];
-    }
+     */
+/*
     else if(eventData.type == EventRtmLeaveCall)
     {
         [self remoteLeaveCall:eventData];
     }
+ */
     else if(eventData.type == EventDial)
     {
         [self dialPhoneCall:eventData];
@@ -75,14 +68,9 @@
     
 }
 
+
 -(void) HandleRtmCallReq: (EventData) eventData{
     /*
-     if(acmCallBack != nil){
-     [acmCallBack onCallReceived:dic[@"channel"] fromPeer:peerId];
-     }
-     */
-    
-    //EventData eventData = {EventGotRtmAudioCall, 0,0,0,dic[@"channel"],peerId,acmCallBack};
     Call *call = eventData.param4;
     id<IACMCallBack> callBack = self.actionMgr.icmCallBack;
     if(callBack != nil)
@@ -90,12 +78,20 @@
         [callBack onCallReceived:call.channelId fromPeer:call.callerId];
         self.channelID = call.channelId;
     }
+     */
+    
+    InComeDialAction* inComeDialAction = [[InComeDialAction alloc]init];
+    
+    [self.actionMgr actionChange:self destAction:inComeDialAction];
+    
+    [self.actionMgr HandleEvent:eventData];
 }
+ 
 
 -(void) HandleApnsCallReq: (EventData) eventData{
     
     
-    //EventData eventData = {EventGotRtmAudioCall, 0,0,0,dic[@"channel"],peerId,acmCallBack};
+    /*
     id<IACMCallBack> callBack = self.actionMgr.icmCallBack;
     Call *call = eventData.param4;
     
@@ -104,17 +100,14 @@
         [callBack onCallReceived:call.channelId fromPeer:call.callerId];
         self.channelID = call.channelId;
     }
+     */
+    InComeDialAction* inComeDialAction = [[InComeDialAction alloc]init];
+    
+    [self.actionMgr actionChange:self destAction:inComeDialAction];
+    
+    [self.actionMgr HandleEvent:eventData];
 }
-
-- (void) HandleAnswerCall: (EventData) eventData{
-    [AudioCallManager startAudioCall:eventData.param4 user:eventData.param5 channel:eventData.param6 rtcToken:nil rtcCallback:eventData.param7];
-}
-
-- (void) HandleRejectCall: (EventData) eventData{
-    [RunTimeMsgManager rejectPhoneCall:eventData.param4  userAccount:self.actionMgr.userId  channelID:eventData.param5];
-    self.channelID = nil;
-}
-
+/*
 - (void) HandleRemoteRejectcall: (EventData) eventData{
     id<IACMCallBack> callBack = eventData.param6;
     self.channelID = nil;
@@ -125,13 +118,9 @@
     }
     
 }
+ */
 
-- (void) leaveCall: (EventData) eventData{
-    [RunTimeMsgManager leaveCall:eventData.param4  userAccount:self.actionMgr.userId  channelID:eventData.param5];
-    [AudioCallManager endAudioCall];
-    self.channelID = nil;
-}
-
+/*
 - (void) remoteLeaveCall: (EventData) eventData{
     id<IACMCallBack> callBack = eventData.param6;
     self.channelID = nil;
@@ -142,6 +131,7 @@
     
     [AudioCallManager endAudioCall];
 }
+ */
 
 -(void) dialPhoneCall:(EventData) eventData{
     //(nonnull ActionManager *) mgr userAcount:(nonnull NSString *)userId remoteAcount:(nonnull NSString *)peerId{

@@ -25,6 +25,12 @@ typedef NS_ENUM(NSInteger, ActionType) {
     
     // 拨号 Action
     ActionDial = 4,
+    
+    // 通话请求 Action
+    ActionInComeDial = 5,
+    
+    // 通话 Action
+    ActionOnPhone = 6,
 };
 
 

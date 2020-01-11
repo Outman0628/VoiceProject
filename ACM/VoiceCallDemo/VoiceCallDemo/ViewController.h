@@ -10,6 +10,7 @@
 #import "BasicViewController.h"
 
 @interface ViewController : BasicViewController
-
+- (void) handleApnsToken: (nullable NSString *)token;
+- (BOOL) handleApnsMessage:(nonnull NSDictionary *)message;
 @end
 

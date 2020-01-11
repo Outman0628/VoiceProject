@@ -60,33 +60,33 @@ static ActionManager *actionMgr = nil;
     }
 }
 
-+ (void) agreeCall: ( nullable NSString *)channelId{
++ (void) agreeCall: ( nullable NSString *)channelId ircmCallback:(id <IRTCCallBack> _Nullable)delegate{
     //[AudioCallManager startAudioCall:AppId user:UserId channel:channelId rtcCallback:nil];
     if(actionMgr != nil)
     {
-        EventData eventData = {EventAgreeAudioCall, 0,0,0,actionMgr.appId,actionMgr.userId,channelId,nil};
+        EventData eventData = {EventAgreeAudioCall, 0,0,0,channelId,delegate};
         [actionMgr HandleEvent:eventData];
     }
 }
 
-+ (void) rejectCall: ( nullable NSString * )channel fromPeer:( nullable NSString *)peerId{
++ (void) rejectCall: ( nullable NSString * )channel{
     if(actionMgr != nil)
     {
-        EventData eventData = {EventRejectAudioCall, 0,0,0,peerId,channel,nil};
+        EventData eventData = {EventRejectAudioCall, 0,0,0,channel};
         [actionMgr HandleEvent:eventData];
     }
 }
 
-+ (void) leaveCall: ( nullable NSString *)channel fromPeer:( nullable NSString * )peerId{
++ (void) leaveCall: ( nullable Call *)call{
     if(actionMgr != nil)
     {
-        EventData eventData = {EventLeaveCall, 0,0,0,peerId,channel,nil};
+        EventData eventData = {EventLeaveCall, 0,0,0,call};
         [actionMgr HandleEvent:eventData];
     }
    // [AudioCallManager endAudioCall];
 }
 
-+ (nullable NSString*) ringAudioCall: ( nullable NSString *)peerId{
++ (nullable Call *) ringAudioCall: (nullable NSString *)peerId ircmCallback:(id <IRTCCallBack> _Nullable)delegate{
     /*
     NSString *channelId = [RunTimeMsgManager invitePhoneCall:peerId acountRemote:actionMgr.userId];
     [AudioCallManager startAudioCall:actionMgr.appId user:actionMgr.userId channel:channelId rtcCallback:nil];
@@ -96,10 +96,12 @@ static ActionManager *actionMgr = nil;
     if(actionMgr != nil)
     {
         //EventData eventData = {EventDial, 0,0,0,peerId};
-        
-        EventData eventData = {EventDial, 0,0,0,peerId};
+        Call *call = [CallManager prepareDialCall:peerId ircmCallback:delegate];
+        EventData eventData = {EventDial, 0,0,0,peerId,delegate,call};
         [actionMgr HandleEvent:eventData];
+        return call;
     }
+    
     return nil;
 }
 

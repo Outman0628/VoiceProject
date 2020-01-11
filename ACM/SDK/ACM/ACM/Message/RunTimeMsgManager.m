@@ -115,8 +115,18 @@ static ActionManager *actionMgr = nil;
            }];
 }
 
++ (void)invitePhoneCall: (nonnull Call*) call
+{
+    for (int i=0; i<[call.subscriberList count]; i++) {
+        NSString *peerId = call.subscriberList[i];
+        [RunTimeMsgManager inviteSinglePhoneCall:peerId accountUser:call.callerId channelInfo:call.channelId call:call];
+    }
+    
+    
+}
+
 // 发起邀请
-+ (nullable NSString *)invitePhoneCall: (nullable NSString *)remoteUid acountRemote:(nullable NSString *)userId channelInfo:(nullable NSString *)channelId{
++ (void)inviteSinglePhoneCall: (nonnull NSString *)remoteUid accountUser:(nullable NSString *)userId channelInfo:(nullable NSString *)channelId call:(nonnull Call*)callInstance{
     NSDictionary * rtmNotifyBean =
     @{@"title":@"audiocall",
       @"accountCaller": userId,
@@ -140,16 +150,18 @@ static ActionManager *actionMgr = nil;
                {
                    // [self showAlert: @"消息已发送!"];
                    NSLog(@"Send phone call succeed!");
+
                }
                else
                {
-                   NSString *errNote =  [[NSString alloc] initWithString:[NSString stringWithFormat:@"Send phone call failed:%d", (int)errorCode]];
+                   NSString *errNote =  [[NSString alloc] initWithString:[NSString stringWithFormat:@"inviteSinglePhoneCall phone call failed:%d", (int)errorCode]];
                    //[self showAlert: errNote];
                    NSLog(@"%@",errNote);
+                   
+                   EventData eventData = {EventRtmDialFailed, errorCode,0,0,remoteUid,callInstance};
+                   [actionMgr HandleEvent:eventData];
                }
            }];
-    
-    return rtmNotifyBean[@"channel"];
 }
 
 // 拒绝邀请
@@ -286,7 +298,7 @@ static ActionManager *actionMgr = nil;
         }
         else
         {
-            Call *instance = [actionMgr.callMgr createReceveCall:dic];
+            Call *instance = [actionMgr.callMgr createReceveCall:dic userAccount:[ActionManager instance].userId];
             EventData eventData = {EventGotRtmAudioCall, 0,0,0,instance};
             [actionMgr HandleEvent:eventData];
         }
@@ -298,7 +310,7 @@ static ActionManager *actionMgr = nil;
     }
     else if( [title isEqualToString:@"leave"] )
     {
-        EventData eventData = {EventRtmLeaveCall, 0,0,0,dic[@"channel"],peerId,acmCallBack};
+        EventData eventData = {EventRtmLeaveCall, 0,0,0,dic[@"channel"]};
         [actionMgr HandleEvent:eventData];
     }
 }

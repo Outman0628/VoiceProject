@@ -9,10 +9,19 @@
 #import "ViewController.h"
 #import <AgoraRtmKit/AgoraRtmKit.h>
 #import <ACM/ACM.h>
+#import "AppDelegate.h"
 
-@interface ViewController ()  <IACMCallBack>
 
-@property (nonatomic, copy) NSString *answerChannelId;
+
+@interface ViewController ()  <IACMCallBack, IRTCCallBack>
+@property NSDictionary *apnsMsg;
+@property BOOL inited;
+//@property (nonatomic, copy) NSString *answerChannelId;
+//@property (nonatomic, copy) NSString *peerId;
+@property Call* inComeCall;
+@property Call* outComeCall;
+
+//@property (nonatomic, copy) NSString *dialChannelId;
 
 @property (weak, nonatomic) IBOutlet UITextField *userIdTextField;
 @property (weak, nonatomic) IBOutlet UITextField *remoteUserIdTextField;
@@ -22,6 +31,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *regBtn;
 @property (weak, nonatomic) IBOutlet UIButton *sendMsgBtn;
 @property (weak, nonatomic) IBOutlet UIButton *callBtn;
+
+@property (weak, nonatomic) IBOutlet UIButton *callRobotBtn;
 
 @property (weak, nonatomic) IBOutlet UILabel *remoteMsgLabel;
 
@@ -35,6 +46,8 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *endCallBtn2;
 
+@property (weak, nonatomic) IBOutlet UIButton *rejectBtn;
+
 @property (weak, nonatomic) IBOutlet UIButton *answerCallBtn2;
 
 @property (weak, nonatomic) IBOutlet UILabel *remoteUserIdLabel2;
@@ -43,12 +56,52 @@
 
 @implementation ViewController
 
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    //[[AgoraRtmKit alloc] initWithAppId:@"appId" delegate:nil];
-    [ACM initManager:@"bc6642a5ce2c423c8419c20e2e9e239f" acmCallback:self];
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    appDelegate.viewController = self;
+    self.inited = false;
+   /*
+    NSString *token=[[NSUserDefaults standardUserDefaults] valueForKey:@"APNSToken"];
+    if(token != nil)
+    {
+         [ACM initManager:@"bc6642a5ce2c423c8419c20e2e9e239f" backendHost:@"http://voice.enjoyst.com/" apnsToken:token acmCallback:self ];
+    
+        [self handleApnsToken:token];
+    }
+    else
+    {
+        NSLog(@"获取推送token 失败!");
+    }
+   */
     [self initControls];
+}
+
+- (void) handleApnsToken: (nullable NSString *)token{
+    if(token != nil)
+    {
+        [ACM initManager:@"bc6642a5ce2c423c8419c20e2e9e239f" backendHost:@"http://voice.enjoyst.com" apnsToken:token acmCallback:self ];
+        [self autoLogin];
+    }
+    else
+    {
+        NSLog(@"获取推送token 失败!");
+    }
+}
+
+- (BOOL) handleApnsMessage:(nonnull NSDictionary *)message{
+    
+    if(self.inited == YES)
+    {
+        [ACM handleApnsMessage:message];
+        self.apnsMsg = nil;
+    }
+    else
+    {
+        self.apnsMsg = message;
+    }
+    return YES;
 }
 
 - (void) initControls{
@@ -57,6 +110,15 @@
     self.userIdTextField.returnKeyType =UIReturnKeyDone;
     self.remoteUserIdTextField.returnKeyType =UIReturnKeyDone;
     self.msgTextField.returnKeyType =UIReturnKeyDone;
+}
+
+- (void) autoLogin{
+    NSString *uid = [self readParam];
+    if(uid != nil && uid.length > 0)
+    {
+        self.userIdTextField.text = uid;
+        [self userRegist:nil];
+    }
 }
 
 - (Boolean)checkParameters {
@@ -150,17 +212,33 @@
         return;
     }
     
-    [ACM loginACM:self.userIdTextField.text completion:^(AgoraRtmLoginErrorCode errorCode) {
-        if (errorCode != AgoraRtmLoginErrorOk) {
+    [ACM loginACM:self.userIdTextField.text completion:^(AcmLoginErrorCode errorCode) {
+        if (errorCode != AcmRtmLoginErrorOk) {
             [self showAlert: [NSString stringWithFormat:@"login error: %ld", errorCode]];
             return;
         }
         else{
+            
+            self.inited = true;
             [self showAlert: @"注册成功"];
+            
+            if(self.apnsMsg != nil)
+            {
+                [ACM handleApnsMessage:self.apnsMsg];
+                
+                [self showAlert: @"倒入push msg"];
+            }
+            [self saveUser:self.userIdTextField.text];
             self.userIdTextField.enabled = false;
             self.regBtn.enabled = false;
         }
     }];
+}
+- (IBAction)callRobot:(id)sender {
+    [ACM ringRobotAudioCall];
+    
+    self.callPanel.hidden = false;
+    self.remoteUserIdLabel.text = @"语音助手";
 }
 
 - (IBAction)audioCall:(id)sender {
@@ -170,31 +248,77 @@
     }
     
     NSString *remoteUid = self.remoteUserIdTextField.text;
-    [ACM ringAudioCall:remoteUid];
+    //self.dialChannelId = [ACM ringAudioCall:remoteUid ircmCallback:nil];
+    self.outComeCall = [ACM ringAudioCall:remoteUid ircmCallback:self];
+
     
     self.callPanel.hidden = false;
     self.remoteUserIdLabel.text = remoteUid;
 }
 
 - (IBAction)endCall:(id)sender {
-    [ACM leaveCall:nil];
-    self.callPanel.hidden = true;
+    if(self.outComeCall != nil)
+    {
+        [ACM leaveCall:self.outComeCall];
+        self.callPanel.hidden = true;
+
+       
+    }
 }
 
 - (IBAction)endCall2:(id)sender {
-    [ACM leaveCall:nil];
-    self.answerPanel.hidden = true;
+    //[ACM leaveCall:nil];
+    if(self.inComeCall != nil)
+    {
+        [ACM leaveCall:self.inComeCall];
+        self.answerPanel.hidden = true;
+    }
 }
 
 - (IBAction)answerCall:(id)sender {
-    if(self.answerChannelId != nil)
+    if(self.inComeCall != nil)
     {
-        [ACM agreeCall:self.answerChannelId];
+        [ACM agreeCall:self.inComeCall.channelId ircmCallback:self];
         self.answerCallBtn2.hidden = true;
         self.endCallBtn2.hidden = false;
         self.answerPanel.hidden = false;
+        self.rejectBtn.hidden = true;
     }
 }
+
+- (IBAction)rejectCall:(id)sender {
+    if(self.inComeCall != nil)
+    {
+        [ACM rejectCall:self.inComeCall.channelId];
+        self.inComeCall = nil;
+        self.answerPanel.hidden = true;
+    }
+}
+
+- (void)saveUser: (nonnull NSString *) uid{
+    // 要保存的数据
+    NSDictionary *dict = [NSDictionary dictionaryWithObject:uid forKey:@"uid"];
+    
+    // 获取路径.
+    NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject;
+    NSString *filePath = [documentPath stringByAppendingPathComponent:@"loginToken.plist"];
+    
+    // 写入数据
+    [dict writeToFile:filePath atomically:YES];
+}
+
+- (nullable NSString *)readParam{
+    // 文件路径
+    NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject;
+    NSString *filePath = [documentPath stringByAppendingPathComponent:@"loginToken.plist"];
+    
+    // 解析数据
+    NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:filePath];
+    NSString *result = dict[@"uid"];
+    NSLog(@"token: %@", result);
+    return result;
+}
+
 
 #pragma mark - IACMCallBack
 - (void)connectionStateChanged:(AgoraRtmConnectionState)state reason:(AgoraRtmConnectionChangeReason)reason{
@@ -215,13 +339,79 @@
 
 
 
-- (void)onCallReceived:(NSString * _Nonnull)channel fromPeer:(NSString * _Nonnull)peerId{
-    self.answerChannelId = channel;
+- (void)onCallReceived:(nonnull Call *)call{
+   
+    self.inComeCall = call;
+    
     self.answerCallBtn2.hidden = false;
     self.endCallBtn2.hidden = true;
     self.answerPanel.hidden = false;
-    self.remoteUserIdLabel2.text = peerId;
+    self.remoteUserIdLabel2.text = call.callerId;
+    self.rejectBtn.hidden = false;
     
+}
+
+
+- (void)onRemoteLeaveCall:(NSString * _Nonnull)channel fromPeer:(NSString * _Nonnull)peerId{
+   
+
+    self.answerPanel.hidden = true;
+    self.callPanel.hidden = true;
+    [self showAlert: [NSString stringWithFormat:@"对方结束通话"]];
+}
+
+#pragma mark - IRTCCallBack
+
+// 拨号结果
+- (void)didPhoneDialResult:(AcmDialCode)dialCode{
+    switch (dialCode) {
+        case AcmDialSucced:
+
+            [self showAlert:@"拨号接通，开始通话"];
+            break;
+        case AcmDialConnectTimeout:
+            [self showAlert:@"超时未接听"];
+            break;
+        case AcmDialRemoteReject:
+           
+            self.callPanel.hidden = true;
+            [self showAlert:@"对方拒接电话"];
+            break;
+        case AcmDialErrorApplyCall:
+            [self showAlert:@"拨号失败：请求拨号通话服务失败，请检查配置和网路"];
+            break;
+        case AcmDialErrorWrongApplyCallResponse:
+            [self showAlert:@"拨号失败：服务器返回错误通话配置"];
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)didPhoneCallResult:(AcmPhoneCallCode)endCode
+{
+    self.answerPanel.hidden = true;
+    self.callPanel.hidden = true;
+    [self showAlert: [NSString stringWithFormat:@"通话结束:%ld", (long)endCode]];
+}
+
+
+// 通话中warning 发生时回调
+- (void)didPhonecallOccurWarning:(AgoraWarningCode)warningCode
+{
+    NSLog(@"通话服务警告:%ldd", (long)warningCode);
+}
+
+//  通话中error 发生时回调
+ - (void)didOccurError:(AgoraErrorCode)errorCode
+{
+    NSLog(@"通话服务错误:%ldd", (long)errorCode);
+}
+
+
+- (void)didJoinChannel:(NSString * _Nonnull)channel withUid:(NSUInteger)uid elapsed:(NSInteger) elapsed
+{
+    NSLog(@"用户:%lu加入通话",(unsigned long)uid);
 }
 
 

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "AudioCallManager.h"
+#import "../Action/ActionManager.h"
 
 static AgoraRtcEngineKit *_rtcKit = nil;
 static AudioCallManager *instance = nil;
@@ -17,7 +18,7 @@ static AudioCallManager *instance = nil;
 
 @implementation AudioCallManager
 
-+ (void) startAudioCall: ( nullable NSString *) appId  user:(nullable NSString *)userID  channel:(nullable NSString *)channelId rtcToken:(nullable NSString *)token  rtcCallback:(id <IRTCCallBack> _Nullable)delegate{
++ (void) startAudioCall: ( nullable NSString *) appId  user:(nullable NSString *)userID  channel:(nullable NSString *)channelId rtcToken:(nullable NSString *)token callInstance:(nonnull Call*) call{
     
     if(_rtcKit == nil)
     {
@@ -46,6 +47,8 @@ static AudioCallManager *instance = nil;
     
     [_rtcKit joinChannelByUserAccount:userID token:token channelId:channelId joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {
         NSLog(@"Succeed to join RTC channel");
+        EventData eventData = {EventSelfInChannelSucceed, 0,0,0,call};
+        [[ActionManager instance]  HandleEvent:eventData];
     }];
     
     [_rtcKit setEnableSpeakerphone:YES];
@@ -65,16 +68,28 @@ static AudioCallManager *instance = nil;
 
 - (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didOccurWarning:(AgoraWarningCode)warningCode
 {
+    EventData eventData = {EventDidRtcOccurWarning, warningCode};
+    [[ActionManager instance]  HandleEvent:eventData];
     NSLog(@"RTC warning:%ld", (long)warningCode);
 }
 - (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didOccurError:(AgoraErrorCode)errorCode
 {
+    EventData eventData = {EventDidRtcOccurError, errorCode};
+    [[ActionManager instance]  HandleEvent:eventData];
     NSLog(@"RTC error:%ld", (long)errorCode);
 }
 
 - (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didJoinChannel:(NSString * _Nonnull)channel withUid:(NSUInteger)uid elapsed:(NSInteger) elapsed
 {
-    NSLog(@"RTC didJoinChannel:channel%@, userID:%@, elapsed:%ld", channel,uid,(long)elapsed);
+    //NSLog(@"RTC didJoinChannel:channel%@, userID:%@, elapsed:%ld", channel,uid,(long)elapsed);
+    //EventData eventData = {EventDidRTCJoinChannel, uid,elapsed,0,channel};
+    //[[ActionManager instance]  HandleEvent:eventData];
+}
+
+- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didJoinedOfUid:(NSUInteger)uid elapsed:(NSInteger)elapsed
+{
+    EventData eventData = {EventDidJoinedOfUid, uid,elapsed,0,nil};
+    [[ActionManager instance]  HandleEvent:eventData];
 }
 
 @end

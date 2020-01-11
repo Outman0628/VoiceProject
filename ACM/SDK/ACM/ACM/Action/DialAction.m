@@ -15,6 +15,7 @@
 #import "IACMCallBack.h"
 #import "../RTC/AudioCallManager.h"
 #import "MonitorAction.h"
+#import "OnPhoneAction.h"
 
 static NSString *DialApi = @"/dapi/call/user";
 static NSString *DialRobot = @"/dapi/call/robot";
@@ -23,10 +24,10 @@ static NSString *DialRobot = @"/dapi/call/robot";
 
 @property ActionManager* actionMgr;
 @property NSString* userId;
-@property NSString* peerId;
 @property NSString* channelId;
 @property NSString* rtcToken;
 @property BOOL robotMode;
+@property Call *curCall;
 @end
 
 @implementation DialAction
@@ -44,32 +45,63 @@ static NSString *DialRobot = @"/dapi/call/robot";
 - (void) HandleEvent: (EventData) eventData{
     if(eventData.type == EventDial)
     {
-        self.peerId = eventData.param4;
+        
         [self HanleDialWorkFlow:eventData];
     }
     else if(eventData.type == EventDialRobotDemo)
     {
         [self RequestRobotCall];
     }
+    
     else if(eventData.type == EventLeaveCall)
     {
         [self leaveCall:eventData];
     }
+    
     else if(eventData.type == EventRtmRejectAudioCall)
     {
         [self HandleRemoteRejectcall:eventData];
     }
+    
     else if(eventData.type == EventRtmLeaveCall)
     {
         [self remoteLeaveCall:eventData];
     }
+     
+    else if(eventData.type == EventRtmDialFailed)
+    {
+        // todo 拨号RTM 拨号问题
+    }
+    else if(eventData.type == EventSelfInChannelSucceed)
+    {}
+    else if(eventData.type == EventDidJoinedOfUid)
+    {
+        [self HandleEventDidJoinedOfUid:eventData];
+    }
+    else if(eventData.type == EventDidRtcOccurWarning)
+    {}
+    else if(eventData.type == EventDidRtcOccurError)
+    {}
+}
+
+- (void) HandleEventDidJoinedOfUid: (EventData) eventData{
+    if(self.curCall != nil && self.curCall.callback != nil)
+    {
+        [self.curCall.callback didPhoneDialResult:AcmDialSucced];
+    }
+    
+    [self.curCall updateStage:OnPhone];
+    // 跳转到OnPhoneAction
+    OnPhoneAction * action = [[OnPhoneAction alloc]init];
+    
+    [self.actionMgr actionChange:self destAction:action];
 }
 
 - (void) HanleDialWorkFlow: (EventData) eventData{
-    [self RequestPhoneCallInfo];
+    [self RequestPhoneCallInfo:eventData];
 }
 
-- (void) RequestPhoneCallInfo{
+- (void) RequestPhoneCallInfo:(EventData) eventData{
     NSString *stringUrl = [NSString stringWithFormat:@"%@%@",self.actionMgr.host, DialApi];
     
     NSURL *url = [NSURL URLWithString:stringUrl];
@@ -80,14 +112,14 @@ static NSString *DialRobot = @"/dapi/call/robot";
     
     request.HTTPMethod = @"POST";
     
-    NSString *bodyString = [NSString stringWithFormat:@"src_uid=%@&dst_uid=%@", self.userId,self.peerId]; //带一个参数key传给服务器
+    NSString *bodyString = [NSString stringWithFormat:@"src_uid=%@&dst_uid=%@", [ActionManager instance].userId,eventData.param4]; //带一个参数key传给服务器
     
     request.HTTPBody = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
     
     NSURLSession *session = [NSURLSession sharedSession];
     
     [[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        
+        NSLog(@"response code:@d", [(NSHTTPURLResponse *)response statusCode]);
         if([(NSHTTPURLResponse *)response statusCode] == 200){
             NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
             NSData *jsonData = [str dataUsingEncoding:NSUTF8StringEncoding];
@@ -104,32 +136,68 @@ static NSString *DialRobot = @"/dapi/call/robot";
                     self.channelId = data[@"channel"];
                     self.rtcToken = data[@"token"];
                    
-                    [RunTimeMsgManager invitePhoneCall:self.peerId acountRemote:self.userId channelInfo:self.channelId];
+
+                    //-( nonnull Call * )createDialCall: (nonnull NSDictionary *)callInfo remoteUser:(nonnull NSString *)peerId ircmCallback:(id <IRTCCallBack> _Nullable)delegate;
+                    Call *instance = [self.actionMgr.callMgr updateDialCall:data selfUid:self.actionMgr.userId remoteUser:eventData.param4 ircmCallback:eventData.param5 preInstance:eventData.param6];
                     
-                    [AudioCallManager startAudioCall:self.actionMgr.appId user:self.userId channel:self.channelId   rtcToken:nil rtcCallback:nil];
+                    
+                    
+                    [RunTimeMsgManager invitePhoneCall:instance];
+                    
+                    [AudioCallManager startAudioCall:self.actionMgr.appId user:self.userId channel:self.channelId   rtcToken:nil callInstance:instance];
+                    
+                    self.curCall = instance;
                     
                 }
                 else
                 {
-                    // deal with err
-                   
+                    // 通知错误发生
+                    id <IRTCCallBack> delegate = eventData.param5;
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        [delegate didPhoneDialResult: AcmDialErrorWrongApplyCallResponse];
+                    });
+                    
+                    
+                    // 跳转到Monitor 状态
+                    [self JumpBackToMonitorAction];
                 }
             }
             else
             {
-                self.userId = nil;
+                // 通知错误发生
+                id <IRTCCallBack> delegate = eventData.param5;
+                dispatch_async(dispatch_get_main_queue(),^{
+                    [delegate didPhoneDialResult: AcmDialErrorWrongApplyCallResponse];
+                });
                 
-                // todo deal with failed
+                
+                // 跳转到Monitor 状态
+                [self JumpBackToMonitorAction];
                 
             }
-            
-            
-            
         }
         else{
-            // todo deal with failed
+            // 通知错误发生
+            id <IRTCCallBack> delegate = eventData.param5;
+            
+            dispatch_async(dispatch_get_main_queue(),^{
+                [delegate didPhoneDialResult: AcmDialErrorApplyCall];
+            });
+            
+            // 跳转到Monitor 状态
+            [self JumpBackToMonitorAction];
         }
     }] resume];
+}
+
+// 跳转回Monitor Action
+- (void) JumpBackToMonitorAction{
+    // 跳转到Monitor 状态
+    MonitorAction * monitorAction = [[MonitorAction alloc]init:self.actionMgr];
+    
+    [self.actionMgr actionChange:self destAction:monitorAction];
+    
+    
 }
 
 - (void) RequestRobotCall{
@@ -169,7 +237,9 @@ static NSString *DialRobot = @"/dapi/call/robot";
                     
                     NSLog(@"Join to Robot channel:%@", self.channelId);
                     
-                    [AudioCallManager startAudioCall:data[@"appID"] user:self.userId channel:self.channelId   rtcToken:self.rtcToken rtcCallback:nil];                            
+                    
+                    
+                    [AudioCallManager startAudioCall:self.actionMgr.appId user:self.userId channel:self.channelId   rtcToken:nil callInstance:nil];
                     
                 }
                 else
@@ -196,43 +266,73 @@ static NSString *DialRobot = @"/dapi/call/robot";
         }
     }] resume];
 }
-
+// 以后更新为Cancel call
 - (void) leaveCall: (EventData) eventData{
-    [RunTimeMsgManager leaveCall:eventData.param4  userAccount:self.actionMgr.userId  channelID:eventData.param5];
-    [AudioCallManager endAudioCall];
+    Call * call = eventData.param4;
+    if(call.role == Originator)
+    {
+        //+ (void) leaveCall: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID{
+        if(call.channelId != nil)
+        {
+            [RunTimeMsgManager leaveCall:call.subscriberList[0]  userAccount:self.actionMgr.userId  channelID:call.channelId];
+            [AudioCallManager endAudioCall];
+            [call updateStage:Finished];
+        }
+        [self JumpBackToMonitorAction];
+    }
+    
 }
+ 
 
 - (void) HandleRemoteRejectcall: (EventData) eventData{
+    
+    /*
     id<IACMCallBack> callBack = eventData.param6;
    
     if(callBack != nil)
     {
         [callBack onRemoteRejectCall:eventData.param4 fromPeer:eventData.param5];
         
-        // 跳转到Monitor 状态
-        MonitorAction * monitorAction = [[MonitorAction alloc]init:self.actionMgr];
         
-        [self.actionMgr actionChange:self destAction:monitorAction];
-        
-        [self.actionMgr HandleEvent:eventData];
+    }
+     */
+    
+    Call *call = [self.actionMgr.callMgr getCall:eventData.param4];
+    if(call != nil && call.callback != nil)
+    {
+        [call.callback didPhoneDialResult:AcmDialRemoteReject];
+        [call updateStage:Finished];
     }
     
+    
+    // 跳转到Monitor 状态
+    [self JumpBackToMonitorAction];    
 }
 
+// change to cancel call
 - (void) remoteLeaveCall: (EventData) eventData{
-    id<IACMCallBack> callBack = eventData.param6;
-    if(callBack != nil)
+    Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
+    if(call != nil)
     {
-        [callBack onRemoteLeaveCall:eventData.param4 fromPeer:eventData.param5];
+        [call updateStage:Finished];
+        if(call.callback != nil)
+        {
+            [call.callback didPhoneCallResult:AcmPhoneCallCodeRemoteEnd];
+        }
+        [self JumpBackToMonitorAction];
     }
-    
-    [AudioCallManager endAudioCall];
-    // 跳转到Monitor 状态
-    MonitorAction * monitorAction = [[MonitorAction alloc]init:self.actionMgr];
-    
-    [self.actionMgr actionChange:self destAction:monitorAction];
-    
-    [self.actionMgr HandleEvent:eventData];
+}
+ 
+
+- (void) handleEventDidRTCJoinChannel: (EventData) eventData{
+    Call *call = [self.actionMgr.callMgr getCall:eventData.param4];
+    if(call != nil && call.callback != nil)
+    {
+        [call.callback didPhoneDialResult:AcmDialSucced];
+        [call updateStage:OnPhone];
+        
+        // todo 跳转到onphone action
+    }
 }
 
 @end
