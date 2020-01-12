@@ -29,9 +29,9 @@
 
 - (void) HandleEvent: (EventData) eventData
 {
-    if(eventData.type == EventAgreeAudioCall)
+    if(eventData.type == EventBackendAgreeAudioCall)
     {
-        [self HandleAnswerCall:eventData];
+        [self JoinAudioCall:eventData];
     }
     else if(eventData.type == EventLeaveCall)
     {
@@ -40,6 +40,10 @@
     else if(eventData.type == EventRtmLeaveCall)
     {
         [self remoteLeaveCall:eventData];
+    }
+    else if(eventData.type == EventRobotAnsweredCall)
+    {
+        [self HandleRobotAnsweredCall:eventData];
     }
 }
 
@@ -60,27 +64,57 @@
      
 }
 
-- (void) HandleAnswerCall: (EventData) eventData{
+- (void) JoinAudioCall: (EventData) eventData{
     /*
     [AudioCallManager startAudioCall:eventData.param4 user:eventData.param5 channel:eventData.param6 rtcToken:nil rtcCallback:eventData.param7];
      */
-    Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
+    Call *call = eventData.param4;
     if(call != nil)
     {
-        //+ (void) startAudioCall: ( nullable NSString *) appId  user:(nullable NSString *)userID  channel:(nullable NSString *)channelId rtcToken:(nullable NSString *)token callInstance:(nonnull Call*) call;
-        call.callback = eventData.param5;
-        [AudioCallManager startAudioCall:[ActionManager instance].appId user:call.selfId channel:call.channelId rtcToken:nil callInstance:call];
         
+        [AudioCallManager startAudioCall:call.appId user:call.selfId channel:call.channelId rtcToken:call.token callInstance:call];
+        
+        [AudioCallManager muteLocalAudioStream:false];
         
         [call updateStage:OnPhone];
         
     }
 }
 
+- (void) HandleRobotAnsweredCall: (EventData) eventData{
+    /*
+     [AudioCallManager startAudioCall:eventData.param4 user:eventData.param5 channel:eventData.param6 rtcToken:nil rtcCallback:eventData.param7];
+     */
+    Call *call = eventData.param4;
+    call.role = Observer;
+
+        [AudioCallManager startAudioCall:call.appId user:call.selfId channel:call.channelId rtcToken:call.token callInstance:call];
+    
+    [AudioCallManager muteLocalAudioStream:true];
+        
+    [call updateStage:OnPhone];
+        
+   
+}
+
 - (void) leaveCall: (EventData) eventData{
-    Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
+    Call *paramCall = eventData.param4;
+    Call *call = nil;
+    if(paramCall != nil)
+    {
+        call =  [[ActionManager instance].callMgr getCall:paramCall.channelId];
+    }
+    
     if(call != nil){
-        [RunTimeMsgManager leaveCall:call.callerId userAccount:call.selfId channelID:call.channelId];
+        if(call.role == Subscriber)  // 如果是观察者模式，不用给发起者发消息通知
+        {
+            [RunTimeMsgManager leaveCall:call.callerId userAccount:call.selfId channelID:call.channelId];
+        }
+        else if(call.role == Originator)
+        {
+            // todo 多人列表
+            [RunTimeMsgManager leaveCall:call.subscriberList[0] userAccount:call.selfId channelID:call.channelId];
+        }
         [AudioCallManager endAudioCall];
         [call updateStage:Finished];
         [self JumpBackToMonitorAction];

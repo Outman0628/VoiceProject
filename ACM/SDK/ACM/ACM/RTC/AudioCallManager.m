@@ -20,6 +20,8 @@ static AudioCallManager *instance = nil;
 
 + (void) startAudioCall: ( nullable NSString *) appId  user:(nullable NSString *)userID  channel:(nullable NSString *)channelId rtcToken:(nullable NSString *)token callInstance:(nonnull Call*) call{
     
+    NSLog(@"RTC start audio call. appID:%@  user:%@  channel:%@  rtcToken:%@", appId, userID, channelId, token);
+    
     if(_rtcKit == nil)
     {
         instance = [AudioCallManager alloc];
@@ -52,6 +54,16 @@ static AudioCallManager *instance = nil;
     }];
     
     [_rtcKit setEnableSpeakerphone:YES];
+}
+
++ (int)muteLocalAudioStream:(BOOL)mute
+{
+    if(_rtcKit != nil)
+    {
+        return [_rtcKit muteLocalAudioStream:mute];
+    }
+    
+    return -1;
 }
 
 

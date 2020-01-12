@@ -102,14 +102,30 @@ typedef NS_ENUM(NSInteger, AcmDialCode) {
     AcmDialRemoteReject = 3,
     
     /**
-     拨号申请失败.
+     机器人代接成功
+     */
+    AcmDialRobotAnswered = 4,
+    
+    /**
+     拨号申请失败(网络异常，服务器异常等)
      */
     AcmDialErrorApplyCall = -1,
     
     /**
-     拨号申请回复错误.
+     拨号申请回复错误(服务器回复内容不正确)
      */
     AcmDialErrorWrongApplyCallResponse = -2,
+    
+    
+    /**
+     拨号申请失败(网络异常，服务器异常等)
+     */
+    AcmDialErrorApplyAnswerCall = -3,
+    
+    /**
+     电话应答申请错误(服务器回复内容不正确)
+     */
+    AcmDialErrorWrongApplyAnswerCallResponse = -4,
     
 
 };

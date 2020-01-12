@@ -68,7 +68,7 @@ FOUNDATION_EXPORT const unsigned char ACMVersionString[];
 /**
  结束电话
  
- @param channel 通话渠道号
+ @param call 通话信息
  
  */
 + (void) leaveCall: ( nullable Call *)call;
@@ -97,6 +97,15 @@ FOUNDATION_EXPORT const unsigned char ACMVersionString[];
  
  */
 + (void) ringRobotAudioCall;
+
+/**
+ 请求语音助手代接
+ 
+ @param channelId 通话请求频道
+ @param delegate 通话回调
+ @return YES 已处理，No 还未初始化，处理失败
+ */
++ (BOOL) robotAnswerCall: ( nullable NSString *)channelId ircmCallback:(id <IRTCCallBack> _Nullable)delegate;
 
 
 

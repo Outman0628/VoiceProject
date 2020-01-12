@@ -50,6 +50,8 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *answerCallBtn2;
 
+@property (weak, nonatomic) IBOutlet UIButton *robotAnswerCallBtn;
+
 @property (weak, nonatomic) IBOutlet UILabel *remoteUserIdLabel2;
 
 @end
@@ -235,10 +237,12 @@
     }];
 }
 - (IBAction)callRobot:(id)sender {
+    
     [ACM ringRobotAudioCall];
     
     self.callPanel.hidden = false;
     self.remoteUserIdLabel.text = @"语音助手";
+    
 }
 
 - (IBAction)audioCall:(id)sender {
@@ -282,6 +286,18 @@
         self.answerCallBtn2.hidden = true;
         self.endCallBtn2.hidden = false;
         self.answerPanel.hidden = false;
+        self.robotAnswerCallBtn.hidden = true;
+        self.rejectBtn.hidden = true;
+    }
+}
+- (IBAction)robotAnserCall:(id)sender {
+    if(self.inComeCall != nil)
+    {
+        [ACM robotAnswerCall:self.inComeCall.channelId ircmCallback:self];
+        self.answerCallBtn2.hidden = true;
+        self.endCallBtn2.hidden = false;
+        self.answerPanel.hidden = false;
+        self.robotAnswerCallBtn.hidden = true;
         self.rejectBtn.hidden = true;
     }
 }
@@ -345,6 +361,7 @@
     
     self.answerCallBtn2.hidden = false;
     self.endCallBtn2.hidden = true;
+    self.robotAnswerCallBtn.hidden = false;
     self.answerPanel.hidden = false;
     self.remoteUserIdLabel2.text = call.callerId;
     self.rejectBtn.hidden = false;
@@ -377,11 +394,20 @@
             self.callPanel.hidden = true;
             [self showAlert:@"对方拒接电话"];
             break;
+        case AcmDialRobotAnswered:
+            [self showAlert:@"机器人代接成功"];
+            break;
+            
         case AcmDialErrorApplyCall:
             [self showAlert:@"拨号失败：请求拨号通话服务失败，请检查配置和网路"];
             break;
         case AcmDialErrorWrongApplyCallResponse:
             [self showAlert:@"拨号失败：服务器返回错误通话配置"];
+             self.callPanel.hidden = true;
+            break;
+        case AcmDialErrorWrongApplyAnswerCallResponse:
+            [self showAlert:@"应答电话申请,服务器返回错误配置"];
+            self.answerPanel.hidden = true;
             break;
         default:
             break;

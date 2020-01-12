@@ -15,6 +15,9 @@
 // todo 对接接听方请求有只保留call,appid参数
 + (void) startAudioCall: ( nullable NSString *) appId  user:(nullable NSString *)userID  channel:(nullable NSString *)channelId rtcToken:(nullable NSString *)token callInstance:(nonnull Call*) call;
 
+//开关本地音频发送
++ (int)muteLocalAudioStream:(BOOL)mute;
+
 + (void) endAudioCall;
 
 @end

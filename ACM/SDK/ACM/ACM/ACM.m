@@ -105,6 +105,7 @@ static ActionManager *actionMgr = nil;
     return nil;
 }
 
+
 + (void) ringRobotAudioCall
 {
     if(actionMgr != nil)
@@ -113,6 +114,7 @@ static ActionManager *actionMgr = nil;
         [actionMgr HandleEvent:eventData];
     }    
 }
+ 
 
 + (BOOL) handleApnsMessage:(nonnull NSDictionary *)message{
     
@@ -120,6 +122,19 @@ static ActionManager *actionMgr = nil;
     if(actionMgr != nil)
     {
         [ApnsMessageManager handleApnsMessage:message actionManager:actionMgr];
+        ret = YES;
+    }
+    
+    return ret;
+}
+
++ (BOOL) robotAnswerCall: ( nullable NSString *)channelId ircmCallback:(id <IRTCCallBack> _Nullable)delegate
+{
+    BOOL ret = NO;
+    if(actionMgr != nil)
+    {
+        EventData eventData = {EventRobotAnswerCall, 0,0,0,channelId, delegate};
+        [actionMgr HandleEvent:eventData];
         ret = YES;
     }
     

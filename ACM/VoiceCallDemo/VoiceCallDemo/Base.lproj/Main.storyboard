@@ -127,8 +127,19 @@
                                             <action selector="answerCall:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DsC-6T-qm6"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5K8-hM-XFv">
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wPU-sW-D7w">
                                         <rect key="frame" x="114" y="280" width="184" height="51"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="32"/>
+                                        <state key="normal" title="助手接听">
+                                            <color key="titleColor" red="0.0" green="0.95686274510000002" blue="0.15026268870000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="robotAnserCall:" destination="BYZ-38-t0r" eventType="touchUpInside" id="e6m-Tp-8HU"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5K8-hM-XFv">
+                                        <rect key="frame" x="114" y="330" width="184" height="51"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="32"/>
                                         <state key="normal" title="挂断">
@@ -202,6 +213,7 @@
                         <outlet property="remoteUserIdLabel" destination="QHj-Et-KOY" id="exs-Hc-WRX"/>
                         <outlet property="remoteUserIdLabel2" destination="IZz-7A-lYL" id="fiQ-6E-Hvc"/>
                         <outlet property="remoteUserIdTextField" destination="73W-es-xnI" id="PsN-kL-3Kf"/>
+                        <outlet property="robotAnswerCallBtn" destination="wPU-sW-D7w" id="Jre-vD-DLc"/>
                         <outlet property="userIdTextField" destination="dKW-xA-wym" id="57x-dJ-026"/>
                     </connections>
                 </viewController>

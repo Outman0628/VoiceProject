@@ -76,6 +76,15 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     // RTC Error
     EventDidRtcOccurError = 20,
     
+    // 机器人代接
+    EventRobotAnswerCall = 21,
+    
+    // 机器人已经代接
+    EventRobotAnsweredCall = 22,
+    
+    // 后台同意接听电话
+    EventBackendAgreeAudioCall = 23,
+    
     // 拨号
     EventDialRobotDemo = 10000,
 };

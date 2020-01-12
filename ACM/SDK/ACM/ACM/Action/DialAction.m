@@ -119,7 +119,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
     NSURLSession *session = [NSURLSession sharedSession];
     
     [[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        NSLog(@"response code:@d", [(NSHTTPURLResponse *)response statusCode]);
+       // NSLog(@"response code:@d", [(NSHTTPURLResponse *)response statusCode]);
         if([(NSHTTPURLResponse *)response statusCode] == 200){
             NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
             NSData *jsonData = [str dataUsingEncoding:NSUTF8StringEncoding];
@@ -133,18 +133,13 @@ static NSString *DialRobot = @"/dapi/call/robot";
                 NSDictionary *data = dic[@"data"];
                 if(data != nil && data[@"channel"] != nil && data[@"token"] != nil)
                 {
-                    self.channelId = data[@"channel"];
-                    self.rtcToken = data[@"token"];
-                   
-
-                    //-( nonnull Call * )createDialCall: (nonnull NSDictionary *)callInfo remoteUser:(nonnull NSString *)peerId ircmCallback:(id <IRTCCallBack> _Nullable)delegate;
                     Call *instance = [self.actionMgr.callMgr updateDialCall:data selfUid:self.actionMgr.userId remoteUser:eventData.param4 ircmCallback:eventData.param5 preInstance:eventData.param6];
                     
                     
                     
                     [RunTimeMsgManager invitePhoneCall:instance];
                     
-                    [AudioCallManager startAudioCall:self.actionMgr.appId user:self.userId channel:self.channelId   rtcToken:nil callInstance:instance];
+                    [AudioCallManager startAudioCall:instance.appId user:instance.selfId channel:instance.channelId   rtcToken:instance.token callInstance:instance];
                     
                     self.curCall = instance;
                     
@@ -234,12 +229,13 @@ static NSString *DialRobot = @"/dapi/call/robot";
                 {
                     self.channelId = data[@"channel"];
                     self.rtcToken = data[@"token"];
+            
                     
                     NSLog(@"Join to Robot channel:%@", self.channelId);
                     
                     
                     
-                    [AudioCallManager startAudioCall:self.actionMgr.appId user:self.userId channel:self.channelId   rtcToken:nil callInstance:nil];
+                    [AudioCallManager startAudioCall:data[@"appID"] user:self.userId channel:self.channelId   rtcToken:data[@"token"] callInstance:nil];
                     
                 }
                 else
