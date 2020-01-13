@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		63A24F4823CB5A9200D2ADC4 /* Assistant.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F4723CB5A9200D2ADC4 /* Assistant.h */; };
+		63A24F4A23CB5ACC00D2ADC4 /* AnswerAsistant.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F4923CB5ACC00D2ADC4 /* AnswerAsistant.h */; };
+		63A24F4C23CB5C6300D2ADC4 /* AnswerAsistant.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A24F4B23CB5C6300D2ADC4 /* AnswerAsistant.m */; };
 		63B3565B23BDE3900034F54B /* ACM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3565123BDE3900034F54B /* ACM.framework */; };
 		63B3566023BDE3900034F54B /* ACMTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B3565F23BDE3900034F54B /* ACMTests.m */; };
 		63B3566223BDE3900034F54B /* ACM.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B3565423BDE3900034F54B /* ACM.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -59,6 +62,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		63A24F4723CB5A9200D2ADC4 /* Assistant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Assistant.h; sourceTree = "<group>"; };
+		63A24F4923CB5ACC00D2ADC4 /* AnswerAsistant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnswerAsistant.h; sourceTree = "<group>"; };
+		63A24F4B23CB5C6300D2ADC4 /* AnswerAsistant.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnswerAsistant.m; sourceTree = "<group>"; };
 		63B3565123BDE3900034F54B /* ACM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ACM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		63B3565423BDE3900034F54B /* ACM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ACM.h; sourceTree = "<group>"; };
 		63B3565523BDE3900034F54B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -127,6 +133,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		63A24F4623CB5A3100D2ADC4 /* Assistant */ = {
+			isa = PBXGroup;
+			children = (
+				63A24F4723CB5A9200D2ADC4 /* Assistant.h */,
+				63A24F4923CB5ACC00D2ADC4 /* AnswerAsistant.h */,
+				63A24F4B23CB5C6300D2ADC4 /* AnswerAsistant.m */,
+			);
+			path = Assistant;
+			sourceTree = "<group>";
+		};
 		63B3564723BDE3900034F54B = {
 			isa = PBXGroup;
 			children = (
@@ -149,6 +165,7 @@
 		63B3565323BDE3900034F54B /* ACM */ = {
 			isa = PBXGroup;
 			children = (
+				63A24F4623CB5A3100D2ADC4 /* Assistant */,
 				63B357BA23C6D8080034F54B /* Call */,
 				63B3578F23C45EBA0034F54B /* Action */,
 				63B3572A23BF24140034F54B /* RTC */,
@@ -262,10 +279,12 @@
 				63B357C023C6D88B0034F54B /* CallManager.h in Headers */,
 				63B357CC23C8BC970034F54B /* OnPhoneAction.h in Headers */,
 				63B3566223BDE3900034F54B /* ACM.h in Headers */,
+				63A24F4823CB5A9200D2ADC4 /* Assistant.h in Headers */,
 				63B3579D23C474C50034F54B /* SDKInitAction.h in Headers */,
 				63B356C023BE553B0034F54B /* RunTimeMsgManager.h in Headers */,
 				63B3579B23C46C8C0034F54B /* ACMCommon.h in Headers */,
 				63B357AC23C4C7480034F54B /* MonitorAction.h in Headers */,
+				63A24F4A23CB5ACC00D2ADC4 /* AnswerAsistant.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -372,6 +391,7 @@
 				63B357AA23C4B1C40034F54B /* LoginAction.m in Sources */,
 				63B357CE23C8BCAC0034F54B /* OnPhoneAction.m in Sources */,
 				63B357B923C6D2E40034F54B /* ApnsMessageManager.m in Sources */,
+				63A24F4C23CB5C6300D2ADC4 /* AnswerAsistant.m in Sources */,
 				63B356BE23BE55290034F54B /* RunTimeMsgManager.m in Sources */,
 				63B3579323C468730034F54B /* ACMAction.m in Sources */,
 				63B356AC23BE38970034F54B /* ACM.m in Sources */,
