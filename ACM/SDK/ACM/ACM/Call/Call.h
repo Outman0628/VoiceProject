@@ -56,6 +56,13 @@ typedef NS_ENUM(NSInteger, RoleType) {
 @property CallStage stage;
 // 本机在电话中的角色
 @property RoleType  role;
+
+// 本地静音状态
+@property BOOL  localMuteState;
+
+// 远程静音状态
+@property BOOL  remoteMuteState;
+
 // 发起者uid
 @property NSString * _Nonnull callerId;
 // 接听者列表

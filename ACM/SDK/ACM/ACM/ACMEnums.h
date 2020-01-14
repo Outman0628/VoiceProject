@@ -107,6 +107,11 @@ typedef NS_ENUM(NSInteger, AcmDialCode) {
     AcmDialRobotAnswered = 4,
     
     /**
+     拨号成功发送
+     */
+    AcmDialRequestSendSucceed = 1000,
+    
+    /**
      拨号申请失败(网络异常，服务器异常等)
      */
     AcmDialErrorApplyCall = -1,

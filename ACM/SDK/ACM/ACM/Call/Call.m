@@ -17,7 +17,8 @@
 -(id _Nullable )init
 {
     if (self = [super init]) {
-        
+        self.localMuteState = false;
+        self.remoteMuteState = false;
         self.subscriberList = [NSMutableArray array];
     }
     return self;

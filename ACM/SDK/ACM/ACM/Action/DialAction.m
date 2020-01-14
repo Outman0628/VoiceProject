@@ -119,7 +119,8 @@ static NSString *DialRobot = @"/dapi/call/robot";
     NSURLSession *session = [NSURLSession sharedSession];
     
     [[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-       // NSLog(@"response code:@d", [(NSHTTPURLResponse *)response statusCode]);
+        NSInteger code = [(NSHTTPURLResponse *)response statusCode];
+        NSLog(@"response code:%ldd", (long)code);
         if([(NSHTTPURLResponse *)response statusCode] == 200){
             NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
             NSData *jsonData = [str dataUsingEncoding:NSUTF8StringEncoding];
@@ -142,6 +143,10 @@ static NSString *DialRobot = @"/dapi/call/robot";
                     [AudioCallManager startAudioCall:instance.appId user:instance.selfId channel:instance.channelId   rtcToken:instance.token callInstance:instance];
                     
                     self.curCall = instance;
+                    
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        [instance.callback didPhoneDialResult:AcmDialRequestSendSucceed];
+                    });
                     
                 }
                 else

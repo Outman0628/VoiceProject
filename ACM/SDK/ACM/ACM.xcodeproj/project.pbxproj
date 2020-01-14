@@ -7,9 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		63A24F4823CB5A9200D2ADC4 /* Assistant.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F4723CB5A9200D2ADC4 /* Assistant.h */; };
-		63A24F4A23CB5ACC00D2ADC4 /* AnswerAsistant.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F4923CB5ACC00D2ADC4 /* AnswerAsistant.h */; };
+		63A24F4823CB5A9200D2ADC4 /* Assistant.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F4723CB5A9200D2ADC4 /* Assistant.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		63A24F4A23CB5ACC00D2ADC4 /* AnswerAsistant.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F4923CB5ACC00D2ADC4 /* AnswerAsistant.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		63A24F4C23CB5C6300D2ADC4 /* AnswerAsistant.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A24F4B23CB5C6300D2ADC4 /* AnswerAsistant.m */; };
+		63A24F5023CC7B3300D2ADC4 /* AudioInputStream.mm in Sources */ = {isa = PBXBuildFile; fileRef = 63A24F4E23CC7B3300D2ADC4 /* AudioInputStream.mm */; };
+		63A24F5123CC7B3300D2ADC4 /* AudioInputStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F4F23CC7B3300D2ADC4 /* AudioInputStream.h */; };
+		63A24F5323CC7B6A00D2ADC4 /* AudioDataQueue.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F5223CC7B6A00D2ADC4 /* AudioDataQueue.hpp */; };
+		63A24F5523CC7CF700D2ADC4 /* AudioDataQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63A24F5423CC7CF700D2ADC4 /* AudioDataQueue.cpp */; };
+		63A24F5723CC7D8A00D2ADC4 /* ACMAudioInputStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F5623CC7D8A00D2ADC4 /* ACMAudioInputStream.h */; };
+		63A24F5923CC7D9900D2ADC4 /* ACMAudioInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A24F5823CC7D9900D2ADC4 /* ACMAudioInputStream.m */; };
+		63A24F6523CCC81D00D2ADC4 /* AudioController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F6423CCC81D00D2ADC4 /* AudioController.h */; };
+		63A24F6723CCC83100D2ADC4 /* AudioController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A24F6623CCC83100D2ADC4 /* AudioController.m */; };
+		63A24F6A23CCD99E00D2ADC4 /* ExternalAudio.mm in Sources */ = {isa = PBXBuildFile; fileRef = 63A24F6823CCD99D00D2ADC4 /* ExternalAudio.mm */; };
+		63A24F6B23CCD99E00D2ADC4 /* ExternalAudio.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F6923CCD99D00D2ADC4 /* ExternalAudio.h */; };
 		63B3565B23BDE3900034F54B /* ACM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3565123BDE3900034F54B /* ACM.framework */; };
 		63B3566023BDE3900034F54B /* ACMTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B3565F23BDE3900034F54B /* ACMTests.m */; };
 		63B3566223BDE3900034F54B /* ACM.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B3565423BDE3900034F54B /* ACM.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -65,6 +75,16 @@
 		63A24F4723CB5A9200D2ADC4 /* Assistant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Assistant.h; sourceTree = "<group>"; };
 		63A24F4923CB5ACC00D2ADC4 /* AnswerAsistant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnswerAsistant.h; sourceTree = "<group>"; };
 		63A24F4B23CB5C6300D2ADC4 /* AnswerAsistant.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnswerAsistant.m; sourceTree = "<group>"; };
+		63A24F4E23CC7B3300D2ADC4 /* AudioInputStream.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AudioInputStream.mm; sourceTree = "<group>"; };
+		63A24F4F23CC7B3300D2ADC4 /* AudioInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioInputStream.h; sourceTree = "<group>"; };
+		63A24F5223CC7B6A00D2ADC4 /* AudioDataQueue.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AudioDataQueue.hpp; sourceTree = "<group>"; };
+		63A24F5423CC7CF700D2ADC4 /* AudioDataQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioDataQueue.cpp; sourceTree = "<group>"; };
+		63A24F5623CC7D8A00D2ADC4 /* ACMAudioInputStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ACMAudioInputStream.h; sourceTree = "<group>"; };
+		63A24F5823CC7D9900D2ADC4 /* ACMAudioInputStream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ACMAudioInputStream.m; sourceTree = "<group>"; };
+		63A24F6423CCC81D00D2ADC4 /* AudioController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioController.h; sourceTree = "<group>"; };
+		63A24F6623CCC83100D2ADC4 /* AudioController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioController.m; sourceTree = "<group>"; };
+		63A24F6823CCD99D00D2ADC4 /* ExternalAudio.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ExternalAudio.mm; sourceTree = "<group>"; };
+		63A24F6923CCD99D00D2ADC4 /* ExternalAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExternalAudio.h; sourceTree = "<group>"; };
 		63B3565123BDE3900034F54B /* ACM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ACM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		63B3565423BDE3900034F54B /* ACM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ACM.h; sourceTree = "<group>"; };
 		63B3565523BDE3900034F54B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -143,6 +163,23 @@
 			path = Assistant;
 			sourceTree = "<group>";
 		};
+		63A24F4D23CC7A9A00D2ADC4 /* ASR */ = {
+			isa = PBXGroup;
+			children = (
+				63A24F6923CCD99D00D2ADC4 /* ExternalAudio.h */,
+				63A24F6823CCD99D00D2ADC4 /* ExternalAudio.mm */,
+				63A24F5423CC7CF700D2ADC4 /* AudioDataQueue.cpp */,
+				63A24F5223CC7B6A00D2ADC4 /* AudioDataQueue.hpp */,
+				63A24F4F23CC7B3300D2ADC4 /* AudioInputStream.h */,
+				63A24F4E23CC7B3300D2ADC4 /* AudioInputStream.mm */,
+				63A24F5623CC7D8A00D2ADC4 /* ACMAudioInputStream.h */,
+				63A24F5823CC7D9900D2ADC4 /* ACMAudioInputStream.m */,
+				63A24F6423CCC81D00D2ADC4 /* AudioController.h */,
+				63A24F6623CCC83100D2ADC4 /* AudioController.m */,
+			);
+			path = ASR;
+			sourceTree = "<group>";
+		};
 		63B3564723BDE3900034F54B = {
 			isa = PBXGroup;
 			children = (
@@ -165,6 +202,7 @@
 		63B3565323BDE3900034F54B /* ACM */ = {
 			isa = PBXGroup;
 			children = (
+				63A24F4D23CC7A9A00D2ADC4 /* ASR */,
 				63A24F4623CB5A3100D2ADC4 /* Assistant */,
 				63B357BA23C6D8080034F54B /* Call */,
 				63B3578F23C45EBA0034F54B /* Action */,
@@ -266,9 +304,15 @@
 			files = (
 				63B357BC23C6D8630034F54B /* Call.h in Headers */,
 				63B3579123C45F290034F54B /* ACMAction.h in Headers */,
+				63A24F5723CC7D8A00D2ADC4 /* ACMAudioInputStream.h in Headers */,
+				63A24F5323CC7B6A00D2ADC4 /* AudioDataQueue.hpp in Headers */,
+				63A24F6B23CCD99E00D2ADC4 /* ExternalAudio.h in Headers */,
 				63B356C223BE56B20034F54B /* IACMCallBack.h in Headers */,
 				63B357C423C81C6E0034F54B /* ACMEnums.h in Headers */,
+				63A24F5123CC7B3300D2ADC4 /* AudioInputStream.h in Headers */,
 				63B357C823C8B49D0034F54B /* InComeDialAction.h in Headers */,
+				63A24F4823CB5A9200D2ADC4 /* Assistant.h in Headers */,
+				63A24F4A23CB5ACC00D2ADC4 /* AnswerAsistant.h in Headers */,
 				63B3573023BF24AD0034F54B /* IRTCCallBack.h in Headers */,
 				63B357B723C6D2CF0034F54B /* ApnsMessageManager.h in Headers */,
 				63B3579523C4692F0034F54B /* ActionManager.h in Headers */,
@@ -279,12 +323,11 @@
 				63B357C023C6D88B0034F54B /* CallManager.h in Headers */,
 				63B357CC23C8BC970034F54B /* OnPhoneAction.h in Headers */,
 				63B3566223BDE3900034F54B /* ACM.h in Headers */,
-				63A24F4823CB5A9200D2ADC4 /* Assistant.h in Headers */,
 				63B3579D23C474C50034F54B /* SDKInitAction.h in Headers */,
 				63B356C023BE553B0034F54B /* RunTimeMsgManager.h in Headers */,
+				63A24F6523CCC81D00D2ADC4 /* AudioController.h in Headers */,
 				63B3579B23C46C8C0034F54B /* ACMCommon.h in Headers */,
 				63B357AC23C4C7480034F54B /* MonitorAction.h in Headers */,
-				63A24F4A23CB5ACC00D2ADC4 /* AnswerAsistant.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -389,10 +432,15 @@
 				63B357BE23C6D8770034F54B /* Call.m in Sources */,
 				63B3579F23C475B80034F54B /* SDKInitAction.m in Sources */,
 				63B357AA23C4B1C40034F54B /* LoginAction.m in Sources */,
+				63A24F6723CCC83100D2ADC4 /* AudioController.m in Sources */,
+				63A24F5523CC7CF700D2ADC4 /* AudioDataQueue.cpp in Sources */,
 				63B357CE23C8BCAC0034F54B /* OnPhoneAction.m in Sources */,
 				63B357B923C6D2E40034F54B /* ApnsMessageManager.m in Sources */,
+				63A24F6A23CCD99E00D2ADC4 /* ExternalAudio.mm in Sources */,
 				63A24F4C23CB5C6300D2ADC4 /* AnswerAsistant.m in Sources */,
 				63B356BE23BE55290034F54B /* RunTimeMsgManager.m in Sources */,
+				63A24F5023CC7B3300D2ADC4 /* AudioInputStream.mm in Sources */,
+				63A24F5923CC7D9900D2ADC4 /* ACMAudioInputStream.m in Sources */,
 				63B3579323C468730034F54B /* ACMAction.m in Sources */,
 				63B356AC23BE38970034F54B /* ACM.m in Sources */,
 				63B357B323C5E6AE0034F54B /* DialAction.m in Sources */,

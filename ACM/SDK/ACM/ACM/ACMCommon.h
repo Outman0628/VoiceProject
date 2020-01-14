@@ -85,8 +85,16 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     // 后台同意接听电话
     EventBackendAgreeAudioCall = 23,
     
+    // 机器人代接
+    EventUpdateMuteState = 24,
+    
+
+    
     // 拨号
     EventDialRobotDemo = 10000,
+    
+    // InputStream Test
+    EventInputStreamTest = 10001,
 };
 
 typedef struct _AcmParam {

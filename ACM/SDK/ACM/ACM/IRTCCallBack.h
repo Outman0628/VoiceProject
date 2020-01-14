@@ -13,6 +13,14 @@
 @optional
 
 /*
+ 实时语音转文字信息
+ @param text 文本信息
+ @param uid 文本对应人员ID
+ @startTime 文本开始的时间戳
+ */
+- (void)onSubTitleReceived: (nonnull NSString *)text userId:(nonnull NSString*)uid timeStamp:(NSTimeInterval)startTime;
+
+/*
  拨号结果
  @param dialCode 详见AcmDialCode
  */

@@ -47,6 +47,8 @@ static AudioCallManager *instance = nil;
     }];
      */
     
+    [_rtcKit enableExternalAudioSourceWithSampleRate:16000 channelsPerFrame:1];
+    
     [_rtcKit joinChannelByUserAccount:userID token:token channelId:channelId joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {
         NSLog(@"Succeed to join RTC channel");
         EventData eventData = {EventSelfInChannelSucceed, 0,0,0,call};
@@ -66,6 +68,16 @@ static AudioCallManager *instance = nil;
     return -1;
 }
 
++ (int)muteAllRemoteAudioStreams:(BOOL)mute
+{
+    if(_rtcKit != nil)
+    {
+        return [_rtcKit muteAllRemoteAudioStreams:mute];
+    }
+    
+    return -1;
+}
+
 
 + (void) endAudioCall{
     if(_rtcKit != nil)
@@ -73,7 +85,22 @@ static AudioCallManager *instance = nil;
         [_rtcKit leaveChannel:^(AgoraChannelStats * _Nonnull stat) {
             
         }];
+        
+        [_rtcKit muteAllRemoteAudioStreams:false];
+        [_rtcKit muteLocalAudioStream:false];
     }
+}
+
+//倒入音频流
++ (BOOL)pushExternalAudioFrameRawData:(void * _Nonnull)data
+                            samplenum:(NSUInteger)sampleNum
+                         timestampnum:(NSTimeInterval)timeStamp
+{
+    if(_rtcKit != nil)
+    {
+        return [_rtcKit pushExternalAudioFrameRawData:data samples:sampleNum timestamp:timeStamp];
+    }
+    return false;
 }
 
 //////////////// delegate

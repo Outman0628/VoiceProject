@@ -53,11 +53,15 @@ static ActionManager *actionMgr = nil;
 + (void) sendP2PMessage: (nullable NSString *)msg peerId:( nullable NSString *)peerId completion:(IACMSendPeerMessageBlock _Nullable)completionBlock{
     //[RunTimeMsgManager sendP2PMessage:msg  remoteUid:peerId completion:completionBlock];
     
+    /*
     if(actionMgr != nil)
     {
         EventData eventData = {EventSendMsg, 0,0,0,msg,peerId,completionBlock};
         [actionMgr HandleEvent:eventData];
     }
+     */
+    EventData eventData = {EventInputStreamTest};
+    [actionMgr HandleEvent:eventData];
 }
 
 + (void) agreeCall: ( nullable NSString *)channelId ircmCallback:(id <IRTCCallBack> _Nullable)delegate{
@@ -136,6 +140,25 @@ static ActionManager *actionMgr = nil;
         EventData eventData = {EventRobotAnswerCall, 0,0,0,channelId, delegate};
         [actionMgr HandleEvent:eventData];
         ret = YES;
+    }
+    
+    return ret;
+}
+
++ (BOOL) updateMuteState: ( nonnull Call *)call
+{
+    BOOL ret = NO;
+    
+    if(call != nil && call.channelId != nil)
+    {
+        Call *instance = [actionMgr.callMgr getCall:call.channelId];
+        if(instance != nil && call.stage != Finished)
+        {
+            ret = true;
+            
+            EventData eventData = {EventUpdateMuteState, 0,0,0,instance};
+            [actionMgr HandleEvent:eventData];
+        }
     }
     
     return ret;

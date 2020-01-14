@@ -108,5 +108,14 @@ FOUNDATION_EXPORT const unsigned char ACMVersionString[];
 + (BOOL) robotAnswerCall: ( nullable NSString *)channelId ircmCallback:(id <IRTCCallBack> _Nullable)delegate;
 
 
+/**
+ 更新Mute Mute state
+ 
+ @param call 通话对象
+ @return FALSE 参数有问题，检查channel id 是否正确，是否call state 是finish 状态
+ */
++ (BOOL) updateMuteState: ( nonnull Call *)call;
+
+
 
 @end

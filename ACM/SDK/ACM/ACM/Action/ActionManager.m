@@ -14,6 +14,9 @@
 #import "MonitorAction.h"
 #import "../Message/RunTimeMsgManager.h"
 #import "../Call/CallManager.h"
+#import "../RTC/AudioCallManager.h"
+#import "../ASR/ACMAudioInputStream.h"
+#import "../ASR/ExternalAudio.h"
 
 static ActionManager* actionMgrInstance = nil;
 
@@ -21,6 +24,8 @@ static ActionManager* actionMgrInstance = nil;
 // 当前Action
 @property  ACMAction *activeAction;
 @property NSString *apnsToken;
+@property ACMAudioInputStream *inputStream;
+@property ExternalAudio *extAudio;
 @end
 
 @implementation ActionManager
@@ -66,12 +71,49 @@ static ActionManager* actionMgrInstance = nil;
             [callBack messageReceived:eventData.param4 fromPeer:eventData.param5];
         }
     }
+    else if(eventData.type == EventUpdateMuteState)
+    {
+        [self handleMuteEvent:eventData];
+    }
+    else if(eventData.type == EventInputStreamTest)
+    {
+        [self handleInputStreamTestEvent2:eventData];
+    }
     else
     {
         [self.activeAction HandleEvent:eventData];
     }
     
     
+}
+
+- (void)handleMuteEvent:(EventData) eventData
+{
+    Call *call = eventData.param4;
+    if(call.stage != Finished)
+    {
+        [AudioCallManager muteLocalAudioStream:call.localMuteState];
+        [AudioCallManager muteAllRemoteAudioStreams:call.remoteMuteState];
+    }
+}
+
+- (void)handleInputStreamTestEvent:(EventData) eventData
+{
+    if(self.inputStream == nil)
+    {
+        self.inputStream = [[ACMAudioInputStream alloc] init];
+        [self.inputStream open];
+    }
+}
+
+- (void)handleInputStreamTestEvent2:(EventData) eventData
+{
+    if(self.extAudio == nil)
+    {
+        self.extAudio = [ExternalAudio sharedExternalAudio];
+        [self.extAudio setupExternalAudioWithAgoraKit:nil sampleRate:16000 channels:1 audioCRMode:AudioCRModeExterCaptureSDKRender IOType:IOUnitTypeRemoteIO];
+        [self.extAudio startWork];
+    }
 }
 
 - (void)setUserId:(nullable NSString *)uid

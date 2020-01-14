@@ -91,6 +91,9 @@
         [AudioCallManager startAudioCall:call.appId user:call.selfId channel:call.channelId rtcToken:call.token callInstance:call];
     
     [AudioCallManager muteLocalAudioStream:true];
+    [AudioCallManager muteAllRemoteAudioStreams:true];
+    call.localMuteState = true;
+    call.remoteMuteState = true;
         
     [call updateStage:OnPhone];
         

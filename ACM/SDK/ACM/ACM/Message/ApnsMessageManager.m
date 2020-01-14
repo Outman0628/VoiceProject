@@ -22,7 +22,14 @@
     
     if(message != nil && message[@"aps"] != nil && message[@"aps"][@"userInfo"] != nil)
     {
-        NSDictionary *userInfo = message[@"aps"][@"userInfo"];
+        
+        //NSDictionary *userInfo = message[@"aps"][@"userInfo"];
+        
+        NSString *apnsMsg =  message[@"aps"][@"userInfo"];
+        
+        NSData *jsonData = [apnsMsg dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *userInfo = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+        
         if( [userInfo[@"title"] isEqualToString:@"audiocall"] )
         {
             //- (void)onCallReceived:(NSString * _Nonnull)channel fromPeer:(NSString * _Nonnull)peerId;
