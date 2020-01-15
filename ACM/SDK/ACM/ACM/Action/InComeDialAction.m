@@ -138,6 +138,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
                     call.token = data[@"token"];
                 }
                 
+                [RunTimeMsgManager agreePhoneCall:call.callerId userAccount:call.selfId channelID:call.channelId];
                 EventData nextData = { EventBackendAgreeAudioCall,0,0,0,call };
                 OnPhoneAction* onPhone = [[OnPhoneAction alloc]init];
                 

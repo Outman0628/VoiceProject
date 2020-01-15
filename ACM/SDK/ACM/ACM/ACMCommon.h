@@ -43,65 +43,68 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     // RTM拒绝电话消息
     EventRtmRejectAudioCall = 9,
     
-    // 结束通话
-    EventLeaveCall = 10,
+    // RTM同意电话消息
+    EventRtmAgreeAudioCall = 10,
     
     // 结束通话
-    EventRtmLeaveCall = 11,
+    EventLeaveCall = 11,
+    
+    // 结束通话
+    EventRtmLeaveCall = 12,
     
     // 拨号
-    EventDial = 12,
+    EventDial = 13,
     
     // 拨号方结束拨号
-    EventCancelCall = 13,
+    EventCancelCall = 14,
     
     // 拨号方结束拨号(接收方处理)
-    EventRTMCancelCall = 14,
+    EventRTMCancelCall = 15,
     
     // 获取到Apns 电话推送消息
-    EventGotApnsAudioCall = 15,
+    EventGotApnsAudioCall = 16,
     
     // RTM 拨号消息失败
-    EventRtmDialFailed = 16,
+    EventRtmDialFailed = 17,
     
     // 自己进入RTC 成功
-    EventSelfInChannelSucceed = 17,
+    EventSelfInChannelSucceed = 18,
     
     // 用户进入RTC 成功
-    EventDidJoinedOfUid = 18,
+    EventDidJoinedOfUid = 19,
     
     // RTC warning
-    EventDidRtcOccurWarning = 19,
+    EventDidRtcOccurWarning = 20,
     
     // RTC Error
-    EventDidRtcOccurError = 20,
+    EventDidRtcOccurError = 21,
     
     // 机器人代接
-    EventRobotAnswerCall = 21,
+    EventRobotAnswerCall = 22,
     
     // 机器人已经代接
-    EventRobotAnsweredCall = 22,
+    EventRobotAnsweredCall = 23,
     
     // 后台同意接听电话
-    EventBackendAgreeAudioCall = 23,
+    EventBackendAgreeAudioCall = 24,
     
     // 机器人代接
-    EventUpdateMuteState = 24,
+    EventUpdateMuteState = 25,
     
     // 拨号方进入onphon state
-    EventOnPhoneCallFromDial = 25,
+    EventOnPhoneCallFromDial = 26,
     
     // ASR 最终数据
-    EventASRFinalResult = 26,
+    EventASRFinalResult = 27,
     
     // ASR 实时数据
-    EventASRRealTimeResult = 27,
+    EventASRRealTimeResult = 28,
     
     // ASR 远端数据
-    EventRemoeAsrResult = 28,
+    EventRemoeAsrResult = 29,
     
     // 获取话语权
-    EventGetAuthority = 29,
+    EventGetAuthority = 30,
     
 
     

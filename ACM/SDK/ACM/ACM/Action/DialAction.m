@@ -82,9 +82,26 @@ static NSString *DialRobot = @"/dapi/call/robot";
     {}
     else if(eventData.type == EventDidRtcOccurError)
     {}
+    else if(eventData.type == EventRtmAgreeAudioCall)
+    {
+        [self handleRemoteAgreePhoneCall:eventData];
+    }
     else
     {
         [super HandleEvent:eventData];
+    }
+}
+
+- (void) handleRemoteAgreePhoneCall: (EventData) eventData{
+    Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
+    if(call != nil && call.role == Originator && call.stage == Dialing)
+    {
+        call.stage = PrepareOnphone;
+        if(call.callback)
+        {
+            [call.callback didPhoneDialResult:AcmPrepareOnphoneStage];
+        }
+        [AudioCallManager startAudioCall:call.appId user:call.selfId channel:call.channelId   rtcToken:call.token callInstance:call];
     }
 }
 
@@ -148,7 +165,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
                     
                     [RunTimeMsgManager invitePhoneCall:instance];
                     
-                    [AudioCallManager startAudioCall:instance.appId user:instance.selfId channel:instance.channelId   rtcToken:instance.token callInstance:instance];
+                    //[AudioCallManager startAudioCall:instance.appId user:instance.selfId channel:instance.channelId   rtcToken:instance.token callInstance:instance];
                     
                     self.curCall = instance;
                     

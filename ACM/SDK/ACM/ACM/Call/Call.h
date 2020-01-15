@@ -27,11 +27,14 @@ typedef NS_ENUM(NSInteger, CallStage) {
     // 拨号阶段
     Dialing = 1,
     
+    // 拨号收到首个应答回复，准备进入通话间断
+    PrepareOnphone = 2,
+    
     // 通话阶段
-    OnPhone = 2,
+    OnPhone = 3,
     
     // 通话结束
-    Finished = 3,
+    Finished = 4,
 };
 
 // 本机在电话中的角色

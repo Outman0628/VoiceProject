@@ -87,7 +87,7 @@ static AudioStreamMgr* instace = nil;
 
 - (void) initExtraAudio{
     self.extAudio = [ExternalAudio sharedExternalAudio];
-    [self.extAudio setupExternalAudioWithAgoraKit:nil sampleRate:16000 channels:1 audioCRMode:AudioCRModeExterCaptureSDKRender IOType:IOUnitTypeRemoteIO];
+    [self.extAudio setupExternalAudioWithAgoraKit:nil sampleRate:16000 channels:1 audioCRMode:AudioCRModeExterCaptureSDKRender IOType:IOUnitTypeVPIO];
 }
 
 @end
