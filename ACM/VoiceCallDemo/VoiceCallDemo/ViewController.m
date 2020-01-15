@@ -255,9 +255,10 @@
     //self.dialChannelId = [ACM ringAudioCall:remoteUid ircmCallback:nil];
     self.outComeCall = [ACM ringAudioCall:remoteUid ircmCallback:self];
 
-    
+   
     self.callPanel.hidden = false;
     self.remoteUserIdLabel.text = remoteUid;
+    
 }
 
 - (IBAction)endCall:(id)sender {
@@ -409,6 +410,9 @@
             [self showAlert:@"应答电话申请,服务器返回错误配置"];
             self.answerPanel.hidden = true;
             break;
+        case AcmDialRequestSendSucceed:
+            NSLog(@"拨号成功");
+            break;
         default:
             break;
     }
@@ -419,6 +423,25 @@
     self.answerPanel.hidden = true;
     self.callPanel.hidden = true;
     [self showAlert: [NSString stringWithFormat:@"通话结束:%ld", (long)endCode]];
+}
+
+- (void)onLocalText: (nonnull NSString *)text timeStamp:(NSTimeInterval)startTime isFinished:(BOOL) finished
+{
+   // NSLog(@"ASR local. Text:%@ timeStamp:%f isFinished:%d", text,startTime,finished);
+}
+
+
+/*
+ 远端语音转文字信息
+ @param text 文本信息
+ @param remoteUid 远端uid
+ @startTime 文本开始的时间戳, 同一句话的startTime 是相同的
+ @msgStamp 远端发送消息时的时间戳
+ @finished false 翻译中的文字， true 翻译完成的文字
+ */
+- (void)onRemoteText: (nonnull NSString *)text remoteAccount:(nonnull NSString *)remoteUid timeStamp:(NSTimeInterval)startTime msgStamp:(NSTimeInterval)msgTimestamp isFinished:(BOOL) finished
+{
+    NSLog(@"ASR remote. from:%@ Text:%@ timeStamp:%f msgTimeStamp:%f isFinished:%d", remoteUid,text,startTime,msgTimestamp, finished);
 }
 
 

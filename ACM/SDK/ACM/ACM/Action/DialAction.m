@@ -95,6 +95,10 @@ static NSString *DialRobot = @"/dapi/call/robot";
     OnPhoneAction * action = [[OnPhoneAction alloc]init];
     
     [self.actionMgr actionChange:self destAction:action];
+    
+    EventData nextEvent = {EventOnPhoneCallFromDial,0,0,0,self.curCall};
+    [self.actionMgr HandleEvent:nextEvent];
+    
 }
 
 - (void) HanleDialWorkFlow: (EventData) eventData{

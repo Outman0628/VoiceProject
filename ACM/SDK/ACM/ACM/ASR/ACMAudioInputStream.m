@@ -182,7 +182,7 @@ const int kk_recorder_frames_per_package     = 1;
         }
          */
         NSLog(@"Got record data len:%d", inBuffer->mAudioDataByteSize);
-        NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+        //NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
         
         
         //NSTimeInterval timestamp=[dat timeIntervalSince1970];

@@ -13,7 +13,7 @@
 #import <AgoraRtcEngineKit/IAgoraRtcEngine.h>
 #import <AgoraRtcEngineKit/IAgoraMediaEngine.h>
 
-#import "../RTC/AudioCallManager.h"
+#import "AudioStreamMgr.h"
 
 
 @interface ExternalAudio () <AudioControllerDelegate>
@@ -188,15 +188,10 @@ static AgoraAudioFrameObserver* s_audioFrameObserver;
 
 - (void)stopWork {
     [self.audioController stopWork];
-    [self cancelRegiset];
+
 }
 
-- (void)cancelRegiset {
-    agora::rtc::IRtcEngine* rtc_engine = (agora::rtc::IRtcEngine*)self.agoraKit.getNativeHandle;
-    agora::util::AutoPtr<agora::media::IMediaEngine> mediaEngine;
-    mediaEngine.queryInterface(rtc_engine, agora::AGORA_IID_MEDIA_ENGINE);
-    mediaEngine->registerAudioFrameObserver(NULL);
-}
+
 
 - (void)audioController:(AudioController *)controller didCaptureData:(unsigned char *)data bytesLength:(int)bytesLength {
     
@@ -206,9 +201,10 @@ static AgoraAudioFrameObserver* s_audioFrameObserver;
         }
     }
     else {
-        NSLog(@"ExtralAudio didCaptureData:%d" , bytesLength / 2 );
+       // NSLog(@"ExtralAudio didCaptureData:%d" , bytesLength / 2 );
         //[self.agoraKit pushExternalAudioFrameRawData:data samples:bytesLength / 2 timestamp:0];
-        [AudioCallManager pushExternalAudioFrameRawData:data samplenum:bytesLength / 2 timestampnum:0];
+        //[AudioCallManager pushExternalAudioFrameRawData:data samplenum:bytesLength / 2 timestampnum:0];
+        [AudioStreamMgr didCaptureData:data bytesLength:bytesLength];
     }
     
 }

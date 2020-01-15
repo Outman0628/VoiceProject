@@ -53,15 +53,16 @@ static ActionManager *actionMgr = nil;
 + (void) sendP2PMessage: (nullable NSString *)msg peerId:( nullable NSString *)peerId completion:(IACMSendPeerMessageBlock _Nullable)completionBlock{
     //[RunTimeMsgManager sendP2PMessage:msg  remoteUid:peerId completion:completionBlock];
     
-    /*
+    
     if(actionMgr != nil)
     {
         EventData eventData = {EventSendMsg, 0,0,0,msg,peerId,completionBlock};
         [actionMgr HandleEvent:eventData];
     }
-     */
+    /*
     EventData eventData = {EventInputStreamTest};
     [actionMgr HandleEvent:eventData];
+     */
 }
 
 + (void) agreeCall: ( nullable NSString *)channelId ircmCallback:(id <IRTCCallBack> _Nullable)delegate{

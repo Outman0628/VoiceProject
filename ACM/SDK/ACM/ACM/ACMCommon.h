@@ -88,6 +88,18 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     // 机器人代接
     EventUpdateMuteState = 24,
     
+    // 拨号方进入onphon state
+    EventOnPhoneCallFromDial = 25,
+    
+    // ASR 最终数据
+    EventASRFinalResult = 26,
+    
+    // ASR 实时数据
+    EventASRRealTimeResult = 27,
+    
+    // ASR 远端数据
+    EventRemoeAsrResult = 28,
+    
 
     
     // 拨号

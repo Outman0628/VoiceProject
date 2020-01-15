@@ -16,14 +16,48 @@
 
 // 电话响铃Action
 @interface OnPhoneAction ()
+@property Call *curCall;
+@property NSTimer *timer;
 @end
 
 @implementation OnPhoneAction
+
+static BOOL turn = NO;
+
 -(id _Nullable )init{
     if (self = [super init]) {
         self.type = ActionOnPhone;
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:3.0 repeats:YES block:^(NSTimer * _Nonnull timer) {
+           // [self CreateSubtitle];
+        }];
     }
     return self;
+}
+
+-(void)dealloc{
+    [self.timer invalidate];
+}
+
+- (void) CreateSubtitle{
+    /*
+    if(_curCall != nil)
+    {
+        NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+        NSTimeInterval timestamp=[dat timeIntervalSince1970];
+        
+       
+        if(turn)
+        {
+            [_curCall.callback onSubTitleReceived:@"这是来自于拨号方的通话内容" userId:_curCall.callerId timeStamp:timestamp];
+        }
+        else
+        {
+            [_curCall.callback onSubTitleReceived:@"接听方的内容是这样的..." userId:_curCall.subscriberList[0] timeStamp:timestamp];
+        }
+        
+        turn = !turn;
+    }
+     */
 }
 
 
@@ -35,17 +69,89 @@
     }
     else if(eventData.type == EventLeaveCall)
     {
+        [self.timer invalidate];
         [self leaveCall:eventData];
     }
     else if(eventData.type == EventRtmLeaveCall)
     {
+        [self.timer invalidate];
         [self remoteLeaveCall:eventData];
     }
     else if(eventData.type == EventRobotAnsweredCall)
     {
         [self HandleRobotAnsweredCall:eventData];
     }
+    else if(eventData.type == EventOnPhoneCallFromDial)
+    {
+        self.curCall = eventData.param4;
+    }
+    else if(eventData.type == EventASRFinalResult)
+    {
+        [self handleAsrFinalResult:eventData];
+    }
+    else if(eventData.type == EventASRRealTimeResult)
+    {
+        [self handleAsrRealTimeResult:eventData];
+    }
+    else if(eventData.type == EventRemoeAsrResult)
+    {
+        [self handleRemoteAsrResult:eventData];
+    }
 }
+
+- (void) handleRemoteAsrResult: (EventData) eventData{
+    if(_curCall != nil)
+    {
+        NSDictionary *msgDic = eventData.param4;
+        BOOL isFinished = [msgDic[@"isFinished"] isEqualToString:@"true"] ? TRUE: FALSE;
+        NSNumber *astTimestamp = msgDic[@"timeStamp"];
+        NSNumber *msgTimestamp = msgDic[@"msgTimeStamp"];
+        
+        [_curCall.callback onRemoteText:msgDic[@"asrData"] remoteAccount:msgDic[@"accountSender"] timeStamp:astTimestamp.doubleValue msgStamp:msgTimestamp.doubleValue isFinished:isFinished];
+    }
+}
+
+- (void) handleAsrRealTimeResult: (EventData) eventData{
+    if(_curCall != nil)
+    {
+        [_curCall.callback onLocalText:eventData.param4  timeStamp:eventData.param3 isFinished:NO];
+        //+ (void)syncAsrData: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID asrData(nonnull NSString *)text timeStamp:(NSTimeInterval)startTime isFinished:(BOOL) finished{
+        NSString *remoteUid = nil;
+        // todo 多人时小时过于频繁，会有问题
+        if(_curCall.role == Originator)
+        {
+            remoteUid = _curCall.subscriberList[0];
+        }
+        else{
+            remoteUid = _curCall.callerId;
+        }
+        
+        [RunTimeMsgManager syncAsrData:remoteUid userAccount:_curCall.selfId channelID:_curCall.channelId asrData:eventData.param4 timeStamp:eventData.param3 isFinished:NO];
+        
+       
+    }
+}
+
+- (void) handleAsrFinalResult: (EventData) eventData{
+    if(_curCall != nil)
+    {
+        [_curCall.callback onLocalText:eventData.param4  timeStamp:eventData.param3 isFinished:YES];
+        
+        NSString *remoteUid = nil;
+        // todo 多人时小时过于频繁，会有问题
+        if(_curCall.role == Originator)
+        {
+            remoteUid = _curCall.subscriberList[0];
+        }
+        else{
+            remoteUid = _curCall.callerId;
+        }
+        
+        [RunTimeMsgManager syncAsrData:remoteUid userAccount:_curCall.selfId channelID:_curCall.channelId asrData:eventData.param4 timeStamp:eventData.param3 isFinished:YES];
+    }
+    
+}
+
 
 - (void) remoteLeaveCall: (EventData) eventData{
     
@@ -69,6 +175,7 @@
     [AudioCallManager startAudioCall:eventData.param4 user:eventData.param5 channel:eventData.param6 rtcToken:nil rtcCallback:eventData.param7];
      */
     Call *call = eventData.param4;
+    self.curCall = call;
     if(call != nil)
     {
         
@@ -87,6 +194,7 @@
      */
     Call *call = eventData.param4;
     call.role = Observer;
+    self.curCall = call;
 
         [AudioCallManager startAudioCall:call.appId user:call.selfId channel:call.channelId rtcToken:call.token callInstance:call];
     

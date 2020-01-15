@@ -16,7 +16,7 @@ typedef struct _EventData {
     ACMEventType type;
     int param1;
     int param2;
-    int param3;
+    double param3;
     id  param4;
     id  param5;
     id  param6;

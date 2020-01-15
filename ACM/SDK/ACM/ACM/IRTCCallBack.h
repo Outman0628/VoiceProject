@@ -13,12 +13,23 @@
 @optional
 
 /*
- 实时语音转文字信息
+ 本地语音转文字信息
  @param text 文本信息
- @param uid 文本对应人员ID
  @startTime 文本开始的时间戳
+ @param finished false 翻译中的文字， true 翻译完成的文字
  */
-- (void)onSubTitleReceived: (nonnull NSString *)text userId:(nonnull NSString*)uid timeStamp:(NSTimeInterval)startTime;
+- (void)onLocalText: (nonnull NSString *)text timeStamp:(NSTimeInterval)startTime isFinished:(BOOL) finished;
+
+
+/*
+ 远端语音转文字信息
+ @param text 文本信息
+ @param remoteUid 远端uid
+ @startTime 文本开始的时间戳, 同一句话的startTime 是相同的
+ @msgStamp 远端发送消息时的时间戳
+ @finished false 翻译中的文字， true 翻译完成的文字
+ */
+- (void)onRemoteText: (nonnull NSString *)text remoteAccount:(nonnull NSString *)remoteUid timeStamp:(NSTimeInterval)startTime msgStamp:(NSTimeInterval)msgTimestamp isFinished:(BOOL) finished;
 
 /*
  拨号结果

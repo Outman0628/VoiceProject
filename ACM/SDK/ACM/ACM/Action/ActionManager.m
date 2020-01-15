@@ -18,6 +18,7 @@
 #import "../ASR/ACMAudioInputStream.h"
 #import "../ASR/ExternalAudio.h"
 
+
 static ActionManager* actionMgrInstance = nil;
 
 @interface ActionManager()
@@ -40,6 +41,8 @@ static ActionManager* actionMgrInstance = nil;
     if (self = [super init]) {
         actionMgrInstance = self;
         self.callMgr = [[CallManager alloc]init];
+        self.asrMgr = [[AsrManager alloc]init];
+        
     }
     return self;
 }

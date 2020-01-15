@@ -21,7 +21,8 @@
 //开关远程音频
 + (int)muteAllRemoteAudioStreams:(BOOL)mute;
 
-//倒入音频流
+//倒入音频流 todo drop
+
 + (BOOL)pushExternalAudioFrameRawData:(void * _Nonnull)data
                               samplenum:(NSUInteger)sampleNum
                             timestampnum:(NSTimeInterval)timeStamp;

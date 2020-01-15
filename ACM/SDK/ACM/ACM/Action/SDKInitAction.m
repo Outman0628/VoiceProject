@@ -10,6 +10,7 @@
 #import "SDKInitAction.h"
 #import "../Message/RunTimeMsgManager.h"
 #import "ActionManager.h"
+#import "../ASR/AudioStreamMgr.h"
 
 @interface SDKInitAction()
 
@@ -34,12 +35,16 @@
 {
     if(eventData.type == EventInitSDK)
     {
+        [AudioStreamMgr initMgr];
+        
         BOOL rtmResult = [RunTimeMsgManager init:eventData.param4 acmCallback:eventData.param5 actionMgr:self.actionMgr];
         
         if(rtmResult == YES)
         {
             [self.actionMgr actionDone:self];
         }
+        
+       
     }
 }
 @end

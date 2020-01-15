@@ -9,11 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "AudioCallManager.h"
 #import "../Action/ActionManager.h"
+#import "../ASR/AudioStreamMgr.h"
 
 static AgoraRtcEngineKit *_rtcKit = nil;
 static AudioCallManager *instance = nil;
 
-@interface AudioCallManager ()  <AgoraRtcEngineDelegate>
+@interface AudioCallManager ()  <AgoraRtcEngineDelegate, AudioStreamPushDelegate>
 @end
 
 @implementation AudioCallManager
@@ -26,6 +27,7 @@ static AudioCallManager *instance = nil;
     {
         instance = [AudioCallManager alloc];
          _rtcKit = [AgoraRtcEngineKit sharedEngineWithAppId:appId delegate:instance];
+        [instance subScribeAudioStream];
     }
     
     if(_rtcKit == nil)
@@ -80,6 +82,8 @@ static AudioCallManager *instance = nil;
 
 
 + (void) endAudioCall{
+    [AudioStreamMgr stopWork];
+    [[ActionManager instance].asrMgr stopAsr];
     if(_rtcKit != nil)
     {
         [_rtcKit leaveChannel:^(AgoraChannelStats * _Nonnull stat) {
@@ -91,7 +95,8 @@ static AudioCallManager *instance = nil;
     }
 }
 
-//倒入音频流
+//倒入音频流 todo drop
+
 + (BOOL)pushExternalAudioFrameRawData:(void * _Nonnull)data
                             samplenum:(NSUInteger)sampleNum
                          timestampnum:(NSTimeInterval)timeStamp
@@ -103,7 +108,21 @@ static AudioCallManager *instance = nil;
     return false;
 }
 
-//////////////// delegate
+
+- (void)subScribeAudioStream{
+    [AudioStreamMgr subscribeAudioStream:self];
+}
+
+//////////////// delegate from AudioStreamPushDelegate
+- (void)didCaptureData:(unsigned char *_Nullable)data bytesLength:(int)bytesLength
+{
+    if(_rtcKit != nil)
+    {
+        [_rtcKit pushExternalAudioFrameRawData:data samples:bytesLength/2 timestamp:0];
+    }
+}
+
+//////////////// delegate from AgoraRtcEngineDelegate
 
 - (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didOccurWarning:(AgoraWarningCode)warningCode
 {
@@ -127,6 +146,8 @@ static AudioCallManager *instance = nil;
 
 - (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didJoinedOfUid:(NSUInteger)uid elapsed:(NSInteger)elapsed
 {
+    [AudioStreamMgr startWork];
+    [[ActionManager instance].asrMgr startAsr];
     EventData eventData = {EventDidJoinedOfUid, uid,elapsed,0,nil};
     [[ActionManager instance]  HandleEvent:eventData];
 }

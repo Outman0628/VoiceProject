@@ -20,6 +20,24 @@
 		63A24F6723CCC83100D2ADC4 /* AudioController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A24F6623CCC83100D2ADC4 /* AudioController.m */; };
 		63A24F6A23CCD99E00D2ADC4 /* ExternalAudio.mm in Sources */ = {isa = PBXBuildFile; fileRef = 63A24F6823CCD99D00D2ADC4 /* ExternalAudio.mm */; };
 		63A24F6B23CCD99E00D2ADC4 /* ExternalAudio.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F6923CCD99D00D2ADC4 /* ExternalAudio.h */; };
+		63A24F6D23CD592300D2ADC4 /* ASRInputStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F6C23CD592300D2ADC4 /* ASRInputStream.h */; };
+		63A24F7123CD607000D2ADC4 /* AudioStreamMgr.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F7023CD607000D2ADC4 /* AudioStreamMgr.h */; };
+		63A24F7323CD634400D2ADC4 /* AudioStreamMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A24F7223CD634400D2ADC4 /* AudioStreamMgr.m */; };
+		63A24F7523CD7BCE00D2ADC4 /* ASRInputStream.mm in Sources */ = {isa = PBXBuildFile; fileRef = 63A24F7423CD7BCE00D2ADC4 /* ASRInputStream.mm */; };
+		63A24F8523CD914900D2ADC4 /* BDSWakeupParameters.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F7823CD914900D2ADC4 /* BDSWakeupParameters.h */; };
+		63A24F8623CD914900D2ADC4 /* BDSASRParameters.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F7923CD914900D2ADC4 /* BDSASRParameters.h */; };
+		63A24F8723CD914900D2ADC4 /* BDSEventManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F7A23CD914900D2ADC4 /* BDSEventManager.h */; };
+		63A24F8823CD914900D2ADC4 /* .gitIgnore in Resources */ = {isa = PBXBuildFile; fileRef = 63A24F7B23CD914900D2ADC4 /* .gitIgnore */; };
+		63A24F8923CD914900D2ADC4 /* BDSUploaderDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F7C23CD914900D2ADC4 /* BDSUploaderDefines.h */; };
+		63A24F8A23CD914900D2ADC4 /* BDSASRDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F7D23CD914900D2ADC4 /* BDSASRDefines.h */; };
+		63A24F8B23CD914900D2ADC4 /* BDSUploaderParameters.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F7E23CD914900D2ADC4 /* BDSUploaderParameters.h */; };
+		63A24F8C23CD914900D2ADC4 /* BDSWakeupDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F7F23CD914900D2ADC4 /* BDSWakeupDefines.h */; };
+		63A24F8D23CD914900D2ADC4 /* BDRecognizerViewParamsObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F8123CD914900D2ADC4 /* BDRecognizerViewParamsObject.h */; };
+		63A24F8E23CD914900D2ADC4 /* BDRecognizerViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F8223CD914900D2ADC4 /* BDRecognizerViewController.h */; };
+		63A24F8F23CD914900D2ADC4 /* BDTheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F8323CD914900D2ADC4 /* BDTheme.h */; };
+		63A24F9023CD914900D2ADC4 /* BDRecognizerViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F8423CD914900D2ADC4 /* BDRecognizerViewDelegate.h */; };
+		63A24F9223CD91CC00D2ADC4 /* AsrManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F9123CD91CC00D2ADC4 /* AsrManager.h */; };
+		63A24F9423CD920500D2ADC4 /* AsrManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A24F9323CD920500D2ADC4 /* AsrManager.m */; };
 		63B3565B23BDE3900034F54B /* ACM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3565123BDE3900034F54B /* ACM.framework */; };
 		63B3566023BDE3900034F54B /* ACMTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B3565F23BDE3900034F54B /* ACMTests.m */; };
 		63B3566223BDE3900034F54B /* ACM.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B3565423BDE3900034F54B /* ACM.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -85,6 +103,24 @@
 		63A24F6623CCC83100D2ADC4 /* AudioController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioController.m; sourceTree = "<group>"; };
 		63A24F6823CCD99D00D2ADC4 /* ExternalAudio.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ExternalAudio.mm; sourceTree = "<group>"; };
 		63A24F6923CCD99D00D2ADC4 /* ExternalAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExternalAudio.h; sourceTree = "<group>"; };
+		63A24F6C23CD592300D2ADC4 /* ASRInputStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASRInputStream.h; sourceTree = "<group>"; };
+		63A24F7023CD607000D2ADC4 /* AudioStreamMgr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioStreamMgr.h; sourceTree = "<group>"; };
+		63A24F7223CD634400D2ADC4 /* AudioStreamMgr.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioStreamMgr.m; sourceTree = "<group>"; };
+		63A24F7423CD7BCE00D2ADC4 /* ASRInputStream.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ASRInputStream.mm; sourceTree = "<group>"; };
+		63A24F7823CD914900D2ADC4 /* BDSWakeupParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSWakeupParameters.h; sourceTree = "<group>"; };
+		63A24F7923CD914900D2ADC4 /* BDSASRParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSASRParameters.h; sourceTree = "<group>"; };
+		63A24F7A23CD914900D2ADC4 /* BDSEventManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSEventManager.h; sourceTree = "<group>"; };
+		63A24F7B23CD914900D2ADC4 /* .gitIgnore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitIgnore; sourceTree = "<group>"; };
+		63A24F7C23CD914900D2ADC4 /* BDSUploaderDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSUploaderDefines.h; sourceTree = "<group>"; };
+		63A24F7D23CD914900D2ADC4 /* BDSASRDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSASRDefines.h; sourceTree = "<group>"; };
+		63A24F7E23CD914900D2ADC4 /* BDSUploaderParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSUploaderParameters.h; sourceTree = "<group>"; };
+		63A24F7F23CD914900D2ADC4 /* BDSWakeupDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSWakeupDefines.h; sourceTree = "<group>"; };
+		63A24F8123CD914900D2ADC4 /* BDRecognizerViewParamsObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDRecognizerViewParamsObject.h; sourceTree = "<group>"; };
+		63A24F8223CD914900D2ADC4 /* BDRecognizerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDRecognizerViewController.h; sourceTree = "<group>"; };
+		63A24F8323CD914900D2ADC4 /* BDTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDTheme.h; sourceTree = "<group>"; };
+		63A24F8423CD914900D2ADC4 /* BDRecognizerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDRecognizerViewDelegate.h; sourceTree = "<group>"; };
+		63A24F9123CD91CC00D2ADC4 /* AsrManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AsrManager.h; sourceTree = "<group>"; };
+		63A24F9323CD920500D2ADC4 /* AsrManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AsrManager.m; sourceTree = "<group>"; };
 		63B3565123BDE3900034F54B /* ACM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ACM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		63B3565423BDE3900034F54B /* ACM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ACM.h; sourceTree = "<group>"; };
 		63B3565523BDE3900034F54B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -166,6 +202,7 @@
 		63A24F4D23CC7A9A00D2ADC4 /* ASR */ = {
 			isa = PBXGroup;
 			children = (
+				63A24F7623CD914900D2ADC4 /* BDSClientHeaders */,
 				63A24F6923CCD99D00D2ADC4 /* ExternalAudio.h */,
 				63A24F6823CCD99D00D2ADC4 /* ExternalAudio.mm */,
 				63A24F5423CC7CF700D2ADC4 /* AudioDataQueue.cpp */,
@@ -176,8 +213,49 @@
 				63A24F5823CC7D9900D2ADC4 /* ACMAudioInputStream.m */,
 				63A24F6423CCC81D00D2ADC4 /* AudioController.h */,
 				63A24F6623CCC83100D2ADC4 /* AudioController.m */,
+				63A24F6C23CD592300D2ADC4 /* ASRInputStream.h */,
+				63A24F7423CD7BCE00D2ADC4 /* ASRInputStream.mm */,
+				63A24F7023CD607000D2ADC4 /* AudioStreamMgr.h */,
+				63A24F7223CD634400D2ADC4 /* AudioStreamMgr.m */,
+				63A24F9123CD91CC00D2ADC4 /* AsrManager.h */,
+				63A24F9323CD920500D2ADC4 /* AsrManager.m */,
 			);
 			path = ASR;
+			sourceTree = "<group>";
+		};
+		63A24F7623CD914900D2ADC4 /* BDSClientHeaders */ = {
+			isa = PBXGroup;
+			children = (
+				63A24F7723CD914900D2ADC4 /* ASR */,
+			);
+			path = BDSClientHeaders;
+			sourceTree = "<group>";
+		};
+		63A24F7723CD914900D2ADC4 /* ASR */ = {
+			isa = PBXGroup;
+			children = (
+				63A24F7823CD914900D2ADC4 /* BDSWakeupParameters.h */,
+				63A24F7923CD914900D2ADC4 /* BDSASRParameters.h */,
+				63A24F7A23CD914900D2ADC4 /* BDSEventManager.h */,
+				63A24F7B23CD914900D2ADC4 /* .gitIgnore */,
+				63A24F7C23CD914900D2ADC4 /* BDSUploaderDefines.h */,
+				63A24F7D23CD914900D2ADC4 /* BDSASRDefines.h */,
+				63A24F7E23CD914900D2ADC4 /* BDSUploaderParameters.h */,
+				63A24F7F23CD914900D2ADC4 /* BDSWakeupDefines.h */,
+				63A24F8023CD914900D2ADC4 /* UIHeaders */,
+			);
+			path = ASR;
+			sourceTree = "<group>";
+		};
+		63A24F8023CD914900D2ADC4 /* UIHeaders */ = {
+			isa = PBXGroup;
+			children = (
+				63A24F8123CD914900D2ADC4 /* BDRecognizerViewParamsObject.h */,
+				63A24F8223CD914900D2ADC4 /* BDRecognizerViewController.h */,
+				63A24F8323CD914900D2ADC4 /* BDTheme.h */,
+				63A24F8423CD914900D2ADC4 /* BDRecognizerViewDelegate.h */,
+			);
+			path = UIHeaders;
 			sourceTree = "<group>";
 		};
 		63B3564723BDE3900034F54B = {
@@ -303,30 +381,44 @@
 			buildActionMask = 2147483647;
 			files = (
 				63B357BC23C6D8630034F54B /* Call.h in Headers */,
+				63A24F8E23CD914900D2ADC4 /* BDRecognizerViewController.h in Headers */,
+				63A24F9023CD914900D2ADC4 /* BDRecognizerViewDelegate.h in Headers */,
+				63A24F9223CD91CC00D2ADC4 /* AsrManager.h in Headers */,
 				63B3579123C45F290034F54B /* ACMAction.h in Headers */,
 				63A24F5723CC7D8A00D2ADC4 /* ACMAudioInputStream.h in Headers */,
 				63A24F5323CC7B6A00D2ADC4 /* AudioDataQueue.hpp in Headers */,
 				63A24F6B23CCD99E00D2ADC4 /* ExternalAudio.h in Headers */,
+				63A24F8623CD914900D2ADC4 /* BDSASRParameters.h in Headers */,
 				63B356C223BE56B20034F54B /* IACMCallBack.h in Headers */,
 				63B357C423C81C6E0034F54B /* ACMEnums.h in Headers */,
 				63A24F5123CC7B3300D2ADC4 /* AudioInputStream.h in Headers */,
 				63B357C823C8B49D0034F54B /* InComeDialAction.h in Headers */,
 				63A24F4823CB5A9200D2ADC4 /* Assistant.h in Headers */,
+				63A24F7123CD607000D2ADC4 /* AudioStreamMgr.h in Headers */,
 				63A24F4A23CB5ACC00D2ADC4 /* AnswerAsistant.h in Headers */,
 				63B3573023BF24AD0034F54B /* IRTCCallBack.h in Headers */,
 				63B357B723C6D2CF0034F54B /* ApnsMessageManager.h in Headers */,
 				63B3579523C4692F0034F54B /* ActionManager.h in Headers */,
+				63A24F8723CD914900D2ADC4 /* BDSEventManager.h in Headers */,
 				63B3572C23BF247C0034F54B /* AudioCallManager.h in Headers */,
+				63A24F8523CD914900D2ADC4 /* BDSWakeupParameters.h in Headers */,
 				63B357B123C5E69C0034F54B /* DialAction.h in Headers */,
 				63B357A823C4B1B30034F54B /* LoginAction.h in Headers */,
 				63B3579923C46BE30034F54B /* EventData.h in Headers */,
 				63B357C023C6D88B0034F54B /* CallManager.h in Headers */,
 				63B357CC23C8BC970034F54B /* OnPhoneAction.h in Headers */,
+				63A24F8D23CD914900D2ADC4 /* BDRecognizerViewParamsObject.h in Headers */,
+				63A24F8C23CD914900D2ADC4 /* BDSWakeupDefines.h in Headers */,
+				63A24F8B23CD914900D2ADC4 /* BDSUploaderParameters.h in Headers */,
+				63A24F8A23CD914900D2ADC4 /* BDSASRDefines.h in Headers */,
 				63B3566223BDE3900034F54B /* ACM.h in Headers */,
 				63B3579D23C474C50034F54B /* SDKInitAction.h in Headers */,
+				63A24F6D23CD592300D2ADC4 /* ASRInputStream.h in Headers */,
 				63B356C023BE553B0034F54B /* RunTimeMsgManager.h in Headers */,
 				63A24F6523CCC81D00D2ADC4 /* AudioController.h in Headers */,
+				63A24F8923CD914900D2ADC4 /* BDSUploaderDefines.h in Headers */,
 				63B3579B23C46C8C0034F54B /* ACMCommon.h in Headers */,
+				63A24F8F23CD914900D2ADC4 /* BDTheme.h in Headers */,
 				63B357AC23C4C7480034F54B /* MonitorAction.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -410,6 +502,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63A24F8823CD914900D2ADC4 /* .gitIgnore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -427,9 +520,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63A24F9423CD920500D2ADC4 /* AsrManager.m in Sources */,
 				63B357CA23C8B4AA0034F54B /* InComeDialAction.m in Sources */,
 				63B357AE23C4C75B0034F54B /* MonitorAction.m in Sources */,
 				63B357BE23C6D8770034F54B /* Call.m in Sources */,
+				63A24F7523CD7BCE00D2ADC4 /* ASRInputStream.mm in Sources */,
 				63B3579F23C475B80034F54B /* SDKInitAction.m in Sources */,
 				63B357AA23C4B1C40034F54B /* LoginAction.m in Sources */,
 				63A24F6723CCC83100D2ADC4 /* AudioController.m in Sources */,
@@ -444,6 +539,7 @@
 				63B3579323C468730034F54B /* ACMAction.m in Sources */,
 				63B356AC23BE38970034F54B /* ACM.m in Sources */,
 				63B357B323C5E6AE0034F54B /* DialAction.m in Sources */,
+				63A24F7323CD634400D2ADC4 /* AudioStreamMgr.m in Sources */,
 				63B3579723C469400034F54B /* ActionManager.m in Sources */,
 				63B3572E23BF24920034F54B /* AudioCallManager.m in Sources */,
 				63B357C223C6D89C0034F54B /* CallManager.m in Sources */,

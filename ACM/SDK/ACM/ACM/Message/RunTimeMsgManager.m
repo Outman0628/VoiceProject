@@ -234,6 +234,51 @@ static ActionManager *actionMgr = nil;
            }];
 }
 
+// ASR 数据同步
++ (void)syncAsrData: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID asrData:(nonnull NSString *)text timeStamp:(NSTimeInterval)startTime isFinished:(BOOL) finished{
+    
+    NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+    NSTimeInterval msgStamp=[dat timeIntervalSince1970];
+    NSNumber *asrTimeStamp = [NSNumber numberWithDouble:startTime];
+    NSNumber *msgTimeStamp = [NSNumber numberWithDouble:msgStamp];
+    
+    NSDictionary * rtmNotifyBean =
+    @{@"title":@"ASRSync",
+      @"accountSender": userID,
+      @"accountRemote":remoteUid,
+      @"channel":  channelID,
+      @"asrData": text,
+      @"timeStamp": asrTimeStamp,
+      @"isFinished": (finished == TRUE ? @"true" : @"false"),
+      @"msgTimeStamp": msgTimeStamp,
+      };
+    
+    NSError *error;
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:rtmNotifyBean options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    
+    AgoraRtmMessage *rtmMessage = [[AgoraRtmMessage alloc] initWithText:jsonStr];
+    
+    [_kit sendMessage:rtmMessage toPeer:remoteUid
+     
+           completion:^(AgoraRtmSendPeerMessageErrorCode errorCode) {
+               
+               //sent((int)errorCode);
+               if(errorCode == AgoraRtmSendPeerMessageErrorOk)
+               {
+                   // [self showAlert: @"消息已发送!"];
+                   NSLog(@"Send phone call succeed!");
+               }
+               else
+               {
+                   NSString *errNote =  [[NSString alloc] initWithString:[NSString stringWithFormat:@"Send asr data failed:%d", (int)errorCode]];
+                   //[self showAlert: errNote];
+                   NSLog(@"%@",errNote);
+               }
+           }];
+}
+
 
 #pragma mark - AgoraRtmDelegate
 - (void)rtmKit:(AgoraRtmKit *)kit connectionStateChanged:(AgoraRtmConnectionState)state reason:(AgoraRtmConnectionChangeReason)reason {
@@ -311,6 +356,11 @@ static ActionManager *actionMgr = nil;
     else if( [title isEqualToString:@"leave"] )
     {
         EventData eventData = {EventRtmLeaveCall, 0,0,0,dic[@"channel"]};
+        [actionMgr HandleEvent:eventData];
+    }
+    else if([title isEqualToString:@"ASRSync"])
+    {
+        EventData eventData = {  EventRemoeAsrResult, 0,0,0,dic};
         [actionMgr HandleEvent:eventData];
     }
 }
