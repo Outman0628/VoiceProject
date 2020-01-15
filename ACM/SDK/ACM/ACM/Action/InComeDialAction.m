@@ -52,6 +52,10 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     {
         [self HandleRobotAnswerCall:eventData];
     }
+    else
+    {
+        [super HandleEvent:eventData];
+    }
 }
 
 -(void) HandleRtmCallReq: (EventData) eventData{

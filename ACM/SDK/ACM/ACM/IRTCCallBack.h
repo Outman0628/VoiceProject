@@ -63,3 +63,13 @@
 
 @end
 
+
+/**
+ Subscription types.
+ */
+
+/**
+话语权切换回调函数.
+ */
+typedef void (^IRTCAGetAuthorityBlock)(AcmPhoneCallCode errorCode);
+

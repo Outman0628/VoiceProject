@@ -49,6 +49,10 @@ static NSString *BackLoginApi = @"/dapi/account/update";
     {
         [self onRTMLoginResult:eventData];
     }
+    else
+    {
+        [super HandleEvent:eventData];
+    }
      
 }
 

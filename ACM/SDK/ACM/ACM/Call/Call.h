@@ -93,6 +93,11 @@ typedef NS_ENUM(NSInteger, RoleType) {
  */
 -(void)updateStage: (CallStage) stage;
 
+/*
+ *结束Observer模式
+ */
+-(void)endObserverMode;
+
 @end
 
 #endif /* Call_h */

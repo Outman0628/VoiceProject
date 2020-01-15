@@ -47,4 +47,19 @@
     self.stage = stage;    
 }
 
+-(void)endObserverMode
+{
+    if(self.role == Observer)
+    {
+        if([self.selfId isEqualToString:self.callerId])
+        {
+            self.role = Originator;
+        }
+        else
+        {
+            self.role = Subscriber;
+        }
+    }
+}
+
 @end

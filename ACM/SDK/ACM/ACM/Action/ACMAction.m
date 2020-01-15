@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ACMAction.h"
+#import "../IRTCCallBack.h"
 
 @implementation  ACMAction
 /**
@@ -27,7 +28,18 @@
  Action 事件处理
  */
 - (void) HandleEvent: (EventData) eventData{
-    
+    if(eventData.type == EventGetAuthority)
+    {
+        [self handleBaseEventGetAuthority:eventData];
+    }
+}
+
+- (void) handleBaseEventGetAuthority: (EventData) eventData{
+    IRTCAGetAuthorityBlock callback = eventData.param5;
+    if( callback != nil )
+    {
+        callback(AcmPhoneCallErrorNoAuthority);
+    }
 }
 
 @end

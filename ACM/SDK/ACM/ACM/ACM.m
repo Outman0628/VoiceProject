@@ -165,5 +165,19 @@ static ActionManager *actionMgr = nil;
     return ret;
 }
 
++ (void) getPhoneAuthority: ( nullable NSString *)channelId completion:(IRTCAGetAuthorityBlock _Nullable)completionBlock
+{
+    if(actionMgr != nil)
+    {
+        EventData eventData = {EventGetAuthority,0,0,0,channelId,completionBlock};
+        [actionMgr HandleEvent:eventData];
+        
+    }
+    else if(completionBlock != nil)
+    {
+        completionBlock(AcmPhoneCallErrorNoAuthority);
+    }
+}
+
 
 @end

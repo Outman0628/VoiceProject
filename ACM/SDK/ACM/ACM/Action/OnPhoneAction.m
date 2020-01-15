@@ -14,6 +14,8 @@
 #import "../RTC/AudioCallManager.h"
 #import "../Message/RunTimeMsgManager.h"
 
+static NSString *AuthorityApi = @"/dapi/quit/robot";
+
 // 电话响铃Action
 @interface OnPhoneAction ()
 @property Call *curCall;
@@ -96,6 +98,14 @@ static BOOL turn = NO;
     else if(eventData.type == EventRemoeAsrResult)
     {
         [self handleRemoteAsrResult:eventData];
+    }
+    else if(eventData.type == EventGetAuthority)
+    {
+        [self handleEventGetAuthority:eventData];
+    }
+    else
+    {
+        [super HandleEvent:eventData];
     }
 }
 
@@ -230,6 +240,91 @@ static BOOL turn = NO;
         [call updateStage:Finished];
         [self JumpBackToMonitorAction];
     }
+}
+
+- (void) handleEventGetAuthority: (EventData) eventData{
+    
+    IRTCAGetAuthorityBlock callback = eventData.param5;
+    
+    Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
+    if(call != nil)
+    {
+        if(call.stage != OnPhone && call.role != Observer)
+        {
+            callback(AcmPhoneCallErrorNoAuthority);
+            return;
+        }
+        
+        [self requestAuthority:call completion:callback];
+        
+    }
+    else if( callback != nil )
+    {
+        callback(AcmPhoneCallErrorNoAuthority);
+    }
+}
+
+- (void) requestAuthority: (nonnull Call *)call completion:(IRTCAGetAuthorityBlock _Nullable)completionBlock
+{
+    NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, AuthorityApi];
+    
+    NSURL *url = [NSURL URLWithString:stringUrl];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    
+    request.timeoutInterval = 5.0;
+    
+    request.HTTPMethod = @"POST";
+    
+    NSString *bodyString = [NSString stringWithFormat:@"channel=%@", call.channelId]; //带一个参数key传给服务器
+    
+    request.HTTPBody = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    
+    [[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSInteger code = [(NSHTTPURLResponse *)response statusCode];
+        NSLog(@"response code:%ldd", (long)code);
+        if([(NSHTTPURLResponse *)response statusCode] == 200){
+            NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSData *jsonData = [str dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+            
+            BOOL ret = dic[@"success"];
+            
+            
+            if(ret == YES)
+            {
+                [AudioCallManager muteLocalAudioStream:false];
+                [AudioCallManager muteAllRemoteAudioStreams:false];
+                [call endObserverMode];
+                if(completionBlock != nil)
+                {
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        completionBlock(AcmPhoneCallOK);
+                    });
+                }
+            }
+            else
+            {
+                if(completionBlock != nil)
+                {
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        completionBlock(AcmPhoneCallErrorApplyAuthorityResponse);
+                    });
+                }
+                
+            }
+        }
+        else{
+            if(completionBlock != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(),^{
+                    completionBlock(AcmPhoneCallErrorApplyAuthority);
+                });
+            }
+        }
+    }] resume];
 }
 
 // 跳转回Monitor Action

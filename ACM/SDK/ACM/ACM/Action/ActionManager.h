@@ -12,7 +12,7 @@
 #import "EventData.h"
 #import "ACMAction.h"
 #import "../Call/CallManager.h"
-#import "../Asr/AsrManager.h"
+#import "../ASR/AsrManager.h"
 
 @interface ActionManager : NSObject
 
@@ -21,7 +21,7 @@
 @property NSString* _Nullable host;
 @property CallManager* _Nonnull  callMgr;
 @property id<IACMCallBack> _Nullable  icmCallBack;
-@property AsrManager *asrMgr;
+@property AsrManager * _Nullable asrMgr;
 
 
 +(ActionManager *_Nullable)instance;

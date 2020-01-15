@@ -116,6 +116,17 @@
                                 <rect key="frame" x="0.0" y="255" width="413" height="454"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uwC-xl-g7U">
+                                        <rect key="frame" x="114" y="280" width="184" height="51"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="32"/>
+                                        <state key="normal" title="切换话语权">
+                                            <color key="titleColor" red="0.91372549020000005" green="0.23529411759999999" blue="0.058823529409999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="getAuthority:" destination="BYZ-38-t0r" eventType="touchUpInside" id="aji-kf-81N"/>
+                                        </connections>
+                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EiK-kK-ATJ">
                                         <rect key="frame" x="113" y="207" width="184" height="51"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
@@ -202,6 +213,7 @@
                     <connections>
                         <outlet property="answerCallBtn2" destination="EiK-kK-ATJ" id="3If-bo-tdW"/>
                         <outlet property="answerPanel" destination="4t7-15-lu5" id="bkE-jk-Xed"/>
+                        <outlet property="authorityBtn" destination="uwC-xl-g7U" id="SXy-LN-hbs"/>
                         <outlet property="callPanel" destination="4PM-SR-UDR" id="EG4-e0-4Sl"/>
                         <outlet property="callRobotBtn" destination="32G-Ww-sCH" id="xkz-eI-ahh"/>
                         <outlet property="endCallBtn" destination="WZ2-oS-yVD" id="jw5-di-PUt"/>

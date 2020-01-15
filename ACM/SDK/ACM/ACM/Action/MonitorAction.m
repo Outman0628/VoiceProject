@@ -65,6 +65,10 @@
     {
         [self HandleApnsCallReq:eventData];
     }
+    else
+    {
+        [super HandleEvent:eventData];
+    }
     
 }
 

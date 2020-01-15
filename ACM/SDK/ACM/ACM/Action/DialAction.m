@@ -82,6 +82,10 @@ static NSString *DialRobot = @"/dapi/call/robot";
     {}
     else if(eventData.type == EventDidRtcOccurError)
     {}
+    else
+    {
+        [super HandleEvent:eventData];
+    }
 }
 
 - (void) HandleEventDidJoinedOfUid: (EventData) eventData{

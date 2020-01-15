@@ -46,5 +46,8 @@
         
        
     }
+    else{
+        [super HandleEvent:eventData];
+    }
 }
 @end

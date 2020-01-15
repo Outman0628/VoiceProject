@@ -54,6 +54,8 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *remoteUserIdLabel2;
 
+@property (weak, nonatomic) IBOutlet UIButton *authorityBtn;
+
 @end
 
 @implementation ViewController
@@ -300,6 +302,7 @@
         self.answerPanel.hidden = false;
         self.robotAnswerCallBtn.hidden = true;
         self.rejectBtn.hidden = true;
+        self.authorityBtn.hidden = false;
     }
 }
 
@@ -311,6 +314,23 @@
         self.answerPanel.hidden = true;
     }
 }
+
+- (IBAction)getAuthority:(id)sender {
+    if(self.inComeCall != nil)
+    {
+        [ACM getPhoneAuthority:self.inComeCall.channelId completion:^(AcmPhoneCallCode errorCode) {
+            if(errorCode == AcmPhoneCallOK)
+            {
+                [self showAlert:@"话语权切换成功"];
+            }
+            else
+            {
+                [self showAlert: [NSString stringWithFormat:@"话语权切换失败:%ld",(long)errorCode]];
+            }
+        }];
+    }
+}
+
 
 - (void)saveUser: (nonnull NSString *) uid{
     // 要保存的数据
@@ -366,6 +386,7 @@
     self.answerPanel.hidden = false;
     self.remoteUserIdLabel2.text = call.callerId;
     self.rejectBtn.hidden = false;
+    self.authorityBtn.hidden = true;
     
 }
 
@@ -441,7 +462,7 @@
  */
 - (void)onRemoteText: (nonnull NSString *)text remoteAccount:(nonnull NSString *)remoteUid timeStamp:(NSTimeInterval)startTime msgStamp:(NSTimeInterval)msgTimestamp isFinished:(BOOL) finished
 {
-    NSLog(@"ASR remote. from:%@ Text:%@ timeStamp:%f msgTimeStamp:%f isFinished:%d", remoteUid,text,startTime,msgTimestamp, finished);
+    //NSLog(@"ASR remote. from:%@ Text:%@ timeStamp:%f msgTimeStamp:%f isFinished:%d", remoteUid,text,startTime,msgTimestamp, finished);
 }
 
 

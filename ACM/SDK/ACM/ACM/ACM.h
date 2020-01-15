@@ -116,6 +116,11 @@ FOUNDATION_EXPORT const unsigned char ACMVersionString[];
  */
 + (BOOL) updateMuteState: ( nonnull Call *)call;
 
-
-
+/**
+ 切换话语权
+ 
+ @param channelId 通话频道
+ @param completionBlock 请求结果回调
+ */
++ (void) getPhoneAuthority: ( nullable NSString *)channelId completion:(IRTCAGetAuthorityBlock _Nullable)completionBlock;
 @end

@@ -100,6 +100,9 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     // ASR 远端数据
     EventRemoeAsrResult = 28,
     
+    // 获取话语权
+    EventGetAuthority = 29,
+    
 
     
     // 拨号

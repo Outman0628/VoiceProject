@@ -140,10 +140,33 @@ typedef NS_ENUM(NSInteger, AcmDialCode) {
  */
 
 typedef NS_ENUM(NSInteger, AcmPhoneCallCode) {
+    
+    /*
+     成功
+     */
+    AcmPhoneCallOK = 0,
+    
     /**
      对方用户挂断.
      */
     AcmPhoneCallCodeRemoteEnd = 1,
+    
+
+    
+    /*
+     申请话语权失败，服务器异常，或是网络问题
+     */
+    AcmPhoneCallErrorApplyAuthority = -1,
+    
+    /*
+     申请话语权失败，服务器回复内容异常
+     */
+    AcmPhoneCallErrorApplyAuthorityResponse = -2,
+    
+    /*
+     申请话语权失败，该请求拥有话语权，或是通话已经结束
+     */
+    AcmPhoneCallErrorNoAuthority = -3,
 };
 
 /*
