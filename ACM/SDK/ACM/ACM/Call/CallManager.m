@@ -19,7 +19,7 @@
 {
     Call *instance = [[Call alloc]init];
     instance.callType = AudioCall;
-    instance.stage = Dialing;
+    [instance updateStage:Dialing];
     instance.role = Originator;
     instance.callback = delegate;
     [instance addSubscriber:peerId];
@@ -55,7 +55,7 @@
 {
     Call *instance = [[Call alloc]init];
     instance.callType = AudioCall;
-    instance.stage = Dialing;
+    [instance updateStage:Dialing];
     instance.role = Subscriber;
     instance.callerId = callReq[@"accountCaller"];
     instance.channelId = callReq[@"channel"];
@@ -70,7 +70,7 @@
 {
     Call *instance = call;
     instance.callType = AudioCall;
-    instance.stage = Dialing;
+    [instance updateStage:Dialing];
     instance.role = Originator;
    
     instance.callerId = callInfo[@"uid"];;

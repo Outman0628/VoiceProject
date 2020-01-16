@@ -123,4 +123,12 @@ FOUNDATION_EXPORT const unsigned char ACMVersionString[];
  @param completionBlock 请求结果回调
  */
 + (void) getPhoneAuthority: ( nullable NSString *)channelId completion:(IRTCAGetAuthorityBlock _Nullable)completionBlock;
+
+
+/**
+设置拨号和接听超时
+ 
+ @param dialingTimer 超时时间 (秒)
+ */
++ (void) updateDialingTimer: ( NSInteger )dialingTimer;
 @end

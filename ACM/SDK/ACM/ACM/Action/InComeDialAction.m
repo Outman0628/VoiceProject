@@ -52,9 +52,56 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     {
         [self HandleRobotAnswerCall:eventData];
     }
+    else if(eventData.type == EventDialingTimeout)
+    {
+        [self handleDialingTimeout:eventData];
+    }
+    else if(eventData.type == EventRtmLeaveCall)
+    {
+        [self remoteLeaveCall:eventData];
+    }
     else
     {
         [super HandleEvent:eventData];
+    }
+}
+
+- (void) remoteLeaveCall: (EventData) eventData{
+    
+    
+    Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
+    if(call != nil && call.role == Subscriber && call.stage == Dialing)
+    {
+        [call updateStage:Finished];
+        [self JumpBackToMonitorAction];
+        
+        id<IACMCallBack> callBack =  [ActionManager instance].icmCallBack;
+        if(callBack != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(),^{
+                [callBack onCallEnd:call endCode:AcmCallerCancelDial];
+            });
+        }
+    }
+    
+}
+
+- (void) handleDialingTimeout: (EventData) eventData{
+    Call *call = eventData.param4;
+    if(call != nil && call.stage == Dialing && call.role == Subscriber)
+    {
+        [call updateStage:Finished];
+        [self JumpBackToMonitorAction];
+        
+        id<IACMCallBack> callBack =  [ActionManager instance].icmCallBack;
+        if(callBack != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(),^{
+                [callBack onCallEnd:call endCode:AcmDialingTimeout];
+            });
+        }
+        
+        
     }
 }
 
@@ -224,15 +271,17 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
             
             EventData nextEventdata = {EventRobotAnsweredCall,0,0,0,call};
             
+            OnPhoneAction* onPhone = [[OnPhoneAction alloc]init];
+            
+            [RunTimeMsgManager robotAnswerPhoneCall:call.callerId userAccount:call.selfId channelID:call.channelId];
+            
+            [[ActionManager instance] actionChange:self destAction:onPhone];
+            
+            [[ActionManager instance] HandleEvent:nextEventdata];
+            
             dispatch_async(dispatch_get_main_queue(),^{
                 
                 [call.callback didPhoneDialResult: AcmDialRobotAnswered];
-                
-                OnPhoneAction* onPhone = [[OnPhoneAction alloc]init];
-                
-                [[ActionManager instance] actionChange:self destAction:onPhone];
-                
-                [[ActionManager instance] HandleEvent:nextEventdata];
             });
         }
         else

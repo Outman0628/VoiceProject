@@ -56,7 +56,7 @@ typedef NS_ENUM(NSInteger, RoleType) {
 // 电话类型
 @property CallType callType;
 // 电话阶段
-@property CallStage stage;
+@property (readonly) CallStage stage;
 // 本机在电话中的角色
 @property RoleType  role;
 

@@ -179,5 +179,15 @@ static ActionManager *actionMgr = nil;
     }
 }
 
++ (void) updateDialingTimer: ( NSInteger )dialingTimer
+{
+    if(actionMgr != nil)
+    {
+        EventData eventData = {EventUpdateDialingTimer,(int)dialingTimer};
+        [actionMgr HandleEvent:eventData];
+        
+    }
+}
+
 
 @end

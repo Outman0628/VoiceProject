@@ -42,7 +42,7 @@ static ActionManager* actionMgrInstance = nil;
         actionMgrInstance = self;
         self.callMgr = [[CallManager alloc]init];
         self.asrMgr = [[AsrManager alloc]init];
-        
+        self.dialingTimetout = 30;
     }
     return self;
 }
@@ -81,6 +81,10 @@ static ActionManager* actionMgrInstance = nil;
     else if(eventData.type == EventInputStreamTest)
     {
         [self handleInputStreamTestEvent2:eventData];
+    }
+    else if(eventData.type == EventUpdateDialingTimer)
+    {
+        _dialingTimetout = eventData.param1;
     }
     else
     {

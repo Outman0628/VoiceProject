@@ -84,7 +84,15 @@ static NSString *DialRobot = @"/dapi/call/robot";
     {}
     else if(eventData.type == EventRtmAgreeAudioCall)
     {
-        [self handleRemoteAgreePhoneCall:eventData];
+        [self prepareOnPhoneCall:eventData];
+    }
+    else if(eventData.type == EventRTMRobotAnser)
+    {
+         [self prepareOnPhoneCall:eventData];
+    }
+    else if(eventData.type == EventDialingTimeout)
+    {
+        [self handleDialingTimeout:eventData];
     }
     else
     {
@@ -92,11 +100,27 @@ static NSString *DialRobot = @"/dapi/call/robot";
     }
 }
 
-- (void) handleRemoteAgreePhoneCall: (EventData) eventData{
+- (void) handleDialingTimeout: (EventData) eventData{
+    Call *call = eventData.param4;
+    if(call != nil && call.stage == Dialing)
+    {
+        [call updateStage:Finished];
+        [self JumpBackToMonitorAction];
+        if(call.callback != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(),^{
+            [call.callback didPhoneDialResult:AcmDialingTimeout];
+            });
+        }
+        
+    }
+}
+
+- (void) prepareOnPhoneCall: (EventData) eventData{
     Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
     if(call != nil && call.role == Originator && call.stage == Dialing)
-    {
-        call.stage = PrepareOnphone;
+    {       
+        [call updateStage:PrepareOnphone];
         if(call.callback)
         {
             [call.callback didPhoneDialResult:AcmPrepareOnphoneStage];

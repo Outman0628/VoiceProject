@@ -8,8 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "Call.h"
+#import "../Action/ActionManager.h"
 
 @interface Call()
+@property NSTimer *dialTimer;      // 拨号，拨号应答超时器
 @end
 
 @implementation Call
@@ -20,6 +22,7 @@
         self.localMuteState = false;
         self.remoteMuteState = false;
         self.subscriberList = [NSMutableArray array];
+        self.dialTimer = nil;
     }
     return self;
 }
@@ -44,7 +47,29 @@
 }
 
 -(void)updateStage: (CallStage) stage{
-    self.stage = stage;    
+   // self.stage = stage;
+    _stage = stage;
+    if(_stage == Dialing)
+    {
+        if(_dialTimer == nil)
+        {
+            _dialTimer = [NSTimer scheduledTimerWithTimeInterval:[ActionManager instance].dialingTimetout repeats:NO block:^(NSTimer * _Nonnull timer) {
+                 [self dialringTimeout];
+            }];
+        }
+    }
+    else
+    {
+        if(_dialTimer != nil)
+        {
+            [_dialTimer invalidate];
+        }
+    }
+}
+
+-(void)dialringTimeout{
+    EventData eventData = {EventDialingTimeout,0,0,0,self};
+    [[ActionManager instance] HandleEvent:eventData];
 }
 
 -(void)endObserverMode

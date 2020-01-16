@@ -94,7 +94,7 @@ typedef NS_ENUM(NSInteger, AcmDialCode) {
     /**
      超时未接听
      */
-    AcmDialConnectTimeout = 2,
+    AcmDialingTimeout = 2,
     
     /**
      对方拒绝接听
@@ -110,6 +110,13 @@ typedef NS_ENUM(NSInteger, AcmDialCode) {
      即将开始通话
      */
     AcmPrepareOnphoneStage = 5,
+    
+    /**
+     拨号方取消拨号
+     */
+    AcmCallerCancelDial= 6,
+    
+ 
     
     /**
      拨号成功发送

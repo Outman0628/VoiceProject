@@ -106,6 +106,15 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     // 获取话语权
     EventGetAuthority = 30,
     
+    // 拨号或接听超时
+    EventDialingTimeout = 31,
+    
+    // 接听方机器人应答
+    EventRTMRobotAnser = 32,
+    
+    // 接听方机器人应答
+    EventUpdateDialingTimer = 33,
+    
 
     
     // 拨号

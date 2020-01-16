@@ -234,6 +234,41 @@ static ActionManager *actionMgr = nil;
     
 }
 
++ (void)robotAnswerPhoneCall: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID{
+    NSDictionary * rtmNotifyBean =
+    @{@"title":@"robotAnswerCall",
+      @"accountCaller": userID,
+      @"accountRemote":remoteUid,
+      @"channel":  channelID,
+      };
+    
+    NSError *error;
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:rtmNotifyBean options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    
+    AgoraRtmMessage *rtmMessage = [[AgoraRtmMessage alloc] initWithText:jsonStr];
+    
+    [_kit sendMessage:rtmMessage toPeer:remoteUid
+     
+           completion:^(AgoraRtmSendPeerMessageErrorCode errorCode) {
+               
+               //sent((int)errorCode);
+               if(errorCode == AgoraRtmSendPeerMessageErrorOk)
+               {
+                   // [self showAlert: @"消息已发送!"];
+                   NSLog(@"Send phone call succeed!");
+               }
+               else
+               {
+                   NSString *errNote =  [[NSString alloc] initWithString:[NSString stringWithFormat:@"Send phone call failed:%d", (int)errorCode]];
+                   //[self showAlert: errNote];
+                   NSLog(@"%@",errNote);
+               }
+           }];
+    
+}
+
 // 结束通话
 + (void) leaveCall: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID{
     NSDictionary * rtmNotifyBean =
@@ -401,6 +436,11 @@ static ActionManager *actionMgr = nil;
     else if([title isEqualToString:@"agreeCall"])
     {
         EventData eventData = {EventRtmAgreeAudioCall, 0,0,0,dic[@"channel"]};
+        [actionMgr HandleEvent:eventData];
+    }
+    else if([title isEqualToString:@"robotAnswerCall"])
+    {
+        EventData eventData = {EventRTMRobotAnser, 0,0,0,dic[@"channel"]};
         [actionMgr HandleEvent:eventData];
     }
 }

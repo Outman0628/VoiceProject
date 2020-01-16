@@ -42,6 +42,14 @@
  */
 - (void)onCallReceived:(nonnull Call *)call;
 
+/**
+ 接听方拨号响应结束
+ 
+ @param call 通话请求对象
+ 
+ */
+- (void)onCallEnd:(nonnull Call *)call endCode:(AcmDialCode)dialCode;
+
 @end
 
 
