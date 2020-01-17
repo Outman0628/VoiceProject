@@ -227,11 +227,11 @@ static BOOL turn = NO;
     }
     
     if(call != nil){
-        if(call.role == Subscriber)  // 如果是观察者模式，不用给发起者发消息通知
+        if(call.role == Subscriber  || ![call.selfId isEqualToString:call.callerId])  // 如果是观察者模式，不用给发起者发消息通知
         {
             [RunTimeMsgManager leaveCall:call.callerId userAccount:call.selfId channelID:call.channelId];
         }
-        else if(call.role == Originator)
+        else if(call.role == Originator || [call.selfId isEqualToString:call.callerId])
         {
             // todo 多人列表
             [RunTimeMsgManager leaveCall:call.subscriberList[0] userAccount:call.selfId channelID:call.channelId];

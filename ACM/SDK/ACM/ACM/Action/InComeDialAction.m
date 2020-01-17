@@ -79,7 +79,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
         if(callBack != nil)
         {
             dispatch_async(dispatch_get_main_queue(),^{
-                [callBack onCallEnd:call endCode:AcmCallerCancelDial];
+                [callBack onCallEnd:call endCode:AcmMsgDialEndByCaller];
             });
         }
     }
@@ -97,7 +97,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
         if(callBack != nil)
         {
             dispatch_async(dispatch_get_main_queue(),^{
-                [callBack onCallEnd:call endCode:AcmDialingTimeout];
+                [callBack onCallEnd:call endCode:AcmMsgDialEndTimeout];
             });
         }
         

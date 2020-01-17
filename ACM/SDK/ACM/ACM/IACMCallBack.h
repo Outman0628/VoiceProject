@@ -48,7 +48,7 @@
  @param call 通话请求对象
  
  */
-- (void)onCallEnd:(nonnull Call *)call endCode:(AcmDialCode)dialCode;
+- (void)onCallEnd:(nonnull Call *)call endCode:(AcmMsgType)dialCode;
 
 @end
 

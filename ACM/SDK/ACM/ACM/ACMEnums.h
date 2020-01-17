@@ -203,4 +203,20 @@ typedef NS_ENUM(NSInteger, AcmError) {
     AcmErrorNotLogin = 2,
 };
 
+/*
+ 通话结束类型
+ */
+
+typedef NS_ENUM(NSInteger, AcmMsgType) {
+    /**
+     通话请求结束，拨号方挂断
+     */
+    AcmMsgDialEndByCaller = 1,
+    
+    /**
+     通话请求结束，超时未接听
+     */
+    AcmMsgDialEndTimeout = 2,
+};
+
 #endif /* IACMEnums_h */
