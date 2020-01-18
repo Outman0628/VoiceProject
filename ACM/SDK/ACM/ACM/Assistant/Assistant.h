@@ -8,31 +8,38 @@
 
 #ifndef Assistant_h
 #define Assistant_h
+#import "AssistantEnum.h"
 
-#import "AnswerAsistant.h"
+@class AnswerAssistant;
 
-@interface Asistant : NSObject
+typedef void (^AssistantBlock)(AssistantCode code, NSError * _Nullable subCode);
+
+@interface Assistant : NSObject
 
 /*
  * 获取本机语音应答助手配置
  */
-+(nullable AnswerAsistant *)getAnswerAsistant;
++(nullable AnswerAssistant *)getAnswerAsistant;
 
 /*
  * 设置或更新本机语音应答助手配置
  */
-+(BOOL)updateAnserAsistantParam:(nonnull AnswerAsistant*) answerAsistant;
++(void)updateAnswerAssistantParam:(nonnull AnswerAssistant*) answerAssistant completionBlock: (AssistantBlock _Nullable )completionHandler;
 
 /*
  * 预设文字试听,以配置中的参数进行试听
  */
-+(void)auditionAnswerSistant:(nonnull AnswerAsistant*) answerAsistant;
++(void)auditionAnswerAssistant:(nonnull AnswerAssistant*) answerAssistant;
 
 /*
  * 取消试听
  */
-+(void)cancelAuditionAnswerSistant:(nonnull AnswerAsistant*) answerAsistant;
++(void)cancelAuditionAnswerAssistant:(nonnull AnswerAssistant*) answerAssistant;
 
+/*
+ * 获取音色名称表
+ */
++(NSArray *_Nullable)getCandidates;
 
 @end
 
