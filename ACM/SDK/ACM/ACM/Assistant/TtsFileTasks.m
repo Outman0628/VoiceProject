@@ -47,24 +47,50 @@
     return _convertTaksk.count;
 }
 
--(BOOL) TaskFinish: (NSInteger) taskId FinishCode:(AssistantCode)code{
-    @synchronized(self) {
-        NSNumber* doneTask = nil;
-        for (int i=0; i<[_convertTaksk count]; i++) {
-            NSNumber* num = _convertTaksk[i];
-            if( num.integerValue == taskId )
-            {
-                doneTask = num;
-                break;
+-(void) TaskFinish: (NSInteger) taskId isError:(BOOL)error  errorCode:(NSError * _Nullable) subCode{
+    
+    NSNumber* doneTask = nil;
+    
+    if(error){
+        
+        // TASK 全部完成不用在回调 (比如之前已经出了错)
+        if(_convertTaksk.count == 0){
+            return;
+            
+        }
+        @synchronized(self) {
+            [_convertTaksk removeAllObjects];
+        }
+        if(self.callBack != nil)
+        {
+            self.callBack(AssistantErrorConvert, subCode);
+        }
+    }
+    else{
+    
+        @synchronized(self) {
+            
+            for (int i=0; i<[_convertTaksk count]; i++) {
+                NSNumber* num = _convertTaksk[i];
+                if( num.integerValue == taskId )
+                {
+                    doneTask = num;
+                    break;
+                }
+            }
+            
+            if(doneTask != nil){
+                [_convertTaksk removeObject:doneTask];
             }
         }
         
-        if(doneTask != nil){
-            [_convertTaksk removeObject:doneTask];
+        if( _convertTaksk.count == 0 && self.callBack != nil)
+        {
+            self.callBack(AssistantOK, nil);
         }
     }
     
-    return _convertTaksk.count == 0;
+    
 }
 
 @end

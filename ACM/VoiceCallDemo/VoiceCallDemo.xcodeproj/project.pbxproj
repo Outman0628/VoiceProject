@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6349E8EF23D19254009EEE99 /* libBaiduTTSSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6349E8EE23D19254009EEE99 /* libBaiduTTSSDK.a */; };
+		6349E8F123D19386009EEE99 /* libiconv.2.4.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6349E8F023D19386009EEE99 /* libiconv.2.4.0.tbd */; };
+		639D125E23CF569300140B5C /* ACM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639D125D23CF569300140B5C /* ACM.framework */; };
 		63A24F9623CDB0C600D2ADC4 /* libz.1.2.5.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A24F9523CDB0C600D2ADC4 /* libz.1.2.5.tbd */; };
 		63A24F9823CDB0D200D2ADC4 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A24F9723CDB0D200D2ADC4 /* libsqlite3.0.tbd */; };
 		63A24F9A23CDB0F200D2ADC4 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A24F9923CDB0F200D2ADC4 /* CFNetwork.framework */; };
@@ -34,7 +37,6 @@
 		63B3573C23BF31A30034F54B /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3573B23BF31A30034F54B /* CoreMedia.framework */; };
 		63B3573E23BF31AE0034F54B /* CoreML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3573D23BF31AE0034F54B /* CoreML.framework */; };
 		63B3574023BF31C60034F54B /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3573F23BF31C60034F54B /* VideoToolbox.framework */; };
-		63B3574223BF57350034F54B /* ACM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3574123BF57340034F54B /* ACM.framework */; };
 		63B357A223C48E9B0034F54B /* BasicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B357A023C48E9B0034F54B /* BasicViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +58,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6349E8EE23D19254009EEE99 /* libBaiduTTSSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBaiduTTSSDK.a; path = libs/libBaiduTTSSDK.a; sourceTree = "<group>"; };
+		6349E8F023D19386009EEE99 /* libiconv.2.4.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.2.4.0.tbd; path = usr/lib/libiconv.2.4.0.tbd; sourceTree = SDKROOT; };
+		639D125B23CF565B00140B5C /* ACM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ACM.framework; sourceTree = "<group>"; };
+		639D125D23CF569300140B5C /* ACM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ACM.framework; sourceTree = "<group>"; };
 		63A24F9523CDB0C600D2ADC4 /* libz.1.2.5.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.2.5.tbd; path = usr/lib/libz.1.2.5.tbd; sourceTree = SDKROOT; };
 		63A24F9723CDB0D200D2ADC4 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		63A24F9923CDB0F200D2ADC4 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -91,7 +97,6 @@
 		63B3573B23BF31A30034F54B /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		63B3573D23BF31AE0034F54B /* CoreML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreML.framework; path = System/Library/Frameworks/CoreML.framework; sourceTree = SDKROOT; };
 		63B3573F23BF31C60034F54B /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
-		63B3574123BF57340034F54B /* ACM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ACM.framework; path = "../../../../../../../Users/David/Library/Developer/Xcode/DerivedData/ACMSDK-gkyfgsakhfozmmbwqwitqewlbmhq/Build/Products/Debug-iphonesimulator/ACM.framework"; sourceTree = "<group>"; };
 		63B357A023C48E9B0034F54B /* BasicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasicViewController.m; sourceTree = "<group>"; };
 		63B357A123C48E9B0034F54B /* BasicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicViewController.h; sourceTree = "<group>"; };
 		63B357AF23C5A8430034F54B /* VoiceCallDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VoiceCallDemo.entitlements; sourceTree = "<group>"; };
@@ -102,6 +107,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6349E8F123D19386009EEE99 /* libiconv.2.4.0.tbd in Frameworks */,
 				63A24F9E23CDB12600D2ADC4 /* GLKit.framework in Frameworks */,
 				63A24FA023CDB18800D2ADC4 /* libBaiduSpeechSDK.a in Frameworks */,
 				63A24F9C23CDB10600D2ADC4 /* CoreLocation.framework in Frameworks */,
@@ -111,13 +117,14 @@
 				63B3574023BF31C60034F54B /* VideoToolbox.framework in Frameworks */,
 				63B3573E23BF31AE0034F54B /* CoreML.framework in Frameworks */,
 				63B3573C23BF31A30034F54B /* CoreMedia.framework in Frameworks */,
+				639D125E23CF569300140B5C /* ACM.framework in Frameworks */,
 				63B3573A23BF31940034F54B /* AVFoundation.framework in Frameworks */,
 				63B3573823BF31880034F54B /* AudioToolbox.framework in Frameworks */,
 				63B3573623BF31790034F54B /* Accelerate.framework in Frameworks */,
 				63B3573423BF316D0034F54B /* AgoraRtcEngineKit.framework in Frameworks */,
 				63B3572023BE688E0034F54B /* CoreTelephony.framework in Frameworks */,
-				63B3574223BF57350034F54B /* ACM.framework in Frameworks */,
 				63B3571E23BE68850034F54B /* SystemConfiguration.framework in Frameworks */,
+				6349E8EF23D19254009EEE99 /* libBaiduTTSSDK.a in Frameworks */,
 				63B3571C23BE687E0034F54B /* libresolv.tbd in Frameworks */,
 				63B3571A23BE68760034F54B /* libc++.tbd in Frameworks */,
 				63B3571823BE68450034F54B /* AgoraRtmKit.framework in Frameworks */,
@@ -144,9 +151,10 @@
 		63B356CF23BE67A80034F54B = {
 			isa = PBXGroup;
 			children = (
+				6349E8EE23D19254009EEE99 /* libBaiduTTSSDK.a */,
+				639D125D23CF569300140B5C /* ACM.framework */,
 				63A24FA123CDB64500D2ADC4 /* bds_easr_basic_model.dat */,
 				63A24F9F23CDB18800D2ADC4 /* libBaiduSpeechSDK.a */,
-				63B3574123BF57340034F54B /* ACM.framework */,
 				63B356DA23BE67A80034F54B /* VoiceCallDemo */,
 				63B356F323BE67A90034F54B /* VoiceCallDemoTests */,
 				63B356FE23BE67A90034F54B /* VoiceCallDemoUITests */,
@@ -205,6 +213,8 @@
 		63B3571623BE68450034F54B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6349E8F023D19386009EEE99 /* libiconv.2.4.0.tbd */,
+				639D125B23CF565B00140B5C /* ACM.framework */,
 				63A24F9D23CDB12600D2ADC4 /* GLKit.framework */,
 				63A24F9B23CDB10600D2ADC4 /* CoreLocation.framework */,
 				63A24F9923CDB0F200D2ADC4 /* CFNetwork.framework */,

@@ -29,7 +29,7 @@ typedef void (^AssistantBlock)(AssistantCode code, NSError * _Nullable subCode);
 /*
  * 预设文字试听,以配置中的参数进行试听
  */
-+(void)auditionAnswerAssistant:(nonnull AnswerAssistant*) answerAssistant;
++(void)auditionAnswerAssistant:(nonnull AnswerAssistant*) answerAssistant completionBlock: (AssistantBlock _Nullable )completionHandler;
 
 /*
  * 取消试听

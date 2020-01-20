@@ -43,6 +43,21 @@ typedef NS_ENUM(NSInteger, AssistantCode) {
      文音转换创建任务错误
      */
     AssistantErrorCreatConverter = -5,
+    
+    /**
+     文音转换错误
+     */
+    AssistantErrorConvert = -6,
+    
+    /**
+     更新服务器文音文件错误
+     */
+    AssistantErrorUdateSeverTTSfile = -7,
+    
+    /**
+     更新服务器机器人配置错误
+     */
+    AssistantErrorUdateSeverAssConfig = -8,
 };
 
 #endif /* AssistantEnum_h */

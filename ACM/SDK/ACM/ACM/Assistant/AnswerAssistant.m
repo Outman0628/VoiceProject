@@ -21,8 +21,16 @@
         
         self.contents = [NSMutableArray array];
         self.enable = false;
+        [self setDefaultValue];
     }
     return self;
+}
+
+- (void) setDefaultValue{
+    self.speechPich = 5;
+    self.speechSpeed = 5;
+    self.speechVolume = 5;
+    self.curSpeakerIndex = 0;
 }
 
 /*
@@ -34,6 +42,7 @@
     clone.speechSpeed = _speechSpeed;
     clone.speechPich = _speechPich;
     clone.curSpeakerIndex = _curSpeakerIndex;
+    clone.enable = _enable;
     if(_contents != nil && _contents.count > 0)
     {
         for (int i=0; i<[_contents count]; i++) {

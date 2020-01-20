@@ -14,11 +14,15 @@
 #import "../TTS/BDSClientHeaders/TTS/BDSSpeechSynthesizer.h"
 #import "AssistantItem.h"
 #import "TtsFileManager.h"
+#import "AuditTask.h"
+#import "UpDateConfigTask.h"
 
 @interface Assistant()
 @property AnswerAssistant *answerAss;
 @property TtsManager *ttsMgr;
 @property TtsFileManager *ttsFileMgr;
+@property AuditTask *auditTask;
+@property UpDateConfigTask *updateConfigTask;
 @property NSMutableArray *speakerCadidates;        // 播报候选人员
 @end
 
@@ -60,12 +64,12 @@ static Assistant *instance = nil;
 }
 
 
-+(void)auditionAnswerAssistant:(nonnull AnswerAssistant*) answerAssistant{
++(void)auditionAnswerAssistant:(nonnull AnswerAssistant*) answerAssistant completionBlock: (AssistantBlock _Nullable )completionHandler{
     [Assistant createInstanceIfNeeded];
     
     if(instance != nil)
     {
-        [instance auditAnswerAssistant:answerAssistant];
+        [instance auditAnswerAssistant:answerAssistant completionBlock:completionHandler];
     }
 }
 
@@ -165,7 +169,18 @@ static Assistant *instance = nil;
         
         if(updateAss.enable  && updateAss.contents != nil && updateAss.contents.count > 0)
         {
-            
+            [_ttsFileMgr prepareVoiceFiles:updateAss.contents ttsManager:_ttsMgr completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
+                if(code == AssistantOK){
+                    // 获取语音文件成功，继续更新服务器配置
+                     NSLog(@"TTS tts files are prepared, is going to update server config");
+                    [self updateServerSetting:answerAssistant completionBlock:completionHandler];
+                }
+                else
+                {
+                    completionHandler(code,subCode);
+                }
+                    
+            }];
         }
         else
         {
@@ -181,9 +196,59 @@ static Assistant *instance = nil;
     }
 }
 
+-(void)updateServerSetting:(nonnull AnswerAssistant*) answerAssistant completionBlock: (AssistantBlock _Nullable )completionHandler{
+    _updateConfigTask = [[UpDateConfigTask alloc] init];
+    [_updateConfigTask updateConfig:answerAssistant.contents completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
+        self.updateConfigTask = nil;
+        if(completionHandler != nil)
+        {
+            completionHandler(code, subCode);
+        }
+        
+    }];
+}
+
 // 试听
--(void)auditAnswerAssistant:(nonnull AnswerAssistant*) answerAssistant{
-   // [_ttsMgr SynthesizeText:answerAssistant.content];
+-(void)auditAnswerAssistant:(nonnull AnswerAssistant*) answerAssistant completionBlock: (AssistantBlock _Nullable )completionHandler{
+    
+    if([self checkAnswerAssistantParam:answerAssistant])
+    {
+        AnswerAssistant *updateAss = [answerAssistant clone];
+        
+        if( updateAss.contents != nil && updateAss.contents.count > 0)
+        {
+            [_ttsFileMgr prepareVoiceFiles:updateAss.contents ttsManager:_ttsMgr completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
+                if(code == AssistantOK){
+                    // 获取语音文件成功，继续更新服务器配置
+                    NSLog(@"TTS tts files are prepared, is going to play them");
+                    [self auditAnswerAssistantFiles:answerAssistant completionBlock:completionHandler];
+                }
+                else
+                {
+                    completionHandler(code,subCode);
+                }
+                
+            }];
+        }
+    }
+    else
+    {
+        if(completionHandler != nil)
+        {
+            completionHandler(AssistantErrorParam,nil);
+        }
+    }
+}
+
+-(void)auditAnswerAssistantFiles:(nonnull AnswerAssistant*) answerAssistant completionBlock: (AssistantBlock _Nullable )completionHandler{
+    _auditTask = [[AuditTask alloc]init];
+    [_auditTask audit:answerAssistant.contents completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
+        self.auditTask = nil;
+        if(completionHandler != nil)
+        {
+            completionHandler(code, subCode);
+        }
+    }];
 }
 
 // 取消试听

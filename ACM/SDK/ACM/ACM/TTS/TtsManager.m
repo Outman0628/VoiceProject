@@ -10,6 +10,7 @@
 #import "TtsManager.h"
 #import "BDSClientHeaders/TTS/BDSSpeechSynthesizer.h"
 #import <AVFoundation/AVFoundation.h>
+#import "../Assistant/TtsFileTasks.h"
 
 NSString* APP_ID = @"18259540";
 NSString* API_KEY = @"gDYzkmc12uPVjUK6YLyPGLSC";
@@ -32,7 +33,7 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 }
 
 - (void)initMgr{
-    _isSpeek = YES;
+    _isSpeek = NO;
     [self configureSDK];
     [[BDSSpeechSynthesizer sharedInstance] setSynthParam:@(BDS_SYNTHESIZER_AUDIO_ENCODE_MP3_8K) forKey:BDS_SYNTHESIZER_PARAM_AUDIO_ENCODING];
     
@@ -81,24 +82,27 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
         }
     }
 
-- (NSInteger)SynthesizeTTsText:(nonnull NSString *)text withError:(NSError**)err{
+- (NSInteger)SynthesizeTTsText:(nonnull NSString *)text fileName:(nonnull NSString*)fName ttsTask:(nonnull TtsFileTasks*)task  withError:(NSError**)err{
     NSInteger sentenceID;
-   // NSError* err = nil;
+   
+     NSError* errCode = nil;
     
     NSAttributedString* string = [[NSAttributedString alloc] initWithString:text];
     
     if(_isSpeek)
-        sentenceID = [[BDSSpeechSynthesizer sharedInstance] speakSentence:[string string] withError:err];
+        sentenceID = [[BDSSpeechSynthesizer sharedInstance] speakSentence:[string string] withError:&errCode];
     else
-        sentenceID = [[BDSSpeechSynthesizer sharedInstance] synthesizeSentence:[string string] withError:err];
-    if(err == nil){
-        NSMutableDictionary *addedString = [[NSMutableDictionary alloc] initWithObjects:@[string, [NSNumber numberWithInteger:sentenceID], [NSNumber numberWithInteger:0], [NSNumber numberWithInteger:0]] forKeys:@[@"TEXT", @"ID", @"SPEAK_LEN", @"SYNTH_LEN"]];
+        sentenceID = [[BDSSpeechSynthesizer sharedInstance] synthesizeSentence:[string string] withError:&errCode];
+    if(errCode == nil){
+        NSMutableDictionary *addedString = [[NSMutableDictionary alloc] initWithObjects:@[string, [NSNumber numberWithInteger:sentenceID], [NSNumber numberWithInteger:0], [NSNumber numberWithInteger:0], [NSString stringWithFormat:@"%@", fName],task] forKeys:@[@"TEXT", @"ID", @"SPEAK_LEN", @"SYNTH_LEN" , @"FileName", @"TASK"]];
         [self.synthesisTexts addObject:addedString];
         // [self updateSynthProgress];
     }
     else{
-        NSLog(@"TTS add sentence error:%@",*err);
+        NSLog(@"TTS add sentence error:%@",errCode);
     }
+    
+    *err = errCode;
     
     return sentenceID;
 }
@@ -119,10 +123,16 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 
 - (void)synthesizerFinishWorkingSentence:(NSInteger)SynthesizeSentence{
     NSLog(@"TTS Did finish synth, %ld", SynthesizeSentence);
-    if(!_isSpeek){
+    //if(!_isSpeek)
+    {
         if(self.synthesisTexts.count > 0 &&
            SynthesizeSentence == [[[self.synthesisTexts objectAtIndex:0] objectForKey:@"ID"] integerValue]){
+            
+            NSMutableDictionary *dict = self.synthesisTexts[0];
             [self.synthesisTexts removeObjectAtIndex:0];
+            
+            TtsFileTasks *task = dict[@"TASK"];
+            [task TaskFinish:SynthesizeSentence isError:NO errorCode:nil];
         }
         else{
             NSLog(@"TTS Sentence ID mismatch??? received ID: %ld\nKnown sentences:", (long)SynthesizeSentence);
@@ -143,7 +153,13 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
     NSLog(@"TTS Did end speak %ld", SpeakSentence);
     if(self.synthesisTexts.count > 0 &&
        SpeakSentence == [[[self.synthesisTexts objectAtIndex:0] objectForKey:@"ID"] integerValue]){
+        //[self.synthesisTexts removeObjectAtIndex:0];
+        
+        NSMutableDictionary *dict = self.synthesisTexts[0];
         [self.synthesisTexts removeObjectAtIndex:0];
+        
+        TtsFileTasks *task = dict[@"TASK"];
+        [task TaskFinish:SpeakSentence isError:NO errorCode:nil];
     }
     else{
         NSLog(@"TTS Sentence ID mismatch??? received ID: %ld\nKnown sentences:", (long)SpeakSentence);
@@ -167,23 +183,58 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
         
         return;
     }
-    [self saveData:newData];
+    [self saveData:newData fileName:sentenceDict[@"FileName"]];
     [sentenceDict setObject:[NSNumber numberWithInteger:newLength] forKey:@"SYNTH_LEN"];
     //[self refreshAfterProgressUpdate:sentenceDict];
 }
 
-- (void)saveData: (NSData *)newData{
+- (void)saveData: (NSData *)newData fileName:(NSString *) fName{
     
     // 获取路径.
     NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject;
-    NSString *filePath = [documentPath stringByAppendingPathComponent:@"tts.mp3"];
-    NSError *error = nil;
+    NSString *filePath = [documentPath stringByAppendingPathComponent:fName];
     
+    
+    
+    /*
+     NSError *error = nil;
     BOOL written = [newData writeToFile:filePath options:NSDataWritingAtomic error:&error];
 
     
     if (!written) {
         NSLog(@"write failed: %@", [error localizedDescription]);
+    }
+     */
+    
+    NSFileHandle *fileHandler = nil;
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    if(![fileManager fileExistsAtPath:filePath]){
+    /*
+        fileHandler = [NSFileHandle fileHandleForWritingAtPath:fName];
+        if(fileHandler != nil)
+        {
+            [fileHandler writeData:newData];
+            [fileHandler closeFile];
+        }
+    */
+        NSError *error = nil;
+        BOOL written = [newData writeToFile:filePath options:NSDataWritingAtomic error:&error];
+        
+        
+        if (!written) {
+            NSLog(@"write failed: %@", [error localizedDescription]);
+        }
+    }
+    else{
+        fileHandler = [NSFileHandle fileHandleForUpdatingAtPath:fName];
+        if(fileHandler != nil)
+        {
+            [fileHandler seekToEndOfFile];
+            [fileHandler writeData:newData];
+            [fileHandler closeFile];
+        }
     }
 }
 
@@ -224,11 +275,22 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
                     synthesizing:(NSInteger)SynthesizeSentence{
     NSLog(@"TTS Did error %@ %ld, %ld", error, SpeakSentence, SynthesizeSentence);
 
+    NSMutableDictionary* sentenceDict = nil;
+    for(NSMutableDictionary *dict in self.synthesisTexts){
+        if([[dict objectForKey:@"ID"] integerValue] == SynthesizeSentence){
+            sentenceDict = dict;
+            break;
+        }
+    }
+    
+    if(sentenceDict != nil){
+        TtsFileTasks *task = sentenceDict[@"TASK"];
+        [task TaskFinish:SynthesizeSentence   isError:YES errorCode:error];
+    }
 
     [self.synthesisTexts removeAllObjects];
 
     [[BDSSpeechSynthesizer sharedInstance] cancel];
-    
 
 }
 

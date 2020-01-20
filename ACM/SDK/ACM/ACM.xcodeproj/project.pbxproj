@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		630F77D723D545960071DF9F /* AuditTask.h in Headers */ = {isa = PBXBuildFile; fileRef = 630F77D623D545960071DF9F /* AuditTask.h */; };
+		630F77D923D545A90071DF9F /* AuditTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 630F77D823D545A90071DF9F /* AuditTask.m */; };
+		630F77DD23D570C80071DF9F /* UpDateConfigTask.h in Headers */ = {isa = PBXBuildFile; fileRef = 630F77DC23D570C80071DF9F /* UpDateConfigTask.h */; };
+		630F77DF23D570D40071DF9F /* UpDateConfigTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 630F77DE23D570D40071DF9F /* UpDateConfigTask.m */; };
 		6349E8DE23D15685009EEE99 /* BDSSynthesizerStatusNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E8D423D15685009EEE99 /* BDSSynthesizerStatusNotifications.h */; };
 		6349E8DF23D15685009EEE99 /* BDSSpeechSynthesizerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E8D523D15685009EEE99 /* BDSSpeechSynthesizerDelegate.h */; };
 		6349E8E023D15685009EEE99 /* BDS_EttsModelManagerInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E8D623D15685009EEE99 /* BDS_EttsModelManagerInterface.h */; };
@@ -22,8 +26,8 @@
 		6349E8ED23D18490009EEE99 /* Assistant.m in Sources */ = {isa = PBXBuildFile; fileRef = 6349E8EC23D18490009EEE99 /* Assistant.m */; };
 		6349E8F323D1BFC1009EEE99 /* TtsFileManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E8F223D1BFC1009EEE99 /* TtsFileManager.h */; };
 		6349E8F523D1BFDE009EEE99 /* TtsFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6349E8F423D1BFDE009EEE99 /* TtsFileManager.m */; };
-		6349E8F723D1CAB9009EEE99 /* AssistantEnum.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E8F623D1CAB9009EEE99 /* AssistantEnum.h */; };
-		6349E8FD23D1FBC4009EEE99 /* AssistantItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E8FC23D1FBC4009EEE99 /* AssistantItem.h */; };
+		6349E8F723D1CAB9009EEE99 /* AssistantEnum.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E8F623D1CAB9009EEE99 /* AssistantEnum.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6349E8FD23D1FBC4009EEE99 /* AssistantItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E8FC23D1FBC4009EEE99 /* AssistantItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6349E8FF23D313AB009EEE99 /* AssistantItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6349E8FE23D313AB009EEE99 /* AssistantItem.m */; };
 		6349E90123D341A8009EEE99 /* TtsFileTasks.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E90023D341A8009EEE99 /* TtsFileTasks.h */; };
 		6349E90323D342E0009EEE99 /* TtsFileTasks.m in Sources */ = {isa = PBXBuildFile; fileRef = 6349E90223D342E0009EEE99 /* TtsFileTasks.m */; };
@@ -110,6 +114,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		630F77D623D545960071DF9F /* AuditTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuditTask.h; sourceTree = "<group>"; };
+		630F77D823D545A90071DF9F /* AuditTask.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuditTask.m; sourceTree = "<group>"; };
+		630F77DC23D570C80071DF9F /* UpDateConfigTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UpDateConfigTask.h; sourceTree = "<group>"; };
+		630F77DE23D570D40071DF9F /* UpDateConfigTask.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UpDateConfigTask.m; sourceTree = "<group>"; };
 		6349E8D423D15685009EEE99 /* BDSSynthesizerStatusNotifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSSynthesizerStatusNotifications.h; sourceTree = "<group>"; };
 		6349E8D523D15685009EEE99 /* BDSSpeechSynthesizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSSpeechSynthesizerDelegate.h; sourceTree = "<group>"; };
 		6349E8D623D15685009EEE99 /* BDS_EttsModelManagerInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDS_EttsModelManagerInterface.h; sourceTree = "<group>"; };
@@ -278,6 +286,10 @@
 				6349E8FE23D313AB009EEE99 /* AssistantItem.m */,
 				6349E90023D341A8009EEE99 /* TtsFileTasks.h */,
 				6349E90223D342E0009EEE99 /* TtsFileTasks.m */,
+				630F77D623D545960071DF9F /* AuditTask.h */,
+				630F77D823D545A90071DF9F /* AuditTask.m */,
+				630F77DC23D570C80071DF9F /* UpDateConfigTask.h */,
+				630F77DE23D570D40071DF9F /* UpDateConfigTask.m */,
 			);
 			path = Assistant;
 			sourceTree = "<group>";
@@ -471,6 +483,8 @@
 				63A24F9223CD91CC00D2ADC4 /* AsrManager.h in Headers */,
 				6349E90123D341A8009EEE99 /* TtsFileTasks.h in Headers */,
 				63B3579123C45F290034F54B /* ACMAction.h in Headers */,
+				6349E8F723D1CAB9009EEE99 /* AssistantEnum.h in Headers */,
+				6349E8FD23D1FBC4009EEE99 /* AssistantItem.h in Headers */,
 				63A24F5723CC7D8A00D2ADC4 /* ACMAudioInputStream.h in Headers */,
 				63A24F5323CC7B6A00D2ADC4 /* AudioDataQueue.hpp in Headers */,
 				63A24F6B23CCD99E00D2ADC4 /* ExternalAudio.h in Headers */,
@@ -479,6 +493,7 @@
 				63B356C223BE56B20034F54B /* IACMCallBack.h in Headers */,
 				63B357C423C81C6E0034F54B /* ACMEnums.h in Headers */,
 				63A24F5123CC7B3300D2ADC4 /* AudioInputStream.h in Headers */,
+				630F77DD23D570C80071DF9F /* UpDateConfigTask.h in Headers */,
 				6349E8E623D15685009EEE99 /* BDSTTSEventManager.h in Headers */,
 				63B357C823C8B49D0034F54B /* InComeDialAction.h in Headers */,
 				63A24F4823CB5A9200D2ADC4 /* Assistant.h in Headers */,
@@ -486,14 +501,12 @@
 				6349E8E723D15685009EEE99 /* BDSSpeechSynthesizerErrors.h in Headers */,
 				63A24F4A23CB5ACC00D2ADC4 /* AnswerAssistant.h in Headers */,
 				63B3573023BF24AD0034F54B /* IRTCCallBack.h in Headers */,
-				6349E8FD23D1FBC4009EEE99 /* AssistantItem.h in Headers */,
 				6349E8DF23D15685009EEE99 /* BDSSpeechSynthesizerDelegate.h in Headers */,
 				63B357B723C6D2CF0034F54B /* ApnsMessageManager.h in Headers */,
 				63B3579523C4692F0034F54B /* ActionManager.h in Headers */,
 				6349E8E223D15685009EEE99 /* BDSMixedModeSynthesizer.h in Headers */,
 				6349E8E423D15685009EEE99 /* BDSSpeechSynthesizerParams.h in Headers */,
 				63A24F8723CD914900D2ADC4 /* BDSEventManager.h in Headers */,
-				6349E8F723D1CAB9009EEE99 /* AssistantEnum.h in Headers */,
 				63B3572C23BF247C0034F54B /* AudioCallManager.h in Headers */,
 				63A24F8523CD914900D2ADC4 /* BDSWakeupParameters.h in Headers */,
 				63B357B123C5E69C0034F54B /* DialAction.h in Headers */,
@@ -507,6 +520,7 @@
 				63A24F8C23CD914900D2ADC4 /* BDSWakeupDefines.h in Headers */,
 				6349E8E323D15685009EEE99 /* BDSSpeechSynthesizer.h in Headers */,
 				63A24F8B23CD914900D2ADC4 /* BDSUploaderParameters.h in Headers */,
+				630F77D723D545960071DF9F /* AuditTask.h in Headers */,
 				63A24F8A23CD914900D2ADC4 /* BDSASRDefines.h in Headers */,
 				63B3566223BDE3900034F54B /* ACM.h in Headers */,
 				63B3579D23C474C50034F54B /* SDKInitAction.h in Headers */,
@@ -640,10 +654,12 @@
 				63A24F5923CC7D9900D2ADC4 /* ACMAudioInputStream.m in Sources */,
 				6349E8FF23D313AB009EEE99 /* AssistantItem.m in Sources */,
 				63B3579323C468730034F54B /* ACMAction.m in Sources */,
+				630F77DF23D570D40071DF9F /* UpDateConfigTask.m in Sources */,
 				63B356AC23BE38970034F54B /* ACM.m in Sources */,
 				63B357B323C5E6AE0034F54B /* DialAction.m in Sources */,
 				63A24F7323CD634400D2ADC4 /* AudioStreamMgr.m in Sources */,
 				63B3579723C469400034F54B /* ActionManager.m in Sources */,
+				630F77D923D545A90071DF9F /* AuditTask.m in Sources */,
 				6349E8EB23D157B4009EEE99 /* TtsManager.m in Sources */,
 				63B3572E23BF24920034F54B /* AudioCallManager.m in Sources */,
 				63B357C223C6D89C0034F54B /* CallManager.m in Sources */,

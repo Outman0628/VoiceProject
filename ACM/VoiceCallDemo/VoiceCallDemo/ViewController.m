@@ -10,6 +10,10 @@
 #import <AgoraRtmKit/AgoraRtmKit.h>
 #import <ACM/ACM.h>
 #import "AppDelegate.h"
+#import <ACM/AnswerAssistant.h>
+#import <ACM/Assistant.h>
+#import <ACM/AssistantItem.h>
+
 
 
 
@@ -20,6 +24,7 @@
 //@property (nonatomic, copy) NSString *peerId;
 @property Call* inComeCall;
 @property Call* outComeCall;
+@property AVAudioPlayer* player;
 
 //@property (nonatomic, copy) NSString *dialChannelId;
 
@@ -35,6 +40,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *callRobotBtn;
 
 @property (weak, nonatomic) IBOutlet UILabel *remoteMsgLabel;
+@property (weak, nonatomic) IBOutlet UILabel *localMsgLabel;
 
 @property (weak, nonatomic) IBOutlet UILabel *remoteUserIdLabel;
 
@@ -86,6 +92,7 @@
     if(token != nil)
     {
         [ACM initManager:@"bc6642a5ce2c423c8419c20e2e9e239f" backendHost:@"http://voice.enjoyst.com" apnsToken:token acmCallback:self ];
+        [ACM updateDialingTimer:30];
         [self autoLogin];
     }
     else
@@ -178,6 +185,9 @@
 
 - (IBAction)sendMsg:(id)sender {
     
+    [self auditAssistant];
+    return;
+    
     if(!self.checkParameters)
     {
         return;
@@ -248,13 +258,14 @@
 }
 
 - (IBAction)audioCall:(id)sender {
+    [self playAssistantFileTest];
+    
     if(!self.checkPhoneCallParameters)
     {
         return;
     }
     
     NSString *remoteUid = self.remoteUserIdTextField.text;
-    //self.dialChannelId = [ACM ringAudioCall:remoteUid ircmCallback:nil];
     self.outComeCall = [ACM ringAudioCall:remoteUid ircmCallback:self];
 
    
@@ -331,6 +342,49 @@
     }
 }
 
+- (void)auditAssistant{
+    
+    AnswerAssistant *ass = [[AnswerAssistant alloc]init];
+    ass.enable = YES;
+   // ass.content = @"你好中国";
+    
+    AssistanItem *item1 = [[AssistanItem alloc]init];
+    item1.interval = 5;
+    item1.content = [NSString stringWithFormat:@"你好中国"];
+    
+    AssistanItem *item2 = [[AssistanItem alloc]init];
+    item2.interval = 3;
+    item2.content = [NSString stringWithFormat:@"天气晴朗"];
+    
+    [ass.contents addObject:item1];
+    [ass.contents addObject:item2];
+    
+   // [Assistant auditionAnswerAssistant:ass];
+    
+    /*
+     [Assistant auditionAnswerAssistant:ass completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
+        [self showAlert:[NSString stringWithFormat:@"试听结果 %ld",(long)code]];
+    }];
+     */
+    
+    [Assistant updateAnswerAssistantParam:ass completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
+        [self showAlert:[NSString stringWithFormat:@"语音助手配置完成 %ld",(long)code]];
+    }];
+}
+
+- (void)playAssistantFileTest{
+    NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject;
+    NSString *filePath = [documentPath stringByAppendingPathComponent:@"tts.mp3"];
+    NSURL *urlFile = [NSURL fileURLWithPath:filePath];
+    NSError *error = nil;
+    self.player = [[AVAudioPlayer alloc]initWithContentsOfURL:urlFile error:&error];
+    if (error == nil) {
+        [self.player prepareToPlay];
+    }
+    [self.player play];
+
+}
+
 
 - (void)saveUser: (nonnull NSString *) uid{
     // 要保存的数据
@@ -370,7 +424,7 @@
 - (void)messageReceived:(NSString * _Nonnull)message fromPeer:(NSString * _Nonnull)peerId{
     NSLog(@"Message received from %@: %@", message, peerId);
     
-    self.remoteMsgLabel.text = message;
+    self.remoteMsgLabel.text = [NSString stringWithFormat:@"p2p: %@", message];
     
 }
 
@@ -390,6 +444,21 @@
     
 }
 
+- (void)onCallEnd:(nonnull Call *)call endCode:(AcmMsgType)dialCode
+{
+    if(dialCode == AcmMsgDialEndTimeout)
+    {
+        [self showAlert:@"通话结束，超时未接听"];
+    }
+    else if( dialCode ==  AcmMsgDialEndByCaller)
+    {
+        [self showAlert:@"通话结束，拨号方取消"];
+    }
+    
+    self.inComeCall = nil;
+    self.answerPanel.hidden = true;
+}
+
 
 - (void)onRemoteLeaveCall:(NSString * _Nonnull)channel fromPeer:(NSString * _Nonnull)peerId{
    
@@ -404,12 +473,16 @@
 // 拨号结果
 - (void)didPhoneDialResult:(AcmDialCode)dialCode{
     switch (dialCode) {
+        case AcmPrepareOnphoneStage:
+            [self showAlert:@"对方同意接通，即将开始通话"];
+            break;
         case AcmDialSucced:
 
-            [self showAlert:@"拨号接通，开始通话"];
+            [self showAlert:@"进入通话频道，开始通话"];
             break;
-        case AcmDialConnectTimeout:
+        case AcmDialingTimeout:
             [self showAlert:@"超时未接听"];
+            self.callPanel.hidden = true;
             break;
         case AcmDialRemoteReject:
            
@@ -448,21 +521,15 @@
 
 - (void)onLocalText: (nonnull NSString *)text timeStamp:(NSTimeInterval)startTime isFinished:(BOOL) finished
 {
-   // NSLog(@"ASR local. Text:%@ timeStamp:%f isFinished:%d", text,startTime,finished);
+    NSLog(@"ASR local1. Text:%@ timeStamp:%f isFinished:%d", text,startTime,finished);
+    self.localMsgLabel.text = [NSString stringWithFormat:@"asrLocal: %@", text];
 }
 
 
-/*
- 远端语音转文字信息
- @param text 文本信息
- @param remoteUid 远端uid
- @startTime 文本开始的时间戳, 同一句话的startTime 是相同的
- @msgStamp 远端发送消息时的时间戳
- @finished false 翻译中的文字， true 翻译完成的文字
- */
 - (void)onRemoteText: (nonnull NSString *)text remoteAccount:(nonnull NSString *)remoteUid timeStamp:(NSTimeInterval)startTime msgStamp:(NSTimeInterval)msgTimestamp isFinished:(BOOL) finished
 {
-    //NSLog(@"ASR remote. from:%@ Text:%@ timeStamp:%f msgTimeStamp:%f isFinished:%d", remoteUid,text,startTime,msgTimestamp, finished);
+    NSLog(@"ASR remote1. from:%@ Text:%@ timeStamp:%f msgTimeStamp:%f isFinished:%d", remoteUid,text,startTime,msgTimestamp, finished);
+    self.remoteMsgLabel.text = [NSString stringWithFormat:@"asrRmote: %@", text];
 }
 
 

@@ -10,13 +10,14 @@
 #define TtsManager_h
 
 
+@class TtsFileTasks;
 
 @interface TtsManager : NSObject
 
 - (void)SynthesizeText:(nonnull NSString *)text;
 
 // 文转音，并返回转换句柄
-- (NSInteger)SynthesizeTTsText:(nonnull NSString *)text withError:(NSError**)err;
+- (NSInteger)SynthesizeTTsText:(nonnull NSString *)text fileName:(nonnull NSString*)fName ttsTask:(nonnull TtsFileTasks*)task withError:(NSError**)err;
 
 @end
 

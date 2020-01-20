@@ -13,14 +13,13 @@
 
 @interface TtsFileTasks : NSObject
 
-@property AssistantBlock callBack;    // 任务结束回调
+@property AssistantBlock _Nullable callBack;    // 任务结束回调
 
 -(void) AddTask: (NSInteger) taskId;
 
 -(NSInteger) taskCount;
 
-// return YES 所有task 完成
--(BOOL) TaskFinish: (NSInteger) taskId FinishCode:(AssistantCode)code;
+-(void) TaskFinish: (NSInteger) taskId isError:(BOOL)error  errorCode:(NSError * _Nullable) subCode;
 
 @end
 
