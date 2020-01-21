@@ -219,6 +219,7 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
             [fileHandler closeFile];
         }
     */
+        NSLog(@"TTS create tts file:%@", fName);
         NSError *error = nil;
         BOOL written = [newData writeToFile:filePath options:NSDataWritingAtomic error:&error];
         
@@ -228,7 +229,8 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
         }
     }
     else{
-        fileHandler = [NSFileHandle fileHandleForUpdatingAtPath:fName];
+        NSLog(@"TTS update tts file:%@", fName);
+        fileHandler = [NSFileHandle fileHandleForUpdatingAtPath:filePath];
         if(fileHandler != nil)
         {
             [fileHandler seekToEndOfFile];

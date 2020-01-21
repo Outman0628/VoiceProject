@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		630F77E923D5C98E0071DF9F /* AAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630F77E823D5C98E0071DF9F /* AAViewController.m */; };
 		6349E8EF23D19254009EEE99 /* libBaiduTTSSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6349E8EE23D19254009EEE99 /* libBaiduTTSSDK.a */; };
 		6349E8F123D19386009EEE99 /* libiconv.2.4.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6349E8F023D19386009EEE99 /* libiconv.2.4.0.tbd */; };
 		639D125E23CF569300140B5C /* ACM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639D125D23CF569300140B5C /* ACM.framework */; };
@@ -58,6 +59,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		630F77E723D5C9730071DF9F /* AAViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AAViewController.h; sourceTree = "<group>"; };
+		630F77E823D5C98E0071DF9F /* AAViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AAViewController.m; sourceTree = "<group>"; };
 		6349E8EE23D19254009EEE99 /* libBaiduTTSSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBaiduTTSSDK.a; path = libs/libBaiduTTSSDK.a; sourceTree = "<group>"; };
 		6349E8F023D19386009EEE99 /* libiconv.2.4.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.2.4.0.tbd; path = usr/lib/libiconv.2.4.0.tbd; sourceTree = SDKROOT; };
 		639D125B23CF565B00140B5C /* ACM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ACM.framework; sourceTree = "<group>"; };
@@ -148,9 +151,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		630F77E023D5C4E80071DF9F /* AnswerAssistant */ = {
+			isa = PBXGroup;
+			children = (
+				630F77E723D5C9730071DF9F /* AAViewController.h */,
+				630F77E823D5C98E0071DF9F /* AAViewController.m */,
+			);
+			path = AnswerAssistant;
+			sourceTree = "<group>";
+		};
 		63B356CF23BE67A80034F54B = {
 			isa = PBXGroup;
 			children = (
+				630F77E023D5C4E80071DF9F /* AnswerAssistant */,
 				6349E8EE23D19254009EEE99 /* libBaiduTTSSDK.a */,
 				639D125D23CF569300140B5C /* ACM.framework */,
 				63A24FA123CDB64500D2ADC4 /* bds_easr_basic_model.dat */,
@@ -379,6 +392,7 @@
 				63B357A223C48E9B0034F54B /* BasicViewController.m in Sources */,
 				63B356EB23BE67A90034F54B /* main.m in Sources */,
 				63B356DD23BE67A80034F54B /* AppDelegate.m in Sources */,
+				630F77E923D5C98E0071DF9F /* AAViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

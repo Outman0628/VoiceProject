@@ -341,6 +341,19 @@
         }];
     }
 }
+- (IBAction)answerAssistSetting:(id)sender {
+    /*
+    NSString * storyboardName = @"AnswerAssistant";
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle: nil];
+    UINavigationController * vc = (UINavigationController*)[storyboard instantiateViewControllerWithIdentifier:@"AnswerAssistant"];
+    [self presentViewController:vc animated:YES completion:^{}];
+     */
+    /*
+    UIViewController* nextVc=[self.storyboard instantiateViewControllerWithIdentifier:storyboardName];
+    [self.navigationController pushViewController:nextVc animated:YES];
+    */
+}
 
 - (void)auditAssistant{
     
@@ -361,15 +374,16 @@
     
    // [Assistant auditionAnswerAssistant:ass];
     
-    /*
+    
      [Assistant auditionAnswerAssistant:ass completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
         [self showAlert:[NSString stringWithFormat:@"试听结果 %ld",(long)code]];
     }];
-     */
-    
+     
+    /*
     [Assistant updateAnswerAssistantParam:ass completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
         [self showAlert:[NSString stringWithFormat:@"语音助手配置完成 %ld",(long)code]];
     }];
+     */
 }
 
 - (void)playAssistantFileTest{
