@@ -11,8 +11,9 @@
 #import <ACM/Assistant.h>
 #import <ACM/AnswerAssistant.h>
 #import <ACM/AssistantItem.h>
+#import <ACM/AssistantCallback.h>
 
-@interface AAViewController ()
+@interface AAViewController () <AssistantCallBack>
 
 @property (weak, nonatomic) IBOutlet UIView *AssistantItemView1;
 
@@ -127,15 +128,28 @@
  
  */
 
+- (void)auditResult:(AssistantCode) code Error:(NSError * _Nullable) subCode{
+    [self showAlert:[NSString stringWithFormat:@"callback 试听结果 %ld", (long)code]];
+    _auditButton.enabled = true;
+    _updateButton.enabled = true;
+    _assSwitch.enabled = true;
+}
+
+- (void)updateAnswerAssistantResult:(AssistantCode) code Error:(NSError * _Nullable) subCode{
+    _auditButton.enabled = true;
+    _updateButton.enabled = true;
+    _assSwitch.enabled = true;
+}
 
 - (IBAction)auditAss:(id)sender {
     AnswerAssistant *ass = nil;
     
     if([self generateAnswerAssit:&ass])
     {
-        [Assistant auditionAnswerAssistant:ass completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
-            [self showAlert:[NSString stringWithFormat:@"试听结果 %d", code]];
-        }];
+        [Assistant auditionAnswerAssistant:ass  CallBack:self ];
+        _auditButton.enabled = false;
+        _updateButton.enabled = false;
+        _assSwitch.enabled = false;
     }else
     {
         [self showAlert:@"参数错误请检查"];
