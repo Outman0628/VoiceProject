@@ -9,6 +9,7 @@
 #ifndef Assistant_h
 #define Assistant_h
 #import "AssistantEnum.h"
+#import "AssistantCallback.h"
 
 @class AnswerAssistant;
 
@@ -24,12 +25,12 @@ typedef void (^AssistantBlock)(AssistantCode code, NSError * _Nullable subCode);
 /*
  * 设置或更新本机语音应答助手配置
  */
-+(void)updateAnswerAssistantParam:(nonnull AnswerAssistant*) answerAssistant completionBlock: (AssistantBlock _Nullable )completionHandler;
++(void)updateAnswerAssistantParam:(nonnull AnswerAssistant*) answerAssistant  CallBack:(id <AssistantCallBack> _Nullable)delegate;
 
 /*
  * 预设文字试听,以配置中的参数进行试听
  */
-+(void)auditionAnswerAssistant:(nonnull AnswerAssistant*) answerAssistant completionBlock: (AssistantBlock _Nullable )completionHandler;
++(void)auditionAnswerAssistant:(nonnull AnswerAssistant*) answerAssistant  CallBack:(id <AssistantCallBack> _Nullable)delegate;
 
 /*
  * 取消试听

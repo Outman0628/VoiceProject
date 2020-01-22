@@ -11,6 +11,7 @@
 		630F77D923D545A90071DF9F /* AuditTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 630F77D823D545A90071DF9F /* AuditTask.m */; };
 		630F77DD23D570C80071DF9F /* UpDateConfigTask.h in Headers */ = {isa = PBXBuildFile; fileRef = 630F77DC23D570C80071DF9F /* UpDateConfigTask.h */; };
 		630F77DF23D570D40071DF9F /* UpDateConfigTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 630F77DE23D570D40071DF9F /* UpDateConfigTask.m */; };
+		63155E9623D7E36F000762DA /* AssistantCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 63155E9523D7E36F000762DA /* AssistantCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6349E8DE23D15685009EEE99 /* BDSSynthesizerStatusNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E8D423D15685009EEE99 /* BDSSynthesizerStatusNotifications.h */; };
 		6349E8DF23D15685009EEE99 /* BDSSpeechSynthesizerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E8D523D15685009EEE99 /* BDSSpeechSynthesizerDelegate.h */; };
 		6349E8E023D15685009EEE99 /* BDS_EttsModelManagerInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E8D623D15685009EEE99 /* BDS_EttsModelManagerInterface.h */; };
@@ -118,6 +119,7 @@
 		630F77D823D545A90071DF9F /* AuditTask.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuditTask.m; sourceTree = "<group>"; };
 		630F77DC23D570C80071DF9F /* UpDateConfigTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UpDateConfigTask.h; sourceTree = "<group>"; };
 		630F77DE23D570D40071DF9F /* UpDateConfigTask.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UpDateConfigTask.m; sourceTree = "<group>"; };
+		63155E9523D7E36F000762DA /* AssistantCallback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AssistantCallback.h; sourceTree = "<group>"; };
 		6349E8D423D15685009EEE99 /* BDSSynthesizerStatusNotifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSSynthesizerStatusNotifications.h; sourceTree = "<group>"; };
 		6349E8D523D15685009EEE99 /* BDSSpeechSynthesizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSSpeechSynthesizerDelegate.h; sourceTree = "<group>"; };
 		6349E8D623D15685009EEE99 /* BDS_EttsModelManagerInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDS_EttsModelManagerInterface.h; sourceTree = "<group>"; };
@@ -290,6 +292,7 @@
 				630F77D823D545A90071DF9F /* AuditTask.m */,
 				630F77DC23D570C80071DF9F /* UpDateConfigTask.h */,
 				630F77DE23D570D40071DF9F /* UpDateConfigTask.m */,
+				63155E9523D7E36F000762DA /* AssistantCallback.h */,
 			);
 			path = Assistant;
 			sourceTree = "<group>";
@@ -485,6 +488,7 @@
 				63B3579123C45F290034F54B /* ACMAction.h in Headers */,
 				6349E8F723D1CAB9009EEE99 /* AssistantEnum.h in Headers */,
 				6349E8FD23D1FBC4009EEE99 /* AssistantItem.h in Headers */,
+				63155E9623D7E36F000762DA /* AssistantCallback.h in Headers */,
 				63A24F5723CC7D8A00D2ADC4 /* ACMAudioInputStream.h in Headers */,
 				63A24F5323CC7B6A00D2ADC4 /* AudioDataQueue.hpp in Headers */,
 				63A24F6B23CCD99E00D2ADC4 /* ExternalAudio.h in Headers */,

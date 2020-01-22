@@ -45,19 +45,19 @@ static Assistant *instance = nil;
 }
 
 
-+(void)updateAnswerAssistantParam:(nonnull AnswerAssistant*) answerAssistant completionBlock: (AssistantBlock _Nullable )completionHandler{
++(void)updateAnswerAssistantParam:(nonnull AnswerAssistant*) answerAssistant  CallBack:(id <AssistantCallBack> _Nullable)delegate{
     
     [Assistant createInstanceIfNeeded];
     
     if(instance != nil)
     {
-        [instance updateAnserAssistant:answerAssistant completionBlock:completionHandler];
+        [instance updateAnserAssistant:answerAssistant CallBack:delegate];
     }
     else
     {
-        if(completionHandler != nil)
+        if(delegate != nil)
         {
-            completionHandler(AssistantNotInited, nil);
+            [delegate updateAnswerAssistantResult:AssistantNotInited Error:nil];
         }
     }
     
@@ -65,12 +65,20 @@ static Assistant *instance = nil;
 }
 
 
-+(void)auditionAnswerAssistant:(nonnull AnswerAssistant*) answerAssistant completionBlock: (AssistantBlock _Nullable )completionHandler{
++(void)auditionAnswerAssistant:(nonnull AnswerAssistant*) answerAssistant CallBack:(id <AssistantCallBack> _Nullable)delegate{
+    
     [Assistant createInstanceIfNeeded];
     
     if(instance != nil)
     {
-        [instance auditAnswerAssistant:answerAssistant completionBlock:completionHandler];
+        [instance auditAnswerAssistant:answerAssistant CallBack:delegate];
+    }
+    else
+    {
+        if(delegate != nil)
+        {
+            [delegate auditResult:AssistantNotInited Error:nil];
+        }
     }
 }
 
@@ -163,7 +171,16 @@ static Assistant *instance = nil;
     self.isWorking = NO;
 }
 // 更新接听配置
--(void)updateAnserAssistant:(nonnull AnswerAssistant*) answerAssistant completionBlock: (AssistantBlock _Nullable )completionHandler{
+-(void)updateAnserAssistant:(nonnull AnswerAssistant*) answerAssistant CallBack:(id <AssistantCallBack> _Nullable)delegate{
+    
+    if(self.isWorking)
+    {
+        if(delegate != nil){
+            [delegate updateAnswerAssistantResult:AssistantSettingBusy Error:nil];
+        }
+        
+        return;
+    }
     
     if([self checkAnswerAssistantParam:answerAssistant])
     {
@@ -177,45 +194,56 @@ static Assistant *instance = nil;
                 if(code == AssistantOK){
                     // 获取语音文件成功，继续更新服务器配置
                      NSLog(@"TTS tts files are prepared, is going to update server config");
-                    [self updateServerSetting:answerAssistant completionBlock:completionHandler];
+                    [self updateServerSetting:answerAssistant completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
+                        if(delegate != nil)
+                        {
+                            [delegate updateAnswerAssistantResult:code Error:subCode];
+                        }
+                        self.isWorking = NO;
+                        self.updateConfigTask = nil;
+                    }];
                 }
                 else
                 {
-                     self.isWorking = NO;
-                    completionHandler(code,subCode);
+                    self.isWorking = NO;
+                    if(delegate != nil){
+                        [delegate updateAnswerAssistantResult:code Error:subCode];
+                    }
                 }
                     
             }];
         }
         else
         {
-            [self disableAnswerAssistant:self.answerAss completionBlock:completionHandler];
+            [self disableAnswerAssistant:self.answerAss completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
+                
+            }];
         }
     }
     else
     {
-       if(completionHandler != nil)
-       {
-           completionHandler(AssistantErrorParam,nil);
-       }
+        if(delegate != nil){
+            [delegate updateAnswerAssistantResult:AssistantErrorParam Error:nil];
+        }
     }
 }
 
 -(void)updateServerSetting:(nonnull AnswerAssistant*) answerAssistant completionBlock: (AssistantBlock _Nullable )completionHandler{
     _updateConfigTask = [[UpDateConfigTask alloc] init];
-    [_updateConfigTask updateConfig:answerAssistant.contents completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
-        self.updateConfigTask = nil;
-        self.isWorking = NO;
-        if(completionHandler != nil)
-        {
-            completionHandler(code, subCode);
-        }
-        
-    }];
+    [_updateConfigTask updateConfig:answerAssistant.contents completionBlock:completionHandler];
 }
 
 // 试听
--(void)auditAnswerAssistant:(nonnull AnswerAssistant*) answerAssistant completionBlock: (AssistantBlock _Nullable )completionHandler{
+-(void)auditAnswerAssistant:(nonnull AnswerAssistant*) answerAssistant CallBack:(id <AssistantCallBack> _Nullable)delegate{
+    
+    if(self.isWorking)
+    {
+        if(delegate != nil){
+            [delegate auditResult:AssistantSettingBusy Error:nil];
+        }
+        
+        return;
+    }
     
     if([self checkAnswerAssistantParam:answerAssistant])
     {
@@ -229,18 +257,27 @@ static Assistant *instance = nil;
                     // 获取语音文件成功，继续更新服务器配置
                     NSLog(@"TTS tts files are prepared, is going to play them");
                     [self auditAnswerAssistantFiles:answerAssistant completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
-                        self.isWorking = NO;
-                        self.auditTask = nil;
+/*
                         if(completionHandler != nil)
                         {
                             completionHandler(code, subCode);
                         }
+*/
+                        if(delegate != nil)
+                        {
+                            [delegate auditResult:code Error:subCode];
+                        }
+                        self.isWorking = NO;
+                        self.auditTask = nil;
                     }];
                 }
                 else
                 {
                     self.isWorking = NO;
-                    completionHandler(code,subCode);
+                    if(delegate != nil)
+                    {
+                        [delegate auditResult:code Error:subCode];
+                    }
                 }
                 
             }];
@@ -248,9 +285,9 @@ static Assistant *instance = nil;
     }
     else
     {
-        if(completionHandler != nil)
+        if(delegate != nil)
         {
-            completionHandler(AssistantErrorParam,nil);
+            [delegate auditResult:AssistantErrorParam Error:nil];
         }
     }
 }

@@ -58,6 +58,11 @@ typedef NS_ENUM(NSInteger, AssistantCode) {
      更新服务器机器人配置错误
      */
     AssistantErrorUdateSeverAssConfig = -8,
+    
+    /**
+     语音助手繁忙，有正在执行的试听或是设置更新行为
+     */
+    AssistantSettingBusy = -9,
 };
 
 #endif /* AssistantEnum_h */
