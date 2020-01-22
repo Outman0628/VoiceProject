@@ -8,6 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		630F77E923D5C98E0071DF9F /* AAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630F77E823D5C98E0071DF9F /* AAViewController.m */; };
+		63155EB623D80D92000762DA /* SelectionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63155E9923D80D92000762DA /* SelectionTableViewController.m */; };
+		63155EB723D80D92000762DA /* EttsModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63155E9B23D80D92000762DA /* EttsModelViewController.m */; };
+		63155EB823D80D92000762DA /* EttsModelTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63155E9C23D80D92000762DA /* EttsModelTableViewCell.m */; };
+		63155EB923D80D92000762DA /* TTSConfigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63155E9F23D80D92000762DA /* TTSConfigViewController.m */; };
+		63155EBA23D80D92000762DA /* SwitchTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63155EA123D80D92000762DA /* SwitchTableViewCell.m */; };
+		63155EBB23D80D92000762DA /* NavigationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63155EA223D80D92000762DA /* NavigationTableViewCell.m */; };
+		63155EBC23D80D92000762DA /* SelectionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63155EA323D80D92000762DA /* SelectionTableViewCell.m */; };
+		63155EBD23D80D92000762DA /* SliderTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63155EA423D80D92000762DA /* SliderTableViewCell.m */; };
+		63155EBE23D80D92000762DA /* InputTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63155EA523D80D92000762DA /* InputTableViewCell.m */; };
+		63155EBF23D80D92000762DA /* TTSMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63155EAD23D80D92000762DA /* TTSMain.storyboard */; };
+		63155EC023D80D92000762DA /* tts_text.txt in Resources */ = {isa = PBXBuildFile; fileRef = 63155EAE23D80D92000762DA /* tts_text.txt */; };
 		6349E8EF23D19254009EEE99 /* libBaiduTTSSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6349E8EE23D19254009EEE99 /* libBaiduTTSSDK.a */; };
 		6349E8F123D19386009EEE99 /* libiconv.2.4.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6349E8F023D19386009EEE99 /* libiconv.2.4.0.tbd */; };
 		639D125E23CF569300140B5C /* ACM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639D125D23CF569300140B5C /* ACM.framework */; };
@@ -61,6 +72,36 @@
 /* Begin PBXFileReference section */
 		630F77E723D5C9730071DF9F /* AAViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AAViewController.h; sourceTree = "<group>"; };
 		630F77E823D5C98E0071DF9F /* AAViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AAViewController.m; sourceTree = "<group>"; };
+		63155E9923D80D92000762DA /* SelectionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectionTableViewController.m; sourceTree = "<group>"; };
+		63155E9B23D80D92000762DA /* EttsModelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EttsModelViewController.m; sourceTree = "<group>"; };
+		63155E9C23D80D92000762DA /* EttsModelTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EttsModelTableViewCell.m; sourceTree = "<group>"; };
+		63155E9D23D80D92000762DA /* EttsModelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EttsModelViewController.h; sourceTree = "<group>"; };
+		63155E9E23D80D92000762DA /* EttsModelTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EttsModelTableViewCell.h; sourceTree = "<group>"; };
+		63155E9F23D80D92000762DA /* TTSConfigViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTSConfigViewController.m; sourceTree = "<group>"; };
+		63155EA123D80D92000762DA /* SwitchTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwitchTableViewCell.m; sourceTree = "<group>"; };
+		63155EA223D80D92000762DA /* NavigationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationTableViewCell.m; sourceTree = "<group>"; };
+		63155EA323D80D92000762DA /* SelectionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectionTableViewCell.m; sourceTree = "<group>"; };
+		63155EA423D80D92000762DA /* SliderTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SliderTableViewCell.m; sourceTree = "<group>"; };
+		63155EA523D80D92000762DA /* InputTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InputTableViewCell.m; sourceTree = "<group>"; };
+		63155EA623D80D92000762DA /* NavigationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationTableViewCell.h; sourceTree = "<group>"; };
+		63155EA723D80D92000762DA /* SwitchTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwitchTableViewCell.h; sourceTree = "<group>"; };
+		63155EA823D80D92000762DA /* SliderTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SliderTableViewCell.h; sourceTree = "<group>"; };
+		63155EA923D80D92000762DA /* SelectionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionTableViewCell.h; sourceTree = "<group>"; };
+		63155EAA23D80D92000762DA /* InputTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InputTableViewCell.h; sourceTree = "<group>"; };
+		63155EAB23D80D92000762DA /* SelectionTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionTableViewController.h; sourceTree = "<group>"; };
+		63155EAC23D80D92000762DA /* TTSConfigViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTSConfigViewController.h; sourceTree = "<group>"; };
+		63155EAD23D80D92000762DA /* TTSMain.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = TTSMain.storyboard; sourceTree = "<group>"; };
+		63155EAE23D80D92000762DA /* tts_text.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tts_text.txt; sourceTree = "<group>"; };
+		63155EC623D8197B000762DA /* BDSSynthesizerStatusNotifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSSynthesizerStatusNotifications.h; sourceTree = "<group>"; };
+		63155EC723D8197B000762DA /* BDSSpeechSynthesizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSSpeechSynthesizerDelegate.h; sourceTree = "<group>"; };
+		63155EC823D8197B000762DA /* BDS_EttsModelManagerInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDS_EttsModelManagerInterface.h; sourceTree = "<group>"; };
+		63155EC923D8197B000762DA /* BDSBuiltInPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSBuiltInPlayer.h; sourceTree = "<group>"; };
+		63155ECA23D8197B000762DA /* BDSMixedModeSynthesizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSMixedModeSynthesizer.h; sourceTree = "<group>"; };
+		63155ECB23D8197B000762DA /* BDSSpeechSynthesizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSSpeechSynthesizer.h; sourceTree = "<group>"; };
+		63155ECC23D8197B000762DA /* BDSSpeechSynthesizerParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSSpeechSynthesizerParams.h; sourceTree = "<group>"; };
+		63155ECD23D8197B000762DA /* BDSSynthesizerLogLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSSynthesizerLogLevel.h; sourceTree = "<group>"; };
+		63155ECE23D8197B000762DA /* BDSTTSEventManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSTTSEventManager.h; sourceTree = "<group>"; };
+		63155ECF23D8197B000762DA /* BDSSpeechSynthesizerErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSSpeechSynthesizerErrors.h; sourceTree = "<group>"; };
 		6349E8EE23D19254009EEE99 /* libBaiduTTSSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBaiduTTSSDK.a; path = libs/libBaiduTTSSDK.a; sourceTree = "<group>"; };
 		6349E8F023D19386009EEE99 /* libiconv.2.4.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.2.4.0.tbd; path = usr/lib/libiconv.2.4.0.tbd; sourceTree = SDKROOT; };
 		639D125B23CF565B00140B5C /* ACM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ACM.framework; sourceTree = "<group>"; };
@@ -160,9 +201,89 @@
 			path = AnswerAssistant;
 			sourceTree = "<group>";
 		};
+		63155E9723D80D92000762DA /* TTS */ = {
+			isa = PBXGroup;
+			children = (
+				63155E9823D80D92000762DA /* Configurations */,
+				63155EAD23D80D92000762DA /* TTSMain.storyboard */,
+				63155EAE23D80D92000762DA /* tts_text.txt */,
+			);
+			name = TTS;
+			path = VoiceCallDemo/TTS;
+			sourceTree = "<group>";
+		};
+		63155E9823D80D92000762DA /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				63155E9A23D80D92000762DA /* EttsModelManager */,
+				63155EA023D80D92000762DA /* TableViewCells */,
+				63155EAB23D80D92000762DA /* SelectionTableViewController.h */,
+				63155E9923D80D92000762DA /* SelectionTableViewController.m */,
+				63155E9F23D80D92000762DA /* TTSConfigViewController.m */,
+				63155EAC23D80D92000762DA /* TTSConfigViewController.h */,
+			);
+			path = Configurations;
+			sourceTree = "<group>";
+		};
+		63155E9A23D80D92000762DA /* EttsModelManager */ = {
+			isa = PBXGroup;
+			children = (
+				63155E9B23D80D92000762DA /* EttsModelViewController.m */,
+				63155E9C23D80D92000762DA /* EttsModelTableViewCell.m */,
+				63155E9D23D80D92000762DA /* EttsModelViewController.h */,
+				63155E9E23D80D92000762DA /* EttsModelTableViewCell.h */,
+			);
+			path = EttsModelManager;
+			sourceTree = "<group>";
+		};
+		63155EA023D80D92000762DA /* TableViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				63155EA123D80D92000762DA /* SwitchTableViewCell.m */,
+				63155EA223D80D92000762DA /* NavigationTableViewCell.m */,
+				63155EA323D80D92000762DA /* SelectionTableViewCell.m */,
+				63155EA423D80D92000762DA /* SliderTableViewCell.m */,
+				63155EA523D80D92000762DA /* InputTableViewCell.m */,
+				63155EA623D80D92000762DA /* NavigationTableViewCell.h */,
+				63155EA723D80D92000762DA /* SwitchTableViewCell.h */,
+				63155EA823D80D92000762DA /* SliderTableViewCell.h */,
+				63155EA923D80D92000762DA /* SelectionTableViewCell.h */,
+				63155EAA23D80D92000762DA /* InputTableViewCell.h */,
+			);
+			path = TableViewCells;
+			sourceTree = "<group>";
+		};
+		63155EC423D8197B000762DA /* BDSClientHeaders */ = {
+			isa = PBXGroup;
+			children = (
+				63155EC523D8197B000762DA /* TTS */,
+			);
+			name = BDSClientHeaders;
+			path = VoiceCallDemo/BDSClientHeaders;
+			sourceTree = "<group>";
+		};
+		63155EC523D8197B000762DA /* TTS */ = {
+			isa = PBXGroup;
+			children = (
+				63155EC623D8197B000762DA /* BDSSynthesizerStatusNotifications.h */,
+				63155EC723D8197B000762DA /* BDSSpeechSynthesizerDelegate.h */,
+				63155EC823D8197B000762DA /* BDS_EttsModelManagerInterface.h */,
+				63155EC923D8197B000762DA /* BDSBuiltInPlayer.h */,
+				63155ECA23D8197B000762DA /* BDSMixedModeSynthesizer.h */,
+				63155ECB23D8197B000762DA /* BDSSpeechSynthesizer.h */,
+				63155ECC23D8197B000762DA /* BDSSpeechSynthesizerParams.h */,
+				63155ECD23D8197B000762DA /* BDSSynthesizerLogLevel.h */,
+				63155ECE23D8197B000762DA /* BDSTTSEventManager.h */,
+				63155ECF23D8197B000762DA /* BDSSpeechSynthesizerErrors.h */,
+			);
+			path = TTS;
+			sourceTree = "<group>";
+		};
 		63B356CF23BE67A80034F54B = {
 			isa = PBXGroup;
 			children = (
+				63155EC423D8197B000762DA /* BDSClientHeaders */,
+				63155E9723D80D92000762DA /* TTS */,
 				630F77E023D5C4E80071DF9F /* AnswerAssistant */,
 				6349E8EE23D19254009EEE99 /* libBaiduTTSSDK.a */,
 				639D125D23CF569300140B5C /* ACM.framework */,
@@ -360,8 +481,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63155EBF23D80D92000762DA /* TTSMain.storyboard in Resources */,
 				63B356E823BE67A90034F54B /* LaunchScreen.storyboard in Resources */,
 				63B356E523BE67A90034F54B /* Assets.xcassets in Resources */,
+				63155EC023D80D92000762DA /* tts_text.txt in Resources */,
 				63B356E323BE67A80034F54B /* Main.storyboard in Resources */,
 				63A24FA223CDB64500D2ADC4 /* bds_easr_basic_model.dat in Resources */,
 			);
@@ -388,11 +511,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63155EB723D80D92000762DA /* EttsModelViewController.m in Sources */,
 				63B356E023BE67A80034F54B /* ViewController.m in Sources */,
+				63155EB923D80D92000762DA /* TTSConfigViewController.m in Sources */,
+				63155EBB23D80D92000762DA /* NavigationTableViewCell.m in Sources */,
+				63155EBD23D80D92000762DA /* SliderTableViewCell.m in Sources */,
 				63B357A223C48E9B0034F54B /* BasicViewController.m in Sources */,
+				63155EBE23D80D92000762DA /* InputTableViewCell.m in Sources */,
+				63155EB623D80D92000762DA /* SelectionTableViewController.m in Sources */,
+				63155EBA23D80D92000762DA /* SwitchTableViewCell.m in Sources */,
 				63B356EB23BE67A90034F54B /* main.m in Sources */,
+				63155EBC23D80D92000762DA /* SelectionTableViewCell.m in Sources */,
 				63B356DD23BE67A80034F54B /* AppDelegate.m in Sources */,
 				630F77E923D5C98E0071DF9F /* AAViewController.m in Sources */,
+				63155EB823D80D92000762DA /* EttsModelTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

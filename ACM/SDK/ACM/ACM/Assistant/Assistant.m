@@ -17,6 +17,27 @@
 #import "AuditTask.h"
 #import "UpDateConfigTask.h"
 
+@interface VoiceConfig ()
+
+@end
+
+@implementation VoiceConfig
+
+-(id _Nullable )init
+{
+    if (self = [super init]) {
+        self.speechPich = 5;
+        self.speechSpeed = 5;
+        self.speechVolume = 5;
+        self.curSpeakerIndex = 0;
+    }
+    return self;
+}
+
+@end
+
+
+
 @interface Assistant()
 @property AnswerAssistant *answerAss;
 @property TtsManager *ttsMgr;
@@ -152,7 +173,7 @@ static Assistant *instance = nil;
     _speakerCadidates =[NSMutableArray array];
     
     NSString *BDS_SYNTHESIZER_SPEAKER_FEMALE = @"女声";
-    NSString *BDS_SYNTHESIZER_SPEAKER_MALE = @"男声";
+    NSString *BDS_SYNTHESIZER_SPEAKER_MALE = @"男声1";
     NSString *BDS_SYNTHESIZER_SPEAKER_MALE_2 = @"男声2";
     NSString *BDS_SYNTHESIZER_SPEAKER_MALE_3 = @"情感男生度逍遥";
     NSString *BDS_SYNTHESIZER_SPEAKER_DYY = @"度丫丫";
@@ -189,7 +210,8 @@ static Assistant *instance = nil;
         if(updateAss.enable  && updateAss.contents != nil && updateAss.contents.count > 0)
         {
              self.isWorking = YES;
-            [_ttsFileMgr prepareVoiceFiles:updateAss.contents ttsManager:_ttsMgr completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
+            [_ttsMgr updateTTSConfig:answerAssistant.config];
+            [_ttsFileMgr prepareVoiceFiles:updateAss.contents ttsManager:_ttsMgr Config:answerAssistant.config completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
                 
                 if(code == AssistantOK){
                     // 获取语音文件成功，继续更新服务器配置
@@ -230,7 +252,7 @@ static Assistant *instance = nil;
 
 -(void)updateServerSetting:(nonnull AnswerAssistant*) answerAssistant completionBlock: (AssistantBlock _Nullable )completionHandler{
     _updateConfigTask = [[UpDateConfigTask alloc] init];
-    [_updateConfigTask updateConfig:answerAssistant.contents completionBlock:completionHandler];
+    [_updateConfigTask updateConfig:answerAssistant.contents Config:answerAssistant.config completionBlock:completionHandler];
 }
 
 // 试听
@@ -252,7 +274,8 @@ static Assistant *instance = nil;
         if( updateAss.contents != nil && updateAss.contents.count > 0)
         {
             self.isWorking = YES;
-            [_ttsFileMgr prepareVoiceFiles:updateAss.contents ttsManager:_ttsMgr completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
+            [_ttsMgr updateTTSConfig:answerAssistant.config];
+            [_ttsFileMgr prepareVoiceFiles:updateAss.contents ttsManager:_ttsMgr Config:answerAssistant.config completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
                 if(code == AssistantOK){
                     // 获取语音文件成功，继续更新服务器配置
                     NSLog(@"TTS tts files are prepared, is going to play them");
@@ -294,7 +317,7 @@ static Assistant *instance = nil;
 
 -(void)auditAnswerAssistantFiles:(nonnull AnswerAssistant*) answerAssistant completionBlock: (AssistantBlock _Nullable )completionHandler{
     _auditTask = [[AuditTask alloc]init];
-    [_auditTask audit:answerAssistant.contents completionBlock:completionHandler];
+    [_auditTask audit:answerAssistant.contents  Config:answerAssistant.config completionBlock:completionHandler];
 }
 
 // 取消试听
@@ -308,18 +331,18 @@ static Assistant *instance = nil;
     if(ass == nil)
         return false;
     
-    if(ass.speechVolume > 15 || ass.speechVolume < 0 ){
+    if(ass.config.speechVolume > 15 || ass.config.speechVolume < 0 ){
         return false;
     }
-    if(ass.speechSpeed > 9 || ass.speechSpeed < 0){
+    if(ass.config.speechSpeed > 9 || ass.config.speechSpeed < 0){
         return false;
     }
         
-    if(ass.speechPich > 9 || ass.speechPich < 0)
+    if(ass.config.speechPich > 9 || ass.config.speechPich < 0)
     {
         return false;
     }
-    if(ass.curSpeakerIndex < 0 || ass.curSpeakerIndex >= self.speakerCadidates.count)
+    if(ass.config.curSpeakerIndex < 0 || ass.config.curSpeakerIndex >= self.speakerCadidates.count)
     {
         return false;
     }

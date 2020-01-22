@@ -62,25 +62,14 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
     
 }
 
-- (void)SynthesizeText:(nonnull NSString *)text {
-        NSInteger sentenceID;
-        NSError* err = nil;
-    
-        NSAttributedString* string = [[NSAttributedString alloc] initWithString:text];
-    
-        if(_isSpeek)
-            sentenceID = [[BDSSpeechSynthesizer sharedInstance] speakSentence:[string string] withError:&err];
-        else
-            sentenceID = [[BDSSpeechSynthesizer sharedInstance] synthesizeSentence:[string string] withError:&err];
-        if(err == nil){
-            NSMutableDictionary *addedString = [[NSMutableDictionary alloc] initWithObjects:@[string, [NSNumber numberWithInteger:sentenceID], [NSNumber numberWithInteger:0], [NSNumber numberWithInteger:0]] forKeys:@[@"TEXT", @"ID", @"SPEAK_LEN", @"SYNTH_LEN"]];
-            [self.synthesisTexts addObject:addedString];
-           // [self updateSynthProgress];
-        }
-        else{
-            NSLog(@"TTS add sentence error:%@",err);
-        }
+- (void)updateTTSConfig:(VoiceConfig *_Nullable)config{
+    if(config != nil){
+        [[BDSSpeechSynthesizer sharedInstance] setSynthParam:@(config.curSpeakerIndex) forKey:BDS_SYNTHESIZER_PARAM_SPEAKER];
+        [[BDSSpeechSynthesizer sharedInstance] setSynthParam:[NSNumber numberWithInteger:config.speechSpeed] forKey:BDS_SYNTHESIZER_PARAM_SPEED];
+        [[BDSSpeechSynthesizer sharedInstance] setSynthParam:[NSNumber numberWithInteger:config.speechVolume] forKey:BDS_SYNTHESIZER_PARAM_VOLUME];
+        [[BDSSpeechSynthesizer sharedInstance] setSynthParam:[NSNumber numberWithInteger:config.speechPich] forKey:BDS_SYNTHESIZER_PARAM_PITCH];
     }
+}
 
 - (NSInteger)SynthesizeTTsText:(nonnull NSString *)text fileName:(nonnull NSString*)fName ttsTask:(nonnull TtsFileTasks*)task  withError:(NSError**)err{
     NSInteger sentenceID;

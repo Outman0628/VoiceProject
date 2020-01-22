@@ -18,6 +18,7 @@
 @property NSMutableArray* updateItems;
 @property AssistantBlock callBack;
 @property NSMutableArray *updatedContents;   // 上传完成后对象
+@property VoiceConfig *voiceConfig;
 @end
 
 static NSString *FileUploadApi = @"/d/upload";
@@ -27,9 +28,9 @@ static NSString *UpdateAnswerAssistantApi = @"/dapi/account/reject-tone";
 
 #define HTTP_CONTENT_BOUNDARY @"WANPUSH"
 
--(BOOL )updateConfig: (NSMutableArray *_Nonnull) contents completionBlock: (AssistantBlock _Nullable )completionHandler{
+-(BOOL )updateConfig: (NSMutableArray *_Nonnull) contents Config:(VoiceConfig *)config completionBlock: (AssistantBlock _Nullable )completionHandler{
     
-    
+    _voiceConfig = config;
     _callBack = completionHandler;
     
     if(_updateItems == nil && contents != nil && contents.count > 0)
@@ -67,7 +68,7 @@ static NSString *UpdateAnswerAssistantApi = @"/dapi/account/reject-tone";
         }
         else{
             NSString *filePath = nil;
-            [TtsFileManager generateFileName:item.content fullName:&filePath];
+            [TtsFileManager generateFileName:item.content fullName:&filePath Config:_voiceConfig];
             
             
             NSString *stringUrl = [NSString stringWithFormat:@"%@%@",actionMgr.host, FileUploadApi];

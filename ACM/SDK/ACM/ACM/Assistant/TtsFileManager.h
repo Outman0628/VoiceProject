@@ -15,9 +15,10 @@
 
 @interface TtsFileManager : NSObject
 
-+(nullable NSString *)generateFileName:(nonnull NSString*) content  fullName:(NSString**)filePath;
++(nullable NSString *)generateFileName:(nonnull NSString*) content  fullName:(NSString**)filePath Config:(VoiceConfig *_Nullable)config;
 
--(void)prepareVoiceFiles:(nonnull NSArray *) contents ttsManager:(nonnull TtsManager *)ttsMgr completionBlock: (AssistantBlock _Nullable )completionHandler;
+-(void)prepareVoiceFiles:(nonnull NSArray *) contents ttsManager:(nonnull TtsManager *)ttsMgr Config:(VoiceConfig *_Nullable)config completionBlock: (AssistantBlock _Nullable )completionHandler;
+
 
 @end
 

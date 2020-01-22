@@ -14,7 +14,7 @@
 @interface AuditTask : NSObject
 
 
--(BOOL )audit: (NSMutableArray *_Nonnull) contents completionBlock: (AssistantBlock _Nullable )completionHandler;
+-(BOOL )audit: (NSMutableArray *_Nonnull) contents Config:(VoiceConfig *_Nullable)config completionBlock: (AssistantBlock _Nullable )completionHandler;
 
 @end
 

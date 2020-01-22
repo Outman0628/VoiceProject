@@ -16,14 +16,16 @@
 @property NSMutableArray* auditContent;
 @property AssistantBlock callBack;
 @property AVAudioPlayer *player;
+@property VoiceConfig *voiceConfig;
 @end
 
 
 @implementation AuditTask
 
--(BOOL )audit: (NSMutableArray *_Nonnull) contents completionBlock: (AssistantBlock _Nullable )completionHandler{
+-(BOOL )audit: (NSMutableArray *_Nonnull) contents Config:(VoiceConfig *_Nullable)config completionBlock: (AssistantBlock _Nullable )completionHandler{
     
     _callBack = completionHandler;
+    _voiceConfig = config;
     
     if(_auditContent == nil && contents != nil && contents.count > 0)
     {
@@ -42,7 +44,7 @@
     return NO;
 }
 
--(void)auditItem{
+-(void)auditItem {
    if(_auditContent.count > 0)
    {
        AssistanItem *item = _auditContent[0];
@@ -67,9 +69,9 @@
 
 -(void)playContent:(nonnull NSString *) content{
     
-        dispatch_async(dispatch_get_main_queue(),^{
+    dispatch_async(dispatch_get_main_queue(),^{
     NSString *filePath = nil;
-    [TtsFileManager generateFileName:content fullName:&filePath];
+    [TtsFileManager generateFileName:content fullName:&filePath Config:_voiceConfig];
     
     if(filePath != nil)
     {

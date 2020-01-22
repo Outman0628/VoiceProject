@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "AnswerAssistant.h"
 #import "AssistantItem.h"
+#import "Assistant.h"
 
 @interface AnswerAssistant()
 @end
@@ -20,17 +21,10 @@
     if (self = [super init]) {
         
         self.contents = [NSMutableArray array];
+        self.config = [[VoiceConfig alloc]init];
         self.enable = false;
-        [self setDefaultValue];
     }
     return self;
-}
-
-- (void) setDefaultValue{
-    self.speechPich = 5;
-    self.speechSpeed = 5;
-    self.speechVolume = 5;
-    self.curSpeakerIndex = 0;
 }
 
 /*
@@ -38,10 +32,10 @@
  */
 -(AnswerAssistant *) clone{
     AnswerAssistant *clone = [[AnswerAssistant alloc]init];
-    clone.speechVolume = _speechVolume;
-    clone.speechSpeed = _speechSpeed;
-    clone.speechPich = _speechPich;
-    clone.curSpeakerIndex = _curSpeakerIndex;
+    clone.config.speechVolume = _config.speechVolume;
+    clone.config.speechSpeed = _config.speechSpeed;
+    clone.config.speechPich = _config.speechPich;
+    clone.config.curSpeakerIndex = _config.curSpeakerIndex;
     clone.enable = _enable;
     if(_contents != nil && _contents.count > 0)
     {

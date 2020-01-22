@@ -12,6 +12,7 @@
 #import <ACM/AnswerAssistant.h>
 #import <ACM/AssistantItem.h>
 #import <ACM/AssistantCallback.h>
+#import "TTSConfigViewController.h"
 
 @interface AAViewController () <AssistantCallBack>
 
@@ -29,6 +30,8 @@
 
 @property (weak, nonatomic) IBOutlet UISwitch *assSwitch;
 
+@property AnswerAssistant *answerAss;
+
 @end
 
 @implementation AAViewController
@@ -43,6 +46,7 @@
 
 
 -(void) initAssView{
+    self.answerAss = [[AnswerAssistant alloc]init];
     [self ClearAssistantItem:_AssistantItemView1];
     [self ClearAssistantItem:_AssistantItemView2];
     [self ClearAssistantItem:_AssistantItemView3];
@@ -71,6 +75,15 @@
     [self DismissItemKeyboard:_AssistantItemView4];
 }
 
+- (IBAction)answerAssSetting:(id)sender {
+    NSString * storyboardName = @"Main";
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle: nil];
+    TTSConfigViewController * vc = (TTSConfigViewController*)[storyboard instantiateViewControllerWithIdentifier:@"TTS_CONFIG"];
+    vc.answerAss = self.answerAss;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+
 - (void)DismissItemKeyboard:(nonnull UIView *)view{
     for(UIView *subView in view.subviews)
     {
@@ -91,7 +104,7 @@
 }
 
 - (IBAction)answerAssistantSwitch:(id)sender {
-    
+
 }
 
 /*
@@ -142,11 +155,12 @@
 }
 
 - (IBAction)auditAss:(id)sender {
-    AnswerAssistant *ass = nil;
+    NSMutableArray *assItems = nil;
     
-    if([self generateAnswerAssit:&ass])
+    if([self generateAnswerAssItem:&assItems])
     {
-        [Assistant auditionAnswerAssistant:ass  CallBack:self ];
+        _answerAss.contents = assItems;
+        [Assistant auditionAnswerAssistant:_answerAss  CallBack:self ];
         _auditButton.enabled = false;
         _updateButton.enabled = false;
         _assSwitch.enabled = false;
@@ -158,18 +172,19 @@
 }
 
 - (IBAction)updateAss:(id)sender {
+
 }
 
--(BOOL) generateAnswerAssit: (AnswerAssistant **)retItem{
+-(BOOL) generateAnswerAssItem: (NSMutableArray **)items{
     
-    AnswerAssistant *assItem = [[AnswerAssistant alloc]init];
+    NSMutableArray *contents = [NSMutableArray array];
     
     AssistanItem *item = nil;
     
     if([self getAssItem:_AssistantItemView1 AssRetItem:&item])
     {
         if(item != nil){
-            [assItem.contents addObject:item];
+            [contents addObject:item];
         }
     }
     else{
@@ -181,7 +196,7 @@
     if([self getAssItem:_AssistantItemView2 AssRetItem:&item])
     {
         if(item != nil){
-            [assItem.contents addObject:item];
+            [contents addObject:item];
         }
     }
     else{
@@ -193,7 +208,7 @@
     if([self getAssItem:_AssistantItemView3 AssRetItem:&item])
     {
         if(item != nil){
-            [assItem.contents addObject:item];
+            [contents addObject:item];
         }
     }
     else{
@@ -205,14 +220,14 @@
     if([self getAssItem:_AssistantItemView4 AssRetItem:&item])
     {
         if(item != nil){
-            [assItem.contents addObject:item];
+            [contents addObject:item];
         }
     }
     else{
         return NO;
     }
     
-    *retItem = assItem;
+    *items = contents;
     
     return YES;
 }

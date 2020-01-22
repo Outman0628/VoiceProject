@@ -13,14 +13,12 @@
  *AnswerAsistant 语音接收器
  */
 
+@class VoiceConfig;
+
 @interface AnswerAssistant : NSObject
 
-@property NSInteger speechVolume;           // 音量  (0-15)
-@property NSInteger speechSpeed;            // 语速  (0-9)
-@property NSInteger speechPich;             // 音调  (0-9)
-@property NSInteger curSpeakerIndex;        // 当前播报人员(speakerCadidates 中的index)
+@property VoiceConfig *config;              // 声音设置
 @property BOOL enable;                      // 开关
-//@property NSString *content;                // 文字格式  [[间隔秒数]]+段落文本+[[间隔秒数]]+段落文本+...
 @property NSMutableArray *contents;         // 内容，放置 AssistantItem 对象
 
 /*

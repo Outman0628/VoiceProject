@@ -11,6 +11,7 @@
 #import "AssistantItem.h"
 #import "../TTS/TtsManager.h"
 #import "TtsFileTasks.h"
+#import <CommonCrypto/CommonDigest.h>
 
 @interface TtsFileManager()
 @property NSMutableArray *cachFiles;
@@ -18,20 +19,62 @@
 @property NSInteger maxCachedFilesCount;
 @end
 
+/*
+ @property NSInteger speechVolume;           // 音量  (0-15)
+ @property NSInteger speechSpeed;            // 语速  (0-9)
+ @property NSInteger speechPich;             // 音调  (0-9)
+ @property NSInteger curSpeakerIndex;        // 当前播报人员(speakerCadidates 中的index)
+ */
 
 @implementation TtsFileManager
 
-+(nullable NSString *)generateFileName:(nonnull NSString*) content  fullName:(NSString**)filePath{
++(nullable NSString *)generateFileName:(nonnull NSString*) content  fullName:(NSString**)filePath Config:(VoiceConfig *_Nullable)config{
     if(content == nil || content.length == 0)
     {
         return nil;
     }
     
-    NSString *fileName = [NSString stringWithFormat:@"ttsvoice_%lu.mp3",(unsigned long)[content hash]];
+    NSString *fileNameHashString = [NSString stringWithFormat:@"speechVolume:%ld speechSpeed:%ld speechPich:%ld curSpeakerIndex:%ld content:%@", (long)config.speechVolume, (long)config.speechSpeed, (long)config.speechPich, config.curSpeakerIndex, content];
+    
+    NSString *sha1 = [TtsFileManager sha1:fileNameHashString];
+    NSString *md5 = [TtsFileManager md5:fileNameHashString];
+    
+    NSString *fileName = [NSString stringWithFormat:@"ttsvoice_%@%@.mp3",sha1,md5];
     NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject;
     NSString *path = [documentPath stringByAppendingPathComponent:fileName];
     *filePath = path;
     return fileName;
+}
+
++(NSString*_Nullable) sha1:(NSString*_Nullable)input
+{
+    const char *cstr = [input cStringUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [NSData dataWithBytes:cstr length:input.length];
+    
+    uint8_t digest[CC_SHA1_DIGEST_LENGTH];
+    
+    CC_SHA1(data.bytes, (CC_LONG)data.length, digest);
+    
+    NSMutableString* output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
+    
+    for(int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
+        [output appendFormat:@"%02x", digest[i]];
+    
+    return output;
+}
+
++(NSString *_Nullable) md5:(NSString *_Nullable) input
+{
+    const char *cStr = [input UTF8String];
+    unsigned char digest[16];
+    CC_MD5( cStr, (CC_LONG)strlen(cStr), digest ); // This is the md5 call
+    
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    
+    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
+        [output appendFormat:@"%02x", digest[i]];
+    
+    return  output;
 }
 
 -(id _Nullable )init{
@@ -43,11 +86,11 @@
     return self;
 }
 
--(void)prepareVoiceFiles:(nonnull NSArray *) contents ttsManager:(nonnull TtsManager *)ttsMgr completionBlock: (AssistantBlock _Nullable )completionHandler{
+-(void)prepareVoiceFiles:(nonnull NSArray *) contents ttsManager:(nonnull TtsManager *)ttsMgr Config:(VoiceConfig *_Nullable)config completionBlock: (AssistantBlock _Nullable )completionHandler{
     
     TtsFileTasks *task = [[TtsFileTasks alloc] init];
     task.callBack = ^(AssistantCode code, NSError * _Nullable subCode) {        
-        [self updateCacheFiles:contents];
+        [self updateCacheFiles:contents Config:config];
         if(completionHandler != nil){
             completionHandler(code,subCode);
         }
@@ -64,7 +107,7 @@
             
             //NSString *fName = [NSString stringWithFormat:@"ttsvoice_%lu.mp3",(unsigned long)[item.content hash]];
             
-            NSString *fName = [TtsFileManager generateFileName:item.content fullName:&filePath];
+            NSString *fName = [TtsFileManager generateFileName:item.content fullName:&filePath Config:config];
             
             if(![self isFileCached:fName])
             {
@@ -97,7 +140,7 @@
     }
 }
 
--(void) updateCacheFiles:(nonnull NSArray *) contents{
+-(void) updateCacheFiles:(nonnull NSArray *) contents Config:(VoiceConfig *_Nullable)config{
     if( contents != nil && contents.count > 0 )
     {
         for (int i=0; i<[contents count]; i++) {
@@ -108,7 +151,7 @@
                 //NSString *fName = [NSString stringWithFormat:@"ttsvoice_%lu.mp3",(unsigned long)[item.content hash]];
                 NSString *filePath = nil;
                 
-                NSString *fName = [TtsFileManager generateFileName:item.content fullName:&filePath];
+                NSString *fName = [TtsFileManager generateFileName:item.content fullName:&filePath Config:config];
                 
                 [_cachFiles addObject:fName];
                 if(_cachFiles.count > _maxCachedFilesCount)
