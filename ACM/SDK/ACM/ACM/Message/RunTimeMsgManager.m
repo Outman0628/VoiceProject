@@ -67,6 +67,82 @@ static ActionManager *actionMgr = nil;
     }];
 }
 
++ (void) loggedInCheck: ( nullable NSString *) userId completion:(LoginCheckBlock _Nullable)completionBlock{
+    if(userId == nil)
+    {
+        if(completionBlock != nil)
+        {
+            completionBlock(false,AgoraRtmQueryPeersOnlineErrorInvalidArgument);
+        }
+        return;
+    }
+    
+
+    
+    if(_kit != nil && completionBlock != nil)
+    {
+        
+        ActionManager *actionMgr = [ActionManager instance];
+        
+        if(actionMgr != nil && actionMgr.userId != nil){    // 已经登录
+            [self CheckloggedIn:userId completion:completionBlock];
+        }
+        else{  // 未登录需要临时账号登录
+            
+            NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+            NSTimeInterval timestamp=[dat timeIntervalSince1970];
+            NSNumber *asrTimeStamp = [NSNumber numberWithDouble:timestamp];
+            
+            NSString *tmpUid = [NSString stringWithFormat:@"%@", asrTimeStamp];
+            
+            [_kit loginByToken:nil user:tmpUid completion:^(AgoraRtmLoginErrorCode errorCode) {
+                
+                if(AgoraRtmLoginErrorOk == errorCode){
+                    [RunTimeMsgManager CheckloggedIn:userId completion:^(BOOL alreadyLoggedin, AgoraRtmQueryPeersOnlineErrorCode errorCode) {
+                        [RunTimeMsgManager logoutACM];
+                        completionBlock(alreadyLoggedin, errorCode);
+                    }];
+                }
+            }];
+        }
+        
+        
+    }
+    else if(_kit == nil && completionBlock != nil)
+    {
+        completionBlock(false,AgoraRtmQueryPeersOnlineErrorNotInitialized);
+    }
+}
+
++ (void) CheckloggedIn: ( nullable NSString *) userId completion:(LoginCheckBlock _Nullable)completionBlock{
+    NSArray *array = [[NSArray alloc] initWithObjects:userId, nil];
+    [_kit queryPeersOnlineStatus:array completion:^(NSArray<AgoraRtmPeerOnlineStatus *> *peerOnlineStatus, AgoraRtmQueryPeersOnlineErrorCode errorCode) {
+        if(errorCode == AgoraRtmQueryPeersOnlineErrorOk)
+        {
+            if(peerOnlineStatus != nil && peerOnlineStatus.count == 1)
+            {
+                AgoraRtmPeerOnlineStatus *status = peerOnlineStatus[0];
+                if(status.isOnline)
+                {
+                    completionBlock(true, errorCode);
+                }
+                else
+                {
+                    completionBlock(false, errorCode);
+                }
+            }
+            else
+            {
+                completionBlock(false, AgoraRtmQueryPeersOnlineErrorInvalidArgument);
+            }
+        }
+        else
+        {
+            completionBlock(false, errorCode);
+        }
+    }];
+}
+
 // 登出RTM
 + (void) logoutACM{
     if(_kit != nil)
@@ -354,6 +430,11 @@ static ActionManager *actionMgr = nil;
 - (void)rtmKit:(AgoraRtmKit *)kit connectionStateChanged:(AgoraRtmConnectionState)state reason:(AgoraRtmConnectionChangeReason)reason {
     NSString *message = [NSString stringWithFormat:@"connection state changed: %ld", state];
     NSLog(@"%@", message);
+    
+    
+    
+    EventData eventData = {EventRTMConnectionStateChange, (int)state,(int)reason,0};
+    [actionMgr HandleEvent:eventData];
     
     if(acmCallBack != nil)
     {

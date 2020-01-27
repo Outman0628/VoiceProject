@@ -115,6 +115,11 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     // 接听方机器人应答
     EventUpdateDialingTimer = 33,
     
+    // RTM 状态变更
+    EventRTMConnectionStateChange = 34,
+    
+    // 账号登录检查
+    EventLoggedinCheck = 35,
 
     
     // 拨号

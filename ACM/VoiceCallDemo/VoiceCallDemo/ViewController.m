@@ -86,6 +86,8 @@
     }
    */
     [self initControls];
+    //[self showAlert:@"测试窗体"];
+    
 }
 
 - (void) handleApnsToken: (nullable NSString *)token{
@@ -226,7 +228,40 @@
         return;
     }
     
-    [ACM loginACM:self.userIdTextField.text completion:^(AcmLoginErrorCode errorCode) {
+    [self Login:self.userIdTextField.text];
+
+}
+
+- (void) dropTest{
+    /*
+    [ACM loggedInCheck:self.userIdTextField.text completion:^(BOOL alreadyLoggedin, AgoraRtmQueryPeersOnlineErrorCode errorCode) {
+        if(errorCode == AgoraRtmQueryPeersOnlineErrorOk)
+        {
+            if(alreadyLoggedin)
+            {
+                [self showAlertWidthCancel:@"该账号已在其他设备登录，继续登录会使以登录设备强制下线！" Callback:^(BOOL isOK) {
+                    if(isOK)
+                    {
+                        [self Login:self.userIdTextField.text];
+                    }
+                    
+                }];
+            }
+            else
+            {
+                [self Login:self.userIdTextField.text];
+            }
+            
+        }else{
+            [self showAlert:@"检查登录状态失败"];
+        }
+        
+    }];
+     */
+}
+
+- (void) Login: (NSString *)uid{
+    [ACM loginACM:uid completion:^(AcmLoginErrorCode errorCode) {
         if (errorCode != AcmRtmLoginErrorOk) {
             [self showAlert: [NSString stringWithFormat:@"login error: %ld", errorCode]];
             return;
@@ -430,6 +465,12 @@
     
     NSString *message = [NSString stringWithFormat:@"connection state changed: %ld", state];
     NSLog(@"%@",message);
+    
+    if(state == AgoraRtmConnectionStateAborted)
+    {
+        [self showAlert:@"该账号在其他设备登录，您已下线!"];
+        self.regBtn.enabled = true;
+    }
     
 }
 

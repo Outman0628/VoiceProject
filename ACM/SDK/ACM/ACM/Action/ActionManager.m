@@ -24,9 +24,9 @@ static ActionManager* actionMgrInstance = nil;
 @interface ActionManager()
 // 当前Action
 @property  ACMAction *activeAction;
-@property NSString *apnsToken;
 @property ACMAudioInputStream *inputStream;
 @property ExternalAudio *extAudio;
+
 @end
 
 @implementation ActionManager
@@ -43,6 +43,7 @@ static ActionManager* actionMgrInstance = nil;
         self.callMgr = [[CallManager alloc]init];
         self.asrMgr = [[AsrManager alloc]init];
         self.dialingTimetout = 30;
+        self.isConnected = NO;
     }
     return self;
 }
@@ -86,12 +87,48 @@ static ActionManager* actionMgrInstance = nil;
     {
         _dialingTimetout = eventData.param1;
     }
+    else if(eventData.type == EventRTMConnectionStateChange)
+    {
+        [self handleRTMConnectionStateChanged:eventData];
+    }
+    else if(eventData.type == EventLoggedinCheck)
+    {
+        [self handleLoggedinCheck:eventData];
+    }
     else
     {
         [self.activeAction HandleEvent:eventData];
     }
     
     
+}
+
+- (void)handleLoggedinCheck: (EventData)eventData{
+    [RunTimeMsgManager loggedInCheck:eventData.param4 completion:eventData.param5];
+}
+
+- (void)handleRTMConnectionStateChanged: (EventData)eventData{
+    AgoraRtmConnectionState state = (AgoraRtmConnectionState)eventData.param1;
+    //AgoraRtmConnectionChangeReason reason = (AgoraRtmConnectionChangeReason)eventData.param2;
+    
+    switch (state) {
+        case AgoraRtmConnectionStateDisconnected:
+        case AgoraRtmConnectionStateConnecting:
+        case AgoraRtmConnectionStateReconnecting:
+            _isConnected = false;
+            break;
+        case AgoraRtmConnectionStateAborted:
+            [RunTimeMsgManager logoutACM];
+            _isConnected = false;
+            break;
+        case AgoraRtmConnectionStateConnected:
+            _isConnected = true;
+            break;
+        default:
+            break;
+    }
+    
+    [self.activeAction HandleEvent:eventData];
 }
 
 - (void)handleMuteEvent:(EventData) eventData

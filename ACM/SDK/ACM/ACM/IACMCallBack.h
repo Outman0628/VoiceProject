@@ -67,3 +67,8 @@ typedef void (^IACMLoginBlock)(AcmLoginErrorCode errorCode);
  发送点对点消息， 返回值参见 AgoraRtmLoginErrorCode.
  */
 typedef void (^IACMSendPeerMessageBlock)(AgoraRtmSendPeerMessageErrorCode errorCode);
+
+/**
+ 是否有他设备已经登录
+ */
+typedef void (^LoginCheckBlock)(BOOL alreadyLoggedin, AgoraRtmQueryPeersOnlineErrorCode errorCode);

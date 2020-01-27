@@ -50,6 +50,20 @@ static ActionManager *actionMgr = nil;
     }
 }
 
+/**
+ 检测账户是否已经在其他设备登录(放弃该接口，无法判断设备上次是从哪里登录)
+ 
+ @param userId 本机用户ID
+ @param completionBlock 登录结果回调
+ */
++ (void) loggedInCheck: ( nullable NSString *) userId completion:(LoginCheckBlock _Nullable)completionBlock{
+    if(actionMgr != nil)
+    {
+        EventData eventData = {EventLoggedinCheck, 0,0,0,userId,completionBlock,nil};
+        [actionMgr HandleEvent:eventData];
+    }
+}
+
 + (void) sendP2PMessage: (nullable NSString *)msg peerId:( nullable NSString *)peerId completion:(IACMSendPeerMessageBlock _Nullable)completionBlock{
     //[RunTimeMsgManager sendP2PMessage:msg  remoteUid:peerId completion:completionBlock];
     

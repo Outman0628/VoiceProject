@@ -23,7 +23,8 @@
 @property CallManager* _Nonnull  callMgr;
 @property id<IACMCallBack> _Nullable  icmCallBack;
 @property AsrManager * _Nullable asrMgr;
-
+@property NSString *apnsToken;
+@property BOOL  isConnected;
 
 +(ActionManager *_Nullable)instance;
 

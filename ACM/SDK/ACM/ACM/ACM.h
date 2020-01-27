@@ -31,13 +31,17 @@ FOUNDATION_EXPORT const unsigned char ACMVersionString[];
 + (void) initManager: ( nullable NSString *) appId backendHost:(nullable NSString *)host apnsToken:(nullable NSString *)token acmCallback:(id <IACMCallBack> _Nullable)delegate;
 
 /**
- 在通过监听服务中登录注册本机用户
+ 在通过监听服务中登录注册本机用户。
+ 如果userid 在其他设备登录，调用该接口会使该账号在其他设备上强制下线
+ 可以先调用 loggedInCheck 获取状态
  
  @param userId 本机用户ID
  @param completionBlock 登录结果回调
  
  */
 + (void) loginACM: ( nullable NSString *) userId completion:(IACMLoginBlock _Nullable)completionBlock;
+
+
 
 
 /**

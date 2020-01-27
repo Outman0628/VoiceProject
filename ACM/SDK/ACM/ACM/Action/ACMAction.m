@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "ACMAction.h"
 #import "../IRTCCallBack.h"
+#import "../RTC/AudioCallManager.h"
+#import "LoginAction.h"
+#import "ActionManager.h"
 
 @implementation  ACMAction
 /**
@@ -32,6 +35,23 @@
     {
         [self handleBaseEventGetAuthority:eventData];
     }
+    else if(eventData.type == EventRTMConnectionStateChange)
+    {
+        [self handleRTMConnectionStateChanged:eventData];
+    }
+}
+
+- (void)handleRTMConnectionStateChanged: (EventData)eventData{
+    AgoraRtmConnectionState state = (AgoraRtmConnectionState)eventData.param1;
+    
+    if(state == AgoraRtmConnectionStateAborted)
+    {
+        [AudioCallManager endAudioCall];
+        LoginAction *nextAction = [[LoginAction alloc]init:[ActionManager instance] apnsToken:[ActionManager instance].apnsToken];
+        [[ActionManager instance] actionChange:self destAction:nextAction];
+    }
+    
+   
 }
 
 - (void) handleBaseEventGetAuthority: (EventData) eventData{
