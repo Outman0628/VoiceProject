@@ -73,15 +73,18 @@ static NSString *DialRobot = @"/dapi/call/robot";
         // todo 拨号RTM 拨号问题
     }
     else if(eventData.type == EventSelfInChannelSucceed)
-    {}
+    {
+        // 拨号成功，有检测channel 中是否有人事件（EventDidJoinedOfUid）回调
+    }
     else if(eventData.type == EventDidJoinedOfUid)
     {
         [self HandleEventDidJoinedOfUid:eventData];
     }
-    else if(eventData.type == EventDidRtcOccurWarning)
-    {}
+
     else if(eventData.type == EventDidRtcOccurError)
-    {}
+    {
+        [self handleRtcError:eventData];
+    }
     else if(eventData.type == EventRtmAgreeAudioCall)
     {
         [self prepareOnPhoneCall:eventData];
@@ -97,6 +100,18 @@ static NSString *DialRobot = @"/dapi/call/robot";
     else
     {
         [super HandleEvent:eventData];
+    }
+}
+
+// 拨号过程中遇到问题结束拨号，并通知远端
+- (void) handleRtcError: (EventData) eventData{
+    Call *call = [[ActionManager instance].callMgr getActiveCall];
+    
+    [self quitDialingPhoneCall:call EndCode:AcmDialErrorJoinChannel];
+    
+    if(call != nil && call.callback != nil)
+    {
+        [call.callback didOccurError:eventData.param1];
     }
 }
 
@@ -382,6 +397,25 @@ static NSString *DialRobot = @"/dapi/call/robot";
         [call updateStage:OnPhone];
         
         // todo 跳转到onphone action
+    }
+    
+}
+    
+- (void) quitDialingPhoneCall: (Call *) call EndCode:(AcmDialCode) code{
+    
+    if(call != nil && ( call.stage == Dialing || call.stage == PrepareOnphone )){
+        [call updateStage:Finished];
+        if(call.channelId != nil)
+        {
+            [AudioCallManager endAudioCall];
+            [RunTimeMsgManager leaveCall:call.subscriberList[0]  userAccount:self.actionMgr.userId  channelID:call.channelId];
+            
+        }
+        if(call.callback != nil)
+        {
+            [call.callback didPhoneDialResult:code];
+        }
+        [self JumpBackToMonitorAction];
     }
 }
 

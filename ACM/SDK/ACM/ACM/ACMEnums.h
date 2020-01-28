@@ -144,6 +144,11 @@ typedef NS_ENUM(NSInteger, AcmDialCode) {
      */
     AcmDialErrorWrongApplyAnswerCallResponse = -4,
     
+    /**
+     进入通话频道错误，详细错误会痛过 IRTCCallBack didOccurError 回调通知
+     */
+    AcmDialErrorJoinChannel = -5,
+    
 
 };
 

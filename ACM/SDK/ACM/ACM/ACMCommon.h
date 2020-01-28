@@ -120,6 +120,9 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     
     // 账号登录检查
     EventLoggedinCheck = 35,
+    
+    // 远程用户离开频道
+    EventRemoteUserLeaveChannel = 36,
 
     
     // 拨号

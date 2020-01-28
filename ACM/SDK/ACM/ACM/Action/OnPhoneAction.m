@@ -103,9 +103,24 @@ static BOOL turn = NO;
     {
         [self handleEventGetAuthority:eventData];
     }
+    else if(eventData.type == EventDidRtcOccurError)
+    {
+        [self handleRtcError:eventData];
+    }
     else
     {
         [super HandleEvent:eventData];
+    }
+}
+
+// 通话过程中遇到问题结束拨号，通知UI层错误，通话结束由
+- (void) handleRtcError: (EventData) eventData{
+   
+    Call *call = [[ActionManager instance].callMgr getActiveCall];
+    
+    if(call != nil && call.callback != nil && call.stage == OnPhone)
+    {
+        [call.callback didOccurError:eventData.param1];
     }
 }
 

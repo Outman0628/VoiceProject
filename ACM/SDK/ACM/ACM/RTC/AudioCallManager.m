@@ -15,6 +15,7 @@ static AgoraRtcEngineKit *_rtcKit = nil;
 static AudioCallManager *instance = nil;
 
 @interface AudioCallManager ()  <AgoraRtcEngineDelegate, AudioStreamPushDelegate>
+@property NSMutableDictionary *channelMemberList;
 @end
 
 @implementation AudioCallManager
@@ -26,6 +27,7 @@ static AudioCallManager *instance = nil;
     if(_rtcKit == nil)
     {
         instance = [AudioCallManager alloc];
+        instance.channelMemberList = [[NSMutableDictionary alloc]init];
          _rtcKit = [AgoraRtcEngineKit sharedEngineWithAppId:appId delegate:instance];
         [instance subScribeAudioStream];
     }
@@ -50,6 +52,8 @@ static AudioCallManager *instance = nil;
      */
     
     [_rtcKit enableExternalAudioSourceWithSampleRate:16000 channelsPerFrame:1];
+    
+    [instance.channelMemberList removeAllObjects];
     
     [_rtcKit joinChannelByUserAccount:userID token:token channelId:channelId joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {
         NSLog(@"Succeed to join RTC channel");
@@ -94,6 +98,7 @@ static AudioCallManager *instance = nil;
         [_rtcKit muteLocalAudioStream:false];
     }
 }
+
 
 //倒入音频流 todo drop
 
@@ -148,7 +153,29 @@ static AudioCallManager *instance = nil;
 {
     [AudioStreamMgr startWork];
     [[ActionManager instance].asrMgr startAsr];
-    EventData eventData = {EventDidJoinedOfUid, uid,elapsed,0,nil};
+    NSNumber *num = [NSNumber numberWithInteger:uid];
+    NSString *userAccount = [_channelMemberList objectForKey:num];
+    EventData eventData = {EventDidJoinedOfUid, (int)uid,(int)elapsed,0,userAccount};
+    [[ActionManager instance]  HandleEvent:eventData];
+}
+
+
+- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didRegisteredLocalUser:(NSString * _Nonnull)userAccount withUid:(NSUInteger)uid{
+    NSLog(@"didRegisteredLocalUser userAccount:%@  uid:%lu", userAccount, (unsigned long)uid);
+}
+
+
+- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didUpdatedUserInfo:(AgoraUserInfo * _Nonnull)userInfo withUid:(NSUInteger)uid{
+    NSLog(@"didUpdatedUserInfo userAccount:%@  uid:%lu", userInfo.userAccount, (unsigned long)userInfo.uid);
+    [_channelMemberList setObject:userInfo.userAccount forKey: [NSNumber numberWithInteger:userInfo.uid]];
+}
+
+- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didOfflineOfUid:(NSUInteger)uid reason:(AgoraUserOfflineReason)reason{
+   //  NSLog(@"didOfflineOfUid userAccount:%lu  reason:%lu", (unsigned long)uid , reason);
+    NSNumber *num = [NSNumber numberWithInteger:uid];
+    NSString *userAccount = [_channelMemberList objectForKey:num];
+    
+    EventData eventData = {EventRemoteUserLeaveChannel, (int)uid,0,0,userAccount};
     [[ActionManager instance]  HandleEvent:eventData];
 }
 

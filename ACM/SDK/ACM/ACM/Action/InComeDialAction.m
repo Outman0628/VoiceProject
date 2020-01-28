@@ -13,6 +13,7 @@
 #import "OnPhoneAction.h"
 #import "../Message/RunTimeMsgManager.h"
 #import "MonitorAction.h"
+#import "../RTC/AudioCallManager.h"
 
 static NSString *RobotAnserApi = @"/dapi/invite/robot";
 static NSString *AnswerApi = @"/dapi/call/recieve";
@@ -60,9 +61,25 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     {
         [self remoteLeaveCall:eventData];
     }
+    else if(eventData.type == EventDidRtcOccurError)
+    {
+        [self handleRtcError:eventData];
+    }
     else
     {
         [super HandleEvent:eventData];
+    }
+}
+
+// 拨号过程中遇到问题结束拨号，并通知远端
+- (void) handleRtcError: (EventData) eventData{
+    Call *call = [[ActionManager instance].callMgr getActiveCall];
+    
+    [self quitIncomeDialingPhoneCall:call EndCode:AcmDialErrorJoinChannel];
+    
+    if(call != nil && call.callback != nil)
+    {
+        [call.callback didOccurError:eventData.param1];
     }
 }
 
@@ -331,6 +348,24 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     
     [[ActionManager instance] actionChange:self destAction:monitorAction];
     
+}
+
+- (void) quitIncomeDialingPhoneCall: (Call *) call EndCode:(AcmDialCode) code{
+    
+    if(call != nil && call.stage == Dialing){
+        [call updateStage:Finished];
+        if(call.channelId != nil)
+        {
+            [AudioCallManager endAudioCall];
+            [RunTimeMsgManager rejectPhoneCall:call.callerId userAccount:call.selfId channelID:call.channelId];
+            
+        }
+        if(call.callback != nil)
+        {
+            [call.callback didPhoneDialResult:code];
+        }
+        [self JumpBackToMonitorAction];
+    }
 }
 
 @end

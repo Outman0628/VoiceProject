@@ -39,6 +39,23 @@
     {
         [self handleRTMConnectionStateChanged:eventData];
     }
+    else if(eventData.type == EventDidRtcOccurWarning)
+    {
+        [self handleRTCWarning:eventData];
+    }
+}
+
+- (void)handleRTCWarning: (EventData)eventData{
+    ActionManager *actionMgr = [ActionManager instance];
+    Call *call = nil;
+    if(actionMgr != nil)
+    {
+        call = [actionMgr.callMgr getActiveCall];
+    }
+    
+    if(call != nil && call.callback != nil){
+        [call.callback  didPhonecallOccurWarning:eventData.param1];
+    }
 }
 
 - (void)handleRTMConnectionStateChanged: (EventData)eventData{

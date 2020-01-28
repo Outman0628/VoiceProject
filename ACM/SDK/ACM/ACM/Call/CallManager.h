@@ -59,6 +59,11 @@
  */
 -( nullable Call * )getCall: (nullable NSString*)channelId;
 
+/*
+ 获取通话当前活跃的通话对象
+ */
+-( nullable Call * )getActiveCall;
+
 @end
 
 #endif /* CallManager_h */

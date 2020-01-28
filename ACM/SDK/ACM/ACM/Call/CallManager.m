@@ -101,4 +101,18 @@
     return instance;
 }
 
+-( nullable Call * )getActiveCall{
+    Call *instance = nil;
+    
+    if(self.activeCallList.count > 0){
+        instance = self.activeCallList[self.activeCallList.count - 1];
+    }
+    
+    if(instance != nil && instance.stage != Finished){
+        return instance;
+    }
+        
+    return nil;
+}
+
 @end
