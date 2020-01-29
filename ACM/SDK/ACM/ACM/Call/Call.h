@@ -70,6 +70,7 @@ typedef NS_ENUM(NSInteger, RoleType) {
 @property NSString * _Nonnull callerId;
 // 接听者列表
 @property NSMutableArray *  _Nonnull subscriberList;
+
 // 本机uid
 @property NSString * _Nonnull selfId;
 // 通话频道
@@ -100,6 +101,16 @@ typedef NS_ENUM(NSInteger, RoleType) {
  *结束Observer模式
  */
 -(void)endObserverMode;
+
+/*
+ *更新在线人员信息
+ */
+-(void)updateOnlineMember: (nonnull NSString *)uid Online:(BOOL)isOnline;
+
+/*
+ * 获取在线人员名单
+ */
+- (NSArray *_Nonnull)getOnlineMembers;
 
 @end
 

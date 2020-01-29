@@ -155,8 +155,10 @@ static AudioCallManager *instance = nil;
     [[ActionManager instance].asrMgr startAsr];
     NSNumber *num = [NSNumber numberWithInteger:uid];
     NSString *userAccount = [_channelMemberList objectForKey:num];
-    EventData eventData = {EventDidJoinedOfUid, (int)uid,(int)elapsed,0,userAccount};
-    [[ActionManager instance]  HandleEvent:eventData];
+    if(userAccount != nil){
+        EventData eventData = {EventDidJoinedOfUid, (int)uid,(int)elapsed,0,userAccount};
+        [[ActionManager instance]  HandleEvent:eventData];
+    }
 }
 
 
@@ -175,8 +177,17 @@ static AudioCallManager *instance = nil;
     NSNumber *num = [NSNumber numberWithInteger:uid];
     NSString *userAccount = [_channelMemberList objectForKey:num];
     
-    EventData eventData = {EventRemoteUserLeaveChannel, (int)uid,0,0,userAccount};
+    EventData eventData = {EventRTCUserLeaveChannel, (int)uid,0,0,userAccount};
     [[ActionManager instance]  HandleEvent:eventData];
+}
+
+- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didRejoinChannel:(NSString * _Nonnull)channel withUid:(NSUInteger)uid elapsed:(NSInteger) elapsed{
+    NSNumber *num = [NSNumber numberWithInteger:uid];
+    NSString *userAccount = [_channelMemberList objectForKey:num];
+    if(userAccount != nil){
+        EventData eventData = {EventDidJoinedOfUid, (int)uid,(int)elapsed,0,userAccount};
+        [[ActionManager instance]  HandleEvent:eventData];
+    }
 }
 
 @end

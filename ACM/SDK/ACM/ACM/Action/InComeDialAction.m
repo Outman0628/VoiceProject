@@ -14,6 +14,7 @@
 #import "../Message/RunTimeMsgManager.h"
 #import "MonitorAction.h"
 #import "../RTC/AudioCallManager.h"
+#import "../Message/HttpUtil.h"
 
 static NSString *RobotAnserApi = @"/dapi/invite/robot";
 static NSString *AnswerApi = @"/dapi/call/recieve";
@@ -75,17 +76,19 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
 - (void) handleRtcError: (EventData) eventData{
     Call *call = [[ActionManager instance].callMgr getActiveCall];
     
-    [self quitIncomeDialingPhoneCall:call EndCode:AcmDialErrorJoinChannel];
+    [self quitIncomeDialingPhoneCall:call ];
     
     if(call != nil && call.callback != nil)
     {
+        
+        [call.callback didPhoneDialResult:AcmDialErrorJoinChannel];
+        
         [call.callback didOccurError:eventData.param1];
     }
 }
 
 - (void) remoteLeaveCall: (EventData) eventData{
-    
-    
+    /*
     Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
     if(call != nil && call.role == Subscriber && call.stage == Dialing)
     {
@@ -100,7 +103,22 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
             });
         }
     }
+    */
     
+    Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
+    
+    [self quitIncomeDialingPhoneCall:call];
+    
+    if(call != nil && call.role == Subscriber && call.stage == Dialing)
+    {
+        id<IACMCallBack> callBack =  [ActionManager instance].icmCallBack;
+        if(callBack != nil)
+        {
+            dispatch_async(dispatch_get_main_queue(),^{
+                [callBack onCallEnd:call endCode:AcmMsgDialEndByCaller];
+            });
+        }
+    }
 }
 
 - (void) handleDialingTimeout: (EventData) eventData{
@@ -117,8 +135,6 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
                 [callBack onCallEnd:call endCode:AcmMsgDialEndTimeout];
             });
         }
-        
-        
     }
 }
 
@@ -329,7 +345,8 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
 }
 
 - (void) HandleRejectCall: (EventData) eventData{
-       
+    
+    /*
     Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
     if(call != nil)
     {
@@ -339,6 +356,21 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     [RunTimeMsgManager rejectPhoneCall:call.callerId userAccount:call.selfId channelID:call.channelId];
     
     [self JumpBackToMonitorAction];
+     */
+    
+    Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
+    if(call != nil){
+        [RunTimeMsgManager rejectPhoneCall:call.callerId userAccount:call.selfId channelID:call.channelId];
+    }
+    
+    [self quitIncomeDialingPhoneCall:call];
+    
+    if(call != nil && call.callback != nil)
+    {
+        
+        [call.callback didPhoneDialResult:AcmSelfCancelDial];
+    }
+    
 }
 
 // 跳转回Monitor Action
@@ -350,20 +382,21 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     
 }
 
-- (void) quitIncomeDialingPhoneCall: (Call *) call EndCode:(AcmDialCode) code{
+- (void) quitIncomeDialingPhoneCall: (Call *) call {
     
     if(call != nil && call.stage == Dialing){
         [call updateStage:Finished];
         if(call.channelId != nil)
         {
             [AudioCallManager endAudioCall];
-            [RunTimeMsgManager rejectPhoneCall:call.callerId userAccount:call.selfId channelID:call.channelId];
+            //[RunTimeMsgManager rejectPhoneCall:call.callerId userAccount:call.selfId channelID:call.channelId];
             
+            NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, EndCallApi];
+            NSString *param = [NSString stringWithFormat:@"uid=%@&channel=%@", call.selfId, call.channelId]; //带一个参数key传给服务器
+            
+            [HttpUtil HttpPost:stringUrl Param:param Callback:nil];
         }
-        if(call.callback != nil)
-        {
-            [call.callback didPhoneDialResult:code];
-        }
+
         [self JumpBackToMonitorAction];
     }
 }

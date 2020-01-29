@@ -13,6 +13,7 @@
 #import "ActionManager.h"
 #import "../RTC/AudioCallManager.h"
 #import "../Message/RunTimeMsgManager.h"
+#import "../Message/HttpUtil.h"
 
 static NSString *AuthorityApi = @"/dapi/quit/robot";
 
@@ -23,8 +24,6 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
 @end
 
 @implementation OnPhoneAction
-
-static BOOL turn = NO;
 
 -(id _Nullable )init{
     if (self = [super init]) {
@@ -107,9 +106,41 @@ static BOOL turn = NO;
     {
         [self handleRtcError:eventData];
     }
+    else if(eventData.type == EventRTCUserLeaveChannel)
+    {
+        [self handleRemoteUserLeaveChannel:eventData];
+    }
+    else if(eventData.type == EventDidJoinedOfUid)
+    {
+        [self HandleEventDidJoinedOfUid:eventData];
+    }
     else
     {
         [super HandleEvent:eventData];
+    }
+}
+
+- (void) HandleEventDidJoinedOfUid: (EventData) eventData{
+    Call *call = [[ActionManager instance].callMgr getActiveCall];
+    
+    if(call != nil  && call.stage == OnPhone)
+    {
+        [call updateOnlineMember:eventData.param4 Online:YES];
+    }
+    if( call.callback != nil ){
+        [call.callback onlineMemberUpdated:[call getOnlineMembers]];
+    }
+}
+
+- (void) handleRemoteUserLeaveChannel: (EventData) eventData{
+    Call *call = [[ActionManager instance].callMgr getActiveCall];
+    
+    if(call != nil  && call.stage == OnPhone)
+    {
+        [call updateOnlineMember:eventData.param4 Online:NO];
+    }
+    if( call.callback != nil ){
+        [call.callback onlineMemberUpdated:[call getOnlineMembers]];
     }
 }
 
@@ -180,18 +211,21 @@ static BOOL turn = NO;
 
 - (void) remoteLeaveCall: (EventData) eventData{
     
-    [AudioCallManager endAudioCall];
-    
     Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
-    if(call != nil)
+    
+    
+    
+    if(call != nil  && call.stage == OnPhone)
     {
-        [call updateStage:Finished];
+       
         if(call.callback != nil)
         {
             [call.callback didPhoneCallResult:AcmPhoneCallCodeRemoteEnd];
         }
-        [self JumpBackToMonitorAction];
+        
     }
+    
+    [self quitOnPhoneCall:call];
      
 }
 
@@ -241,8 +275,8 @@ static BOOL turn = NO;
         call =  [[ActionManager instance].callMgr getCall:paramCall.channelId];
     }
     
-    if(call != nil){
-        if(call.role == Subscriber  || ![call.selfId isEqualToString:call.callerId])  // 如果是观察者模式，不用给发起者发消息通知
+    if(call != nil && call.stage == OnPhone){
+        if(call.role == Subscriber  || ![call.selfId isEqualToString:call.callerId])
         {
             [RunTimeMsgManager leaveCall:call.callerId userAccount:call.selfId channelID:call.channelId];
         }
@@ -251,9 +285,8 @@ static BOOL turn = NO;
             // todo 多人列表
             [RunTimeMsgManager leaveCall:call.subscriberList[0] userAccount:call.selfId channelID:call.channelId];
         }
-        [AudioCallManager endAudioCall];
-        [call updateStage:Finished];
-        [self JumpBackToMonitorAction];
+        
+        [self quitOnPhoneCall:call];
     }
 }
 
@@ -349,6 +382,24 @@ static BOOL turn = NO;
     
     [[ActionManager instance] actionChange:self destAction:monitorAction];
 
+}
+
+- (void) quitOnPhoneCall: (Call *) call {
+    
+    if(call != nil && call.stage == OnPhone){
+        [call updateStage:Finished];
+        if(call.channelId != nil)
+        {
+            [AudioCallManager endAudioCall];
+            
+            NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, EndCallApi];
+            NSString *param = [NSString stringWithFormat:@"uid=%@&channel=%@", call.selfId, call.channelId]; //带一个参数key传给服务器
+            
+            [HttpUtil HttpPost:stringUrl Param:param Callback:nil];
+        }
+        
+        [self JumpBackToMonitorAction];
+    }
 }
 
 @end

@@ -116,6 +116,11 @@ typedef NS_ENUM(NSInteger, AcmDialCode) {
      */
     AcmCallerCancelDial= 6,
     
+    /**
+     自己取消拨号，或是挂断来电
+     */
+    AcmSelfCancelDial= 7,
+    
  
     
     /**

@@ -12,6 +12,8 @@
 		630F77DD23D570C80071DF9F /* UpDateConfigTask.h in Headers */ = {isa = PBXBuildFile; fileRef = 630F77DC23D570C80071DF9F /* UpDateConfigTask.h */; };
 		630F77DF23D570D40071DF9F /* UpDateConfigTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 630F77DE23D570D40071DF9F /* UpDateConfigTask.m */; };
 		63155E9623D7E36F000762DA /* AssistantCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 63155E9523D7E36F000762DA /* AssistantCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6338001723E13EEE00679F83 /* HttpUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 6338001623E13EEE00679F83 /* HttpUtil.h */; };
+		6338001923E13F1A00679F83 /* HttpUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 6338001823E13F1A00679F83 /* HttpUtil.m */; };
 		6349E8DE23D15685009EEE99 /* BDSSynthesizerStatusNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E8D423D15685009EEE99 /* BDSSynthesizerStatusNotifications.h */; };
 		6349E8DF23D15685009EEE99 /* BDSSpeechSynthesizerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E8D523D15685009EEE99 /* BDSSpeechSynthesizerDelegate.h */; };
 		6349E8E023D15685009EEE99 /* BDS_EttsModelManagerInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E8D623D15685009EEE99 /* BDS_EttsModelManagerInterface.h */; };
@@ -120,6 +122,8 @@
 		630F77DC23D570C80071DF9F /* UpDateConfigTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UpDateConfigTask.h; sourceTree = "<group>"; };
 		630F77DE23D570D40071DF9F /* UpDateConfigTask.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UpDateConfigTask.m; sourceTree = "<group>"; };
 		63155E9523D7E36F000762DA /* AssistantCallback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AssistantCallback.h; sourceTree = "<group>"; };
+		6338001623E13EEE00679F83 /* HttpUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HttpUtil.h; sourceTree = "<group>"; };
+		6338001823E13F1A00679F83 /* HttpUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HttpUtil.m; sourceTree = "<group>"; };
 		6349E8D423D15685009EEE99 /* BDSSynthesizerStatusNotifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSSynthesizerStatusNotifications.h; sourceTree = "<group>"; };
 		6349E8D523D15685009EEE99 /* BDSSpeechSynthesizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSSpeechSynthesizerDelegate.h; sourceTree = "<group>"; };
 		6349E8D623D15685009EEE99 /* BDS_EttsModelManagerInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDS_EttsModelManagerInterface.h; sourceTree = "<group>"; };
@@ -424,6 +428,8 @@
 				63B356BF23BE553B0034F54B /* RunTimeMsgManager.h */,
 				63B357B623C6D2CF0034F54B /* ApnsMessageManager.h */,
 				63B357B823C6D2E40034F54B /* ApnsMessageManager.m */,
+				6338001623E13EEE00679F83 /* HttpUtil.h */,
+				6338001823E13F1A00679F83 /* HttpUtil.m */,
 			);
 			path = Message;
 			sourceTree = "<group>";
@@ -528,6 +534,7 @@
 				63A24F8A23CD914900D2ADC4 /* BDSASRDefines.h in Headers */,
 				63B3566223BDE3900034F54B /* ACM.h in Headers */,
 				63B3579D23C474C50034F54B /* SDKInitAction.h in Headers */,
+				6338001723E13EEE00679F83 /* HttpUtil.h in Headers */,
 				63A24F6D23CD592300D2ADC4 /* ASRInputStream.h in Headers */,
 				63B356C023BE553B0034F54B /* RunTimeMsgManager.h in Headers */,
 				6349E8E523D15685009EEE99 /* BDSSynthesizerLogLevel.h in Headers */,
@@ -644,6 +651,7 @@
 				63A24F7523CD7BCE00D2ADC4 /* ASRInputStream.mm in Sources */,
 				63B3579F23C475B80034F54B /* SDKInitAction.m in Sources */,
 				63B357AA23C4B1C40034F54B /* LoginAction.m in Sources */,
+				6338001923E13F1A00679F83 /* HttpUtil.m in Sources */,
 				63A24F6723CCC83100D2ADC4 /* AudioController.m in Sources */,
 				63A24F5523CC7CF700D2ADC4 /* AudioDataQueue.cpp in Sources */,
 				6349E90323D342E0009EEE99 /* TtsFileTasks.m in Sources */,

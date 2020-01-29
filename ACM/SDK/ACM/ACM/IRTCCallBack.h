@@ -49,17 +49,16 @@
 */
 - (void)didPhonecallOccurWarning:(AgoraWarningCode)warningCode;
 
-/**  通话中error 发生时回调
+/*
+ *  通话中error 发生时回调
  @param errorCode 详见AgoraErrorCode
  */
 - (void)didOccurError:(AgoraErrorCode)errorCode;
 
-/**  通话中error 发生时回调
- @param channel 通话频道
- @param uid  用户ID
- @param elapsed 从申请加入频道开始到发生此事件过去的时间（ms)。
+/*
+ *  通话频道人员变更，有人参与到Channel, 或是退出Channel 调用该回调更新在线人员
  */
-- (void)didJoinChannel:(NSString * _Nonnull)channel withUid:(NSUInteger)uid elapsed:(NSInteger) elapsed;
+- (void)onlineMemberUpdated:(NSArray *_Nonnull) onlineMemberList;
 
 @end
 

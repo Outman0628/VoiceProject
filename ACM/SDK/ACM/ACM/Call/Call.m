@@ -12,6 +12,8 @@
 
 @interface Call()
 @property NSTimer *dialTimer;      // 拨号，拨号应答超时器
+// 在线人员列表
+@property NSMutableArray *  _Nonnull onlineMemberList;
 @end
 
 @implementation Call
@@ -22,6 +24,7 @@
         self.localMuteState = false;
         self.remoteMuteState = false;
         self.subscriberList = [NSMutableArray array];
+        self.onlineMemberList = [NSMutableArray array];
         self.dialTimer = nil;
     }
     return self;
@@ -85,6 +88,31 @@
             self.role = Subscriber;
         }
     }
+}
+
+-(void)updateOnlineMember: (nonnull NSString *)uid Online:(BOOL)isOnline{
+    for(int i = 0; i < _onlineMemberList.count ; i++){
+        
+        if([uid isEqualToString:_onlineMemberList[i]]){
+            
+            if(isOnline){
+                    return;
+                }
+            else{
+                [_onlineMemberList removeObjectAtIndex:i];
+                return;
+            }
+        }
+    }
+    
+    if(isOnline){
+        [_onlineMemberList addObject:uid];
+    }
+        
+}
+
+- (NSArray *_Nonnull)getOnlineMembers{
+    return _onlineMemberList;
 }
 
 @end
