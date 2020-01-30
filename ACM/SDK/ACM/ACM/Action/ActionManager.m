@@ -133,7 +133,7 @@ static ActionManager* actionMgrInstance = nil;
 
 - (void)handleMuteEvent:(EventData) eventData
 {
-    Call *call = eventData.param4;
+    AcmCall *call = eventData.param4;
     if(call.stage != Finished)
     {
         [AudioCallManager muteLocalAudioStream:call.localMuteState];

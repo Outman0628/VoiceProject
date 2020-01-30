@@ -425,6 +425,15 @@ static ActionManager *actionMgr = nil;
            }];
 }
 
++ (AgoraRtmChannel * _Nullable)createChannel:(NSString * _Nonnull)channelId
+                                          Delegate:(id <AgoraRtmChannelDelegate> _Nullable)delegate{
+    if(_kit != nil){
+        return [_kit createChannelWithId:channelId delegate:delegate];
+    }
+    
+    return nil;
+}
+
 
 #pragma mark - AgoraRtmDelegate
 - (void)rtmKit:(AgoraRtmKit *)kit connectionStateChanged:(AgoraRtmConnectionState)state reason:(AgoraRtmConnectionChangeReason)reason {

@@ -74,15 +74,6 @@
 }
 
 -(void) HandleRtmCallReq: (EventData) eventData{
-    /*
-    Call *call = eventData.param4;
-    id<IACMCallBack> callBack = self.actionMgr.icmCallBack;
-    if(callBack != nil)
-    {
-        [callBack onCallReceived:call.channelId fromPeer:call.callerId];
-        self.channelID = call.channelId;
-    }
-     */
     
     InComeDialAction* inComeDialAction = [[InComeDialAction alloc]init];
     
@@ -94,17 +85,6 @@
 
 -(void) HandleApnsCallReq: (EventData) eventData{
     
-    
-    /*
-    id<IACMCallBack> callBack = self.actionMgr.icmCallBack;
-    Call *call = eventData.param4;
-    
-    if(callBack != nil)
-    {
-        [callBack onCallReceived:call.channelId fromPeer:call.callerId];
-        self.channelID = call.channelId;
-    }
-     */
     InComeDialAction* inComeDialAction = [[InComeDialAction alloc]init];
     
     [self.actionMgr actionChange:self destAction:inComeDialAction];

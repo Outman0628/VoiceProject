@@ -29,7 +29,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
 @property NSString* channelId;
 @property NSString* rtcToken;
 @property BOOL robotMode;
-@property Call *curCall;
+@property AcmCall *curCall;
 @end
 
 @implementation DialAction
@@ -107,7 +107,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
 
 // 拨号过程中遇到问题结束拨号，并通知远端
 - (void) handleRtcError: (EventData) eventData{
-    Call *call = [[ActionManager instance].callMgr getActiveCall];
+    AcmCall *call = [[ActionManager instance].callMgr getActiveCall];
     
     [self quitDialingPhoneCall:call EndCode:AcmDialErrorJoinChannel];
     
@@ -118,7 +118,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
 }
 
 - (void) handleDialingTimeout: (EventData) eventData{
-    Call *call = eventData.param4;
+    AcmCall *call = eventData.param4;
     
     /*
     if(call != nil && call.stage == Dialing)
@@ -138,7 +138,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
 }
 
 - (void) prepareOnPhoneCall: (EventData) eventData{
-    Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
+    AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
     if(call != nil && call.role == Originator && call.stage == Dialing)
     {       
         [call updateStage:PrepareOnphone];
@@ -172,12 +172,26 @@ static NSString *DialRobot = @"/dapi/call/robot";
     [self RequestPhoneCallInfo:eventData];
 }
 
+- (void) CreateSyncChannel: (nonnull AcmCall *)call{
+    
+}
+
 - (void) RequestPhoneCallInfo:(EventData) eventData{
     
     NSString *stringUrl = [NSString stringWithFormat:@"%@%@",self.actionMgr.host, DialApi];
-    NSString *bodyString = [NSString stringWithFormat:@"src_uid=%@&dst_uid=%@", [ActionManager instance].userId,eventData.param4]; //带一个参数key传给服务器
+    AcmCall *call = eventData.param6;
     
-    [HttpUtil HttpPost:stringUrl Param:bodyString Callback:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    NSDictionary * phoneCallParam =
+    @{@"src_uid": [ActionManager instance].userId,
+      @"dst_uid": call.subscriberList,
+      };
+    
+    
+    NSError *error;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:phoneCallParam options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *param = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    
+    [HttpUtil HttpPost:stringUrl Param:param Callback:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
         if([(NSHTTPURLResponse *)response statusCode] == 200){
             NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -191,8 +205,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
                 NSDictionary *data = dic[@"data"];
                 if(data != nil && data[@"channel"] != nil && data[@"token"] != nil)
                 {
-                    Call *instance = [self.actionMgr.callMgr updateDialCall:data selfUid:self.actionMgr.userId remoteUser:eventData.param4 ircmCallback:eventData.param5 preInstance:eventData.param6];
-                    
+                    AcmCall *instance = [self.actionMgr.callMgr updateDialCall:data selfUid:self.actionMgr.userId ircmCallback:eventData.param5 preInstance:eventData.param6];
                     
                     
                     [RunTimeMsgManager invitePhoneCall:instance];
@@ -246,96 +259,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
         }
     }];
     
-    /*
-    NSString *stringUrl = [NSString stringWithFormat:@"%@%@",self.actionMgr.host, DialApi];
-    NSString *bodyString = [NSString stringWithFormat:@"src_uid=%@&dst_uid=%@", [ActionManager instance].userId,eventData.param4]; //带一个参数key传给服务器
     
-    
-    NSURL *url = [NSURL URLWithString:stringUrl];
-    
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    
-    request.timeoutInterval = 5.0;
-    
-    request.HTTPMethod = @"POST";
-    
-    
-    
-    request.HTTPBody = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
-    
-    NSURLSession *session = [NSURLSession sharedSession];
-    
-    [[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        NSInteger code = [(NSHTTPURLResponse *)response statusCode];
-        NSLog(@"response code:%ldd", (long)code);
-        if([(NSHTTPURLResponse *)response statusCode] == 200){
-            NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            NSData *jsonData = [str dataUsingEncoding:NSUTF8StringEncoding];
-            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
-            
-            BOOL ret = dic[@"success"];
-           
-            
-            if(ret == YES)
-            {
-                NSDictionary *data = dic[@"data"];
-                if(data != nil && data[@"channel"] != nil && data[@"token"] != nil)
-                {
-                    Call *instance = [self.actionMgr.callMgr updateDialCall:data selfUid:self.actionMgr.userId remoteUser:eventData.param4 ircmCallback:eventData.param5 preInstance:eventData.param6];
-                    
-                    
-                    
-                    [RunTimeMsgManager invitePhoneCall:instance];
-                    
-                    //[AudioCallManager startAudioCall:instance.appId user:instance.selfId channel:instance.channelId   rtcToken:instance.token callInstance:instance];
-                    
-                    self.curCall = instance;
-                    
-                    dispatch_async(dispatch_get_main_queue(),^{
-                        [instance.callback didPhoneDialResult:AcmDialRequestSendSucceed];
-                    });
-                    
-                }
-                else
-                {
-                    // 通知错误发生
-                    id <IRTCCallBack> delegate = eventData.param5;
-                    dispatch_async(dispatch_get_main_queue(),^{
-                        [delegate didPhoneDialResult: AcmDialErrorWrongApplyCallResponse];
-                    });
-                    
-                    
-                    // 跳转到Monitor 状态
-                    [self JumpBackToMonitorAction];
-                }
-            }
-            else
-            {
-                // 通知错误发生
-                id <IRTCCallBack> delegate = eventData.param5;
-                dispatch_async(dispatch_get_main_queue(),^{
-                    [delegate didPhoneDialResult: AcmDialErrorWrongApplyCallResponse];
-                });
-                
-                
-                // 跳转到Monitor 状态
-                [self JumpBackToMonitorAction];
-                
-            }
-        }
-        else{
-            // 通知错误发生
-            id <IRTCCallBack> delegate = eventData.param5;
-            
-            dispatch_async(dispatch_get_main_queue(),^{
-                [delegate didPhoneDialResult: AcmDialErrorApplyCall];
-            });
-            
-            // 跳转到Monitor 状态
-            [self JumpBackToMonitorAction];
-        }
-    }] resume];
-     */
 }
 
 // 跳转回Monitor Action
@@ -415,7 +339,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
 }
 // 以后更新为Cancel call
 - (void) leaveCall: (EventData) eventData{
-    Call * call = eventData.param4;
+    AcmCall * call = eventData.param4;
     /*
     if(call.role == Originator)
     {
@@ -438,7 +362,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
 - (void) HandleRemoteRejectcall: (EventData) eventData{
 
     
-    Call *call = [self.actionMgr.callMgr getCall:eventData.param4];
+    AcmCall *call = [self.actionMgr.callMgr getCall:eventData.param4];
     
     
     /*
@@ -458,7 +382,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
 
 // change to cancel call
 - (void) remoteLeaveCall: (EventData) eventData{
-    Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
+    AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
     
     /*
     if(call != nil)
@@ -476,7 +400,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
  
 
 - (void) handleEventDidRTCJoinChannel: (EventData) eventData{
-    Call *call = [self.actionMgr.callMgr getCall:eventData.param4];
+    AcmCall *call = [self.actionMgr.callMgr getCall:eventData.param4];
     if(call != nil && call.callback != nil)
     {
         [call.callback didPhoneDialResult:AcmDialSucced];
@@ -487,7 +411,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
     
 }
     
-- (void) quitDialingPhoneCall: (Call *) call EndCode:(AcmDialCode) code{
+- (void) quitDialingPhoneCall: (AcmCall *) call EndCode:(AcmDialCode) code{
     
     if(call != nil && ( call.stage == Dialing || call.stage == PrepareOnphone )){
         [call updateStage:Finished];

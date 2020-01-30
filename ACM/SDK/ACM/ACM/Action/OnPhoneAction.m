@@ -19,7 +19,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
 
 // 电话响铃Action
 @interface OnPhoneAction ()
-@property Call *curCall;
+@property AcmCall *curCall;
 @property NSTimer *timer;
 @end
 
@@ -121,7 +121,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
 }
 
 - (void) HandleEventDidJoinedOfUid: (EventData) eventData{
-    Call *call = [[ActionManager instance].callMgr getActiveCall];
+    AcmCall *call = [[ActionManager instance].callMgr getActiveCall];
     
     if(call != nil  && call.stage == OnPhone)
     {
@@ -133,7 +133,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
 }
 
 - (void) handleRemoteUserLeaveChannel: (EventData) eventData{
-    Call *call = [[ActionManager instance].callMgr getActiveCall];
+    AcmCall *call = [[ActionManager instance].callMgr getActiveCall];
     
     if(call != nil  && call.stage == OnPhone)
     {
@@ -147,7 +147,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
 // 通话过程中遇到问题结束拨号，通知UI层错误，通话结束由
 - (void) handleRtcError: (EventData) eventData{
    
-    Call *call = [[ActionManager instance].callMgr getActiveCall];
+    AcmCall *call = [[ActionManager instance].callMgr getActiveCall];
     
     if(call != nil && call.callback != nil && call.stage == OnPhone)
     {
@@ -211,7 +211,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
 
 - (void) remoteLeaveCall: (EventData) eventData{
     
-    Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
+    AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
     
     
     
@@ -233,7 +233,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
     /*
     [AudioCallManager startAudioCall:eventData.param4 user:eventData.param5 channel:eventData.param6 rtcToken:nil rtcCallback:eventData.param7];
      */
-    Call *call = eventData.param4;
+    AcmCall *call = eventData.param4;
     self.curCall = call;
     if(call != nil)
     {
@@ -251,7 +251,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
     /*
      [AudioCallManager startAudioCall:eventData.param4 user:eventData.param5 channel:eventData.param6 rtcToken:nil rtcCallback:eventData.param7];
      */
-    Call *call = eventData.param4;
+    AcmCall *call = eventData.param4;
     call.role = Observer;
     self.curCall = call;
 
@@ -268,8 +268,8 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
 }
 
 - (void) leaveCall: (EventData) eventData{
-    Call *paramCall = eventData.param4;
-    Call *call = nil;
+    AcmCall *paramCall = eventData.param4;
+    AcmCall *call = nil;
     if(paramCall != nil)
     {
         call =  [[ActionManager instance].callMgr getCall:paramCall.channelId];
@@ -294,7 +294,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
     
     IRTCAGetAuthorityBlock callback = eventData.param5;
     
-    Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
+    AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
     if(call != nil)
     {
         if(call.stage != OnPhone && call.role != Observer)
@@ -312,7 +312,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
     }
 }
 
-- (void) requestAuthority: (nonnull Call *)call completion:(IRTCAGetAuthorityBlock _Nullable)completionBlock
+- (void) requestAuthority: (nonnull AcmCall *)call completion:(IRTCAGetAuthorityBlock _Nullable)completionBlock
 {
     NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, AuthorityApi];
     
@@ -384,7 +384,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
 
 }
 
-- (void) quitOnPhoneCall: (Call *) call {
+- (void) quitOnPhoneCall: (AcmCall *) call {
     
     if(call != nil && call.stage == OnPhone){
         [call updateStage:Finished];

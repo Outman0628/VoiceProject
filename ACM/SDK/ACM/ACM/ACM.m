@@ -112,11 +112,27 @@ static ActionManager *actionMgr = nil;
     return channelId;
      */
     
+    if(actionMgr != nil && peerId != nil && peerId.length > 0)
+    {
+        //EventData eventData = {EventDial, 0,0,0,peerId};
+        
+        NSArray *peerList = [[NSArray alloc] initWithObjects:peerId, nil];
+        
+        Call *call = [CallManager prepareDialCall:peerList Type:AudioCall ircmCallback:delegate];
+        EventData eventData = {EventDial, 0,0,0,nil,delegate,call};
+        [actionMgr HandleEvent:eventData];
+        return call;
+    }
+    
+    return nil;
+}
+
++ (nullable Call *) ringGroupAudioCall: (nonnull NSArray *)peerList ircmCallback:(id <IRTCCallBack> _Nullable)delegate{
     if(actionMgr != nil)
     {
         //EventData eventData = {EventDial, 0,0,0,peerId};
-        Call *call = [CallManager prepareDialCall:peerId ircmCallback:delegate];
-        EventData eventData = {EventDial, 0,0,0,peerId,delegate,call};
+        Call *call = [CallManager prepareDialCall:peerList Type:AudioCall ircmCallback:delegate];
+        EventData eventData = {EventDial, 0,0,0,nil,delegate,call};
         [actionMgr HandleEvent:eventData];
         return call;
     }

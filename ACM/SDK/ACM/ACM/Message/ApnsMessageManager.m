@@ -43,7 +43,7 @@
             }
             else
             {
-                Call *instance = [actionMgr.callMgr createReceveCall:userInfo userAccount:[ActionManager instance].userId];
+                AcmCall  *instance = [actionMgr.callMgr createReceveCall:userInfo userAccount:[ActionManager instance].userId];
                 EventData eventData = {EventGotApnsAudioCall, 0,0,0,instance};
                 [actionMgr HandleEvent:eventData];
             }

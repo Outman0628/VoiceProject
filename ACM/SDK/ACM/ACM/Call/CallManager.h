@@ -8,7 +8,7 @@
 
 #ifndef CallManager_h
 #define CallManager_h
-#import "Call.h"
+#import "AcmCall.h"
 #import "../IRTCCallBack.h"
 
 @interface CallManager : NSObject
@@ -22,7 +22,15 @@
   @param peerId 通话 对象
   @delegate 通话状态回调
   */
-+( nonnull Call * )prepareDialCall: (nonnull NSString *)peerId ircmCallback:(id <IRTCCallBack> _Nullable)delegate;
+//+( nonnull Call * )prepareDialCall: (nonnull NSString *)peerId ircmCallback:(id <IRTCCallBack> _Nullable)delegate;
+
+/*
+ 生成新的拨打通话记录
+ @param peerList 通话 对象
+ @type 通话类型
+ @delegate 通话状态回调
+ */
++( nonnull AcmCall * )prepareDialCall: (nonnull NSArray *)peerList Type:(CallType)type ircmCallback:(id <IRTCCallBack> _Nullable)delegate;
 
 /*
  初始化
@@ -43,26 +51,26 @@
  @param userId 本机用户id
  @return 通话记录
  */
--( nonnull Call * )createReceveCall: (nonnull NSDictionary *)callReq userAccount:(nonnull NSString *)userId;
+-( nonnull AcmCall * )createReceveCall: (nonnull NSDictionary *)callReq userAccount:(nonnull NSString *)userId;
 
 /*
  更新的拨打通话记录
  @param peerId 通话 对象
  @delegate 通话状态回调
  */
--( nonnull Call * )updateDialCall: (nonnull NSDictionary *)callInfo selfUid:(nonnull NSString*)uid remoteUser:(nonnull NSString *)peerId ircmCallback:(id <IRTCCallBack> _Nullable)delegate  preInstance:(nonnull Call *)call;
+-( nonnull AcmCall * )updateDialCall: (nonnull NSDictionary *)callInfo selfUid:(nonnull NSString*)uid ircmCallback:(id <IRTCCallBack> _Nullable)delegate  preInstance:(nonnull AcmCall *)call;
 
 /*
 获取通话对象
  @param channelId 通话id
  @return 返回channelId 对应记录
  */
--( nullable Call * )getCall: (nullable NSString*)channelId;
+-( nullable AcmCall * )getCall: (nullable NSString*)channelId;
 
 /*
  获取通话当前活跃的通话对象
  */
--( nullable Call * )getActiveCall;
+-( nullable AcmCall * )getActiveCall;
 
 @end
 

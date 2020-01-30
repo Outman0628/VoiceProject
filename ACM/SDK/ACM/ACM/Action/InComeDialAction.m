@@ -74,7 +74,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
 
 // 拨号过程中遇到问题结束拨号，并通知远端
 - (void) handleRtcError: (EventData) eventData{
-    Call *call = [[ActionManager instance].callMgr getActiveCall];
+    AcmCall *call = [[ActionManager instance].callMgr getActiveCall];
     
     [self quitIncomeDialingPhoneCall:call ];
     
@@ -88,24 +88,9 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
 }
 
 - (void) remoteLeaveCall: (EventData) eventData{
-    /*
-    Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
-    if(call != nil && call.role == Subscriber && call.stage == Dialing)
-    {
-        [call updateStage:Finished];
-        [self JumpBackToMonitorAction];
-        
-        id<IACMCallBack> callBack =  [ActionManager instance].icmCallBack;
-        if(callBack != nil)
-        {
-            dispatch_async(dispatch_get_main_queue(),^{
-                [callBack onCallEnd:call endCode:AcmMsgDialEndByCaller];
-            });
-        }
-    }
-    */
+
     
-    Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
+    AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
     
     [self quitIncomeDialingPhoneCall:call];
     
@@ -122,7 +107,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
 }
 
 - (void) handleDialingTimeout: (EventData) eventData{
-    Call *call = eventData.param4;
+    AcmCall *call = eventData.param4;
     if(call != nil && call.stage == Dialing && call.role == Subscriber)
     {
         [call updateStage:Finished];
@@ -146,7 +131,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
      */
     
     //EventData eventData = {EventGotRtmAudioCall, 0,0,0,dic[@"channel"],peerId,acmCallBack};
-    Call *call = eventData.param4;
+    AcmCall *call = eventData.param4;
     id<IACMCallBack> callBack =  [ActionManager instance].icmCallBack;
     if(callBack != nil)
     {
@@ -155,7 +140,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
 }
 -(void) HandleApnsCallReq: (EventData) eventData{
     id<IACMCallBack> callBack =  [ActionManager instance].icmCallBack;
-    Call *call = eventData.param4;
+    AcmCall *call = eventData.param4;
     
     if(callBack != nil)
     {
@@ -170,7 +155,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     
    [[ActionManager instance] HandleEvent:eventData];
     */
-    Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
+    AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
     if(call == nil && call.role != Subscriber)
     {
         // todo callback return error
@@ -254,7 +239,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
 }
 
 - (void) HandleRobotAnswerCall: (EventData) eventData{
-    Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
+    AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
     if(call == nil && call.role != Subscriber)
     {
         // todo callback return error
@@ -346,19 +331,8 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
 
 - (void) HandleRejectCall: (EventData) eventData{
     
-    /*
-    Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
-    if(call != nil)
-    {
-        [call updateStage:Finished];
-    }
     
-    [RunTimeMsgManager rejectPhoneCall:call.callerId userAccount:call.selfId channelID:call.channelId];
-    
-    [self JumpBackToMonitorAction];
-     */
-    
-    Call *call = [[ActionManager instance].callMgr getCall:eventData.param4];
+    AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
     if(call != nil){
         [RunTimeMsgManager rejectPhoneCall:call.callerId userAccount:call.selfId channelID:call.channelId];
     }
@@ -382,7 +356,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     
 }
 
-- (void) quitIncomeDialingPhoneCall: (Call *) call {
+- (void) quitIncomeDialingPhoneCall: (AcmCall *) call {
     
     if(call != nil && call.stage == Dialing){
         [call updateStage:Finished];

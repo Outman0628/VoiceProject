@@ -8,12 +8,12 @@
 
 #import "IRTCCallBack.h"
 
-@class Call;
+@class AcmCall;
 
 @interface AudioCallManager : NSObject
 
 // todo 对接接听方请求有只保留call,appid参数
-+ (void) startAudioCall: ( nullable NSString *) appId  user:(nullable NSString *)userID  channel:(nullable NSString *)channelId rtcToken:(nullable NSString *)token callInstance:(nonnull Call*) call;
++ (void) startAudioCall: ( nullable NSString *) appId  user:(nullable NSString *)userID  channel:(nullable NSString *)channelId rtcToken:(nullable NSString *)token callInstance:(nonnull AcmCall *) call;
 
 //开关本地音频发送
 + (int)muteLocalAudioStream:(BOOL)mute;
@@ -28,6 +28,5 @@
                             timestampnum:(NSTimeInterval)timeStamp;
 
 + (void) endAudioCall;
-
 
 @end

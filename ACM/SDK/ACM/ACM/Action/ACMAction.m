@@ -47,7 +47,7 @@
 
 - (void)handleRTCWarning: (EventData)eventData{
     ActionManager *actionMgr = [ActionManager instance];
-    Call *call = nil;
+    AcmCall *call = nil;
     if(actionMgr != nil)
     {
         call = [actionMgr.callMgr getActiveCall];

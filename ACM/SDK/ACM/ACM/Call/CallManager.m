@@ -15,6 +15,7 @@
 
 @implementation CallManager
 
+/*
 +( nonnull Call * )prepareDialCall: (nonnull NSString *)peerId ircmCallback:(id <IRTCCallBack> _Nullable)delegate
 {
     Call *instance = [[Call alloc]init];
@@ -24,6 +25,24 @@
     instance.callback = delegate;
     [instance addSubscriber:peerId];
     return instance;
+}
+ */
+
++( nonnull AcmCall * )prepareDialCall: (nonnull NSArray *)peerList Type:(CallType)type ircmCallback:(id <IRTCCallBack> _Nullable)delegate
+{
+    if(peerList != nil && peerList.count > 0){
+        AcmCall *instance = [[AcmCall alloc]init];
+        instance.callType = type;
+        [instance updateStage:Dialing];
+        instance.role = Originator;
+        instance.callback = delegate;
+        for(int i = 0; i < peerList.count; i++){
+            [instance addSubscriber:peerList[i]];
+        }
+        return instance;
+    }
+    
+    return nil;
 }
 
 -(id _Nullable )init
@@ -40,7 +59,7 @@
     BOOL ret = NO;
     
     for (int i=0; i<[self.activeCallList count]; i++) {
-        Call *call =self.activeCallList[i];
+        AcmCall *call =self.activeCallList[i];
         if([call.channelId isEqualToString:channelId])
         {
             ret = TRUE;
@@ -51,9 +70,9 @@
     return ret;
 }
 
--( nonnull Call * )createReceveCall: (nonnull NSDictionary *)callReq userAccount:(nonnull NSString *)userId
+-( nonnull AcmCall * )createReceveCall: (nonnull NSDictionary *)callReq userAccount:(nonnull NSString *)userId
 {
-    Call *instance = [[Call alloc]init];
+    AcmCall *instance = [[AcmCall alloc]init];
     instance.callType = AudioCall;
     [instance updateStage:Dialing];
     instance.role = Subscriber;
@@ -66,9 +85,9 @@
     return instance;
 }
 
--( nonnull Call * )updateDialCall: (nonnull NSDictionary *)callInfo selfUid:(nonnull NSString*)uid remoteUser:(nonnull NSString *)peerId ircmCallback:(id <IRTCCallBack> _Nullable)delegate  preInstance:(nonnull Call *)call;
+-( nonnull AcmCall * )updateDialCall: (nonnull NSDictionary *)callInfo selfUid:(nonnull NSString*)uid ircmCallback:(id <IRTCCallBack> _Nullable)delegate  preInstance:(nonnull AcmCall *)call;
 {
-    Call *instance = call;
+    AcmCall *instance = call;
     instance.callType = AudioCall;
     [instance updateStage:Dialing];
     instance.role = Originator;
@@ -79,19 +98,18 @@
     instance.appId =callInfo[@"appID"];
     instance.selfId = uid;
     instance.callback = delegate;
-    [instance addSubscriber:peerId];
     
     [self.activeCallList addObject:instance];
     
     return instance;
 }
 
--( nullable Call * )getCall: (nullable NSString*)channelId
+-( nullable AcmCall * )getCall: (nullable NSString*)channelId
 {
-    Call *instance = nil;
+    AcmCall *instance = nil;
     
     for (int i=0; i<[self.activeCallList count]; i++) {
-        Call *call =self.activeCallList[i];
+        AcmCall *call =self.activeCallList[i];
         if([call.channelId isEqualToString:channelId])
         {
             instance = self.activeCallList[i];
@@ -101,8 +119,8 @@
     return instance;
 }
 
--( nullable Call * )getActiveCall{
-    Call *instance = nil;
+-( nullable AcmCall * )getActiveCall{
+    AcmCall *instance = nil;
     
     if(self.activeCallList.count > 0){
         instance = self.activeCallList[self.activeCallList.count - 1];

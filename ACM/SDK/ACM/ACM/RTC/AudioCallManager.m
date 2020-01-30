@@ -20,7 +20,7 @@ static AudioCallManager *instance = nil;
 
 @implementation AudioCallManager
 
-+ (void) startAudioCall: ( nullable NSString *) appId  user:(nullable NSString *)userID  channel:(nullable NSString *)channelId rtcToken:(nullable NSString *)token callInstance:(nonnull Call*) call{
++ (void) startAudioCall: ( nullable NSString *) appId  user:(nullable NSString *)userID  channel:(nullable NSString *)channelId rtcToken:(nullable NSString *)token callInstance:(nonnull AcmCall *) call{
     
     NSLog(@"RTC start audio call. appID:%@  user:%@  channel:%@  rtcToken:%@", appId, userID, channelId, token);
     

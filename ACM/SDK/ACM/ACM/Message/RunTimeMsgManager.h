@@ -13,7 +13,7 @@
 #import "IACMCallBack.h"
 
 @class ActionManager;
-@class Call;
+@class AcmCall;
 
 @interface RunTimeMsgManager : NSObject
 
@@ -27,7 +27,7 @@
 
 + (void)sendP2PMessage: (nullable NSString *)msg  userAccount:( nullable NSString *)userId remoteUid:( nullable NSString *)peerId completion:(IACMSendPeerMessageBlock _Nullable)completionBlock;
 
-+ (void)invitePhoneCall: (nonnull Call*) call;
++ (void)invitePhoneCall: (nonnull AcmCall *) call;
 
 + (void)rejectPhoneCall: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID;
 
@@ -38,6 +38,9 @@
 + (void) leaveCall: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID;
 
 + (void)syncAsrData: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID asrData:(nonnull NSString *)text timeStamp:(NSTimeInterval)startTime isFinished:(BOOL) finished;
+
++ (AgoraRtmChannel * _Nullable)createChannel:(NSString * _Nonnull)channelId
+                                          Delegate:(id <AgoraRtmChannelDelegate> _Nullable)delegate;
 
 @end
 
