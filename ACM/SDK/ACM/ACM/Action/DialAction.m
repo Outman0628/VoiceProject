@@ -47,8 +47,27 @@ static NSString *DialRobot = @"/dapi/call/robot";
 - (void) HandleEvent: (EventData) eventData{
     if(eventData.type == EventDial)
     {
-        
-        [self HanleDialWorkFlow:eventData];
+        [self RequestPhoneCallInfo:eventData];    // step 1 向后台申请拨号
+    }
+    else if(eventData.type == EventBackendRequestDialSucceed)  // step 2 创建消息同步通道
+    {
+        [self JoinSyncChannel:eventData];
+    }
+    else if(eventData.type == EventJoinEventSyncChannelSucceed) // step 3 向用户列表发送通话消息
+    {
+        [self DispatchPhoneCallRequest:eventData];
+    }
+    else if(eventData.type == EventRtmAgreeAudioCall)       // step 7 接听方用户同意接听电话
+    {
+        [self prepareOnPhoneCall:eventData];
+    }
+    else if(eventData.type == EventRTMRobotAnser)         //  step 7 接听方用户使用助手接听电话
+    {
+        [self prepareOnPhoneCall:eventData];
+    }
+    else if(eventData.type == EventDidJoinedOfUid)       // step 8 第一个用户进入通话通道
+    {
+        [self HandleEventDidJoinedOfUid:eventData];
     }
     else if(eventData.type == EventDialRobotDemo)
     {
@@ -78,22 +97,11 @@ static NSString *DialRobot = @"/dapi/call/robot";
     {
         // 拨号成功，有检测channel 中是否有人事件（EventDidJoinedOfUid）回调
     }
-    else if(eventData.type == EventDidJoinedOfUid)
-    {
-        [self HandleEventDidJoinedOfUid:eventData];
-    }
+
 
     else if(eventData.type == EventDidRtcOccurError)
     {
         [self handleRtcError:eventData];
-    }
-    else if(eventData.type == EventRtmAgreeAudioCall)
-    {
-        [self prepareOnPhoneCall:eventData];
-    }
-    else if(eventData.type == EventRTMRobotAnser)
-    {
-         [self prepareOnPhoneCall:eventData];
     }
     else if(eventData.type == EventDialingTimeout)
     {
@@ -120,20 +128,6 @@ static NSString *DialRobot = @"/dapi/call/robot";
 - (void) handleDialingTimeout: (EventData) eventData{
     AcmCall *call = eventData.param4;
     
-    /*
-    if(call != nil && call.stage == Dialing)
-    {
-        [call updateStage:Finished];
-        [self JumpBackToMonitorAction];
-        if(call.callback != nil)
-        {
-            dispatch_async(dispatch_get_main_queue(),^{
-            [call.callback didPhoneDialResult:AcmDialingTimeout];
-            });
-        }
-        
-    }
-     */
     [self quitDialingPhoneCall:call EndCode:AcmDialingTimeout];
 }
 
@@ -168,12 +162,38 @@ static NSString *DialRobot = @"/dapi/call/robot";
     
 }
 
-- (void) HanleDialWorkFlow: (EventData) eventData{
-    [self RequestPhoneCallInfo:eventData];
+- (void) JoinSyncChannel: (EventData ) eventData{
+    AcmCall *call = eventData.param4;
+    
+    BOOL joinEventChannelRet = [call joinEventSyncChannel:^(AgoraRtmJoinChannelErrorCode errorCode) {
+        if(AgoraRtmJoinChannelErrorOk == errorCode){
+            EventData nextEvent = {EventJoinEventSyncChannelSucceed,0,0,0,call};
+            [[ActionManager instance] HandleEvent:nextEvent];
+        }
+        else{
+            NSLog(@"ACM Err: failed to join event channel:%ld", (long)errorCode);
+            [self quitDialingPhoneCall:call EndCode:AcmDialErrorJoinEventSyncChannel];
+        }
+    }];
+    
+    if(joinEventChannelRet == NO){
+        [self quitDialingPhoneCall:call EndCode:AcmDialErrorJoinEventSyncChannel];
+    }
 }
 
-- (void) CreateSyncChannel: (nonnull AcmCall *)call{
+- (void) DispatchPhoneCallRequest: (EventData ) eventData{
+    AcmCall *call = eventData.param4;
     
+    
+    // 发送消息后，等待第一个握手回复后进入通话频道
+    [RunTimeMsgManager invitePhoneCall:call];
+
+    self.curCall = call;
+
+    dispatch_async(dispatch_get_main_queue(),^{
+    [call.callback didPhoneDialResult:AcmDialRequestSendSucceed];
+});
+     
 }
 
 - (void) RequestPhoneCallInfo:(EventData) eventData{
@@ -207,16 +227,11 @@ static NSString *DialRobot = @"/dapi/call/robot";
                 {
                     AcmCall *instance = [self.actionMgr.callMgr updateDialCall:data selfUid:self.actionMgr.userId ircmCallback:eventData.param5 preInstance:eventData.param6];
                     
-                    
-                    [RunTimeMsgManager invitePhoneCall:instance];
-                    
-                    //[AudioCallManager startAudioCall:instance.appId user:instance.selfId channel:instance.channelId   rtcToken:instance.token callInstance:instance];
-                    
-                    self.curCall = instance;
-                    
+                    EventData eventData = {EventBackendRequestDialSucceed,0,0,0,instance};
                     dispatch_async(dispatch_get_main_queue(),^{
-                        [instance.callback didPhoneDialResult:AcmDialRequestSendSucceed];
+                        [[ActionManager instance] HandleEvent:eventData];
                     });
+                    
                     
                 }
                 else

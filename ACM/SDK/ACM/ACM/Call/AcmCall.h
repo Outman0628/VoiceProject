@@ -10,8 +10,16 @@
 #define AcmCall_h
 
 #import "Call.h"
+#import <AgoraRtmKit/AgoraRtmKit.h>
 
-@interface AcmCall : Call
+@class AgoraRtmChannel;
+
+@interface AcmCall : Call 
+
+/*
+ *生成通话内部同步信息通道
+ */
+-(BOOL)joinEventSyncChannel:(AgoraRtmJoinChannelBlock _Nullable)completionBlock;
 
 @end
 

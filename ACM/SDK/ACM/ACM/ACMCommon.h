@@ -123,6 +123,12 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     
     // 远程用户离开频道
     EventRTCUserLeaveChannel = 36,
+    
+    // 向后台拨号请求成功
+    EventBackendRequestDialSucceed = 37,
+    
+    // 加入事件同步通道成功
+    EventJoinEventSyncChannelSucceed = 38,
 
     
     // 拨号

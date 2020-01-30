@@ -128,6 +128,7 @@ typedef NS_ENUM(NSInteger, AcmDialCode) {
      */
     AcmDialRequestSendSucceed = 1000,
     
+    
     /**
      拨号申请失败(网络异常，服务器异常等)
      */
@@ -155,6 +156,10 @@ typedef NS_ENUM(NSInteger, AcmDialCode) {
     AcmDialErrorJoinChannel = -5,
     
 
+    /**
+     进入通话事件同步频道失败
+     */
+    AcmDialErrorJoinEventSyncChannel = -6,
 };
 
 /*
