@@ -78,6 +78,7 @@
     instance.role = Subscriber;
     instance.callerId = callReq[@"accountCaller"];
     instance.channelId = callReq[@"channel"];
+    instance.subscriberList = callReq[@"subscribers"];
     instance.selfId = userId;
     
     [self.activeCallList addObject:instance];

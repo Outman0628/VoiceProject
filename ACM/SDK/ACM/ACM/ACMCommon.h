@@ -49,8 +49,8 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     // 结束通话
     EventLeaveCall = 11,
     
-    // 结束通话
-    EventRtmLeaveCall = 12,
+    // 没有成员结束通话
+    EventNoMemberEndCall = 12,
     
     // 拨号
     EventDial = 13,
@@ -129,6 +129,18 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     
     // 加入事件同步通道成功
     EventJoinEventSyncChannelSucceed = 38,
+    
+    // 向后台接通电话请求成功
+    EventBackendRequestAcceptDialSucceed = 39,
+    
+    // 事件同步通道成员数量变更
+    EventEventChannelMemberCountUpdated = 39,
+    
+    // 人员离开通话
+    EventRtmLeaveCall = 40,
+    
+    // 拨号方结束通话
+    EventCallerEndDial = 41,
 
     
     // 拨号

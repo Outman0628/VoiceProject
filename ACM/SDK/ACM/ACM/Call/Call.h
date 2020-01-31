@@ -92,10 +92,7 @@ typedef NS_ENUM(NSInteger, RoleType) {
  */
 -(void)addSubscriber: (nonnull NSString *)subscriberId;
 
-/*
- *添加接听对象
- */
--(void)updateStage: (CallStage) stage;
+
 
 /*
  *结束Observer模式

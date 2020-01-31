@@ -73,10 +73,10 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
         [self.timer invalidate];
         [self leaveCall:eventData];
     }
-    else if(eventData.type == EventRtmLeaveCall)
+    else if(eventData.type == EventNoMemberEndCall)
     {
         [self.timer invalidate];
-        [self remoteLeaveCall:eventData];
+        [self handleEventNoMemberEndCall:eventData];
     }
     else if(eventData.type == EventRobotAnsweredCall)
     {
@@ -138,10 +138,18 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
     if(call != nil  && call.stage == OnPhone)
     {
         [call updateOnlineMember:eventData.param4 Online:NO];
+        
+        if( call.callback != nil ){
+            [call.callback onlineMemberUpdated:[call getOnlineMembers]];
+        }
+        
+        // 1-1 通话，人数为0时退出通话，多人通话时由APP处理
+        if( call.getOnlineMembers.count == 0  && call.subscriberList.count == 1){
+            EventData data = {EventNoMemberEndCall,0,0,0,call};
+            [[ActionManager instance] HandleEvent:data];
+        }
     }
-    if( call.callback != nil ){
-        [call.callback onlineMemberUpdated:[call getOnlineMembers]];
-    }
+    
 }
 
 // 通话过程中遇到问题结束拨号，通知UI层错误，通话结束由
@@ -171,7 +179,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
     if(_curCall != nil)
     {
         [_curCall.callback onLocalText:eventData.param4  timeStamp:eventData.param3 isFinished:NO];
-        //+ (void)syncAsrData: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID asrData(nonnull NSString *)text timeStamp:(NSTimeInterval)startTime isFinished:(BOOL) finished{
+        
         NSString *remoteUid = nil;
         // todo 多人时小时过于频繁，会有问题
         if(_curCall.role == Originator)
@@ -182,9 +190,9 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
             remoteUid = _curCall.callerId;
         }
         
-        [RunTimeMsgManager syncAsrData:remoteUid userAccount:_curCall.selfId channelID:_curCall.channelId asrData:eventData.param4 timeStamp:eventData.param3 isFinished:NO];
+        //[RunTimeMsgManager syncAsrData:remoteUid userAccount:_curCall.selfId channelID:_curCall.channelId asrData:eventData.param4 timeStamp:eventData.param3 isFinished:NO];
         
-       
+       [_curCall broadcastAsrData:eventData.param4 timeStamp:eventData.param3 isFinished:NO];
     }
 }
 
@@ -203,15 +211,17 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
             remoteUid = _curCall.callerId;
         }
         
-        [RunTimeMsgManager syncAsrData:remoteUid userAccount:_curCall.selfId channelID:_curCall.channelId asrData:eventData.param4 timeStamp:eventData.param3 isFinished:YES];
+        //[RunTimeMsgManager syncAsrData:remoteUid userAccount:_curCall.selfId channelID:_curCall.channelId asrData:eventData.param4 timeStamp:eventData.param3 isFinished:YES];
+        
+        [_curCall broadcastAsrData:eventData.param4 timeStamp:eventData.param3 isFinished:YES];
     }
     
 }
 
 
-- (void) remoteLeaveCall: (EventData) eventData{
+- (void) handleEventNoMemberEndCall: (EventData) eventData{
     
-    AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
+    AcmCall *call = eventData.param4;
     
     
     
@@ -276,6 +286,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
     }
     
     if(call != nil && call.stage == OnPhone){
+        /*
         if(call.role == Subscriber  || ![call.selfId isEqualToString:call.callerId])
         {
             [RunTimeMsgManager leaveCall:call.callerId userAccount:call.selfId channelID:call.channelId];
@@ -285,6 +296,8 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
             // todo 多人列表
             [RunTimeMsgManager leaveCall:call.subscriberList[0] userAccount:call.selfId channelID:call.channelId];
         }
+         */
+        [call broadcastLeaveCall];
         
         [self quitOnPhoneCall:call];
     }

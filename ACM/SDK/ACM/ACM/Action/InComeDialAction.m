@@ -35,16 +35,23 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
 
 - (void) HandleEvent: (EventData) eventData
 {
-    if(eventData.type == EventGotRtmAudioCall){
+    if(eventData.type == EventGotRtmAudioCall){       // step 1 RTM 来电消息
         [self HandleRtmCallReq:eventData];
     }
-    else if(eventData.type == EventGotApnsAudioCall)
+    else if(eventData.type == EventGotApnsAudioCall)   // step 1 APNS 来电消息
     {
         [self HandleApnsCallReq:eventData];
     }
-    else if(eventData.type == EventAgreeAudioCall)
+    else if(eventData.type == EventAgreeAudioCall)    // step 2 同意接听电话
     {
-        [self HandleAnswerCall:eventData];
+        [self RequestAcceptDial:eventData];
+    }
+    else if(eventData.type == EventBackendRequestAcceptDialSucceed)  // step 3 创建消息同步通道
+    {
+        [self JoinSyncChannel:eventData];
+    }
+    else if(eventData.type == EventJoinEventSyncChannelSucceed){    // step 4 回复拨号者，并进入通话状态
+        [self ReadyForOnPhone:eventData];
     }
     else if(eventData.type == EventRejectAudioCall)
     {
@@ -58,9 +65,9 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     {
         [self handleDialingTimeout:eventData];
     }
-    else if(eventData.type == EventRtmLeaveCall)
+    else if(eventData.type == EventCallerEndDial)
     {
-        [self remoteLeaveCall:eventData];
+        [self callerEndDial:eventData];
     }
     else if(eventData.type == EventDidRtcOccurError)
     {
@@ -72,7 +79,48 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     }
 }
 
-// 拨号过程中遇到问题结束拨号，并通知远端
+- (void) ReadyForOnPhone: (EventData) eventData{
+     AcmCall *call = eventData.param4;
+     [RunTimeMsgManager agreePhoneCall:call.callerId userAccount:call.selfId channelID:call.channelId];
+     EventData nextData = { EventBackendAgreeAudioCall,0,0,0,call };
+     OnPhoneAction* onPhone = [[OnPhoneAction alloc]init];
+     
+     [[ActionManager instance] actionChange:self destAction:onPhone];
+     
+     [[ActionManager instance] HandleEvent:nextData];
+    
+}
+
+- (void) JoinSyncChannel: (EventData ) eventData{
+    AcmCall *call = eventData.param4;
+    
+    BOOL joinEventChannelRet = [call joinEventSyncChannel:^(AgoraRtmJoinChannelErrorCode errorCode) {
+        if(AgoraRtmJoinChannelErrorOk == errorCode){
+            EventData nextEvent = {EventJoinEventSyncChannelSucceed,0,0,0,call};
+            [[ActionManager instance] HandleEvent:nextEvent];
+        }
+        else{
+            NSLog(@"ACM Err: failed to join event channel:%ld", (long)errorCode);
+            [self quitIncomeDialingPhoneCall:call];
+            if(call != nil && call.callback != nil)
+            {
+                
+                [call.callback didPhoneDialResult:AcmDialErrorJoinEventSyncChannel];
+            }
+        }
+    }];
+    
+    if(joinEventChannelRet == NO){
+        [self quitIncomeDialingPhoneCall:call];
+        if(call != nil && call.callback != nil)
+        {
+            
+            [call.callback didPhoneDialResult:AcmDialErrorJoinEventSyncChannel];
+        }
+    }
+}
+
+// 拨号过程中遇到问题结束拨号
 - (void) handleRtcError: (EventData) eventData{
     AcmCall *call = [[ActionManager instance].callMgr getActiveCall];
     
@@ -87,12 +135,10 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     }
 }
 
-- (void) remoteLeaveCall: (EventData) eventData{
+- (void) callerEndDial: (EventData) eventData{
 
     
     AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
-    
-    [self quitIncomeDialingPhoneCall:call];
     
     if(call != nil && call.role == Subscriber && call.stage == Dialing)
     {
@@ -104,6 +150,8 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
             });
         }
     }
+    
+    [self quitIncomeDialingPhoneCall:call];
 }
 
 - (void) handleDialingTimeout: (EventData) eventData{
@@ -124,13 +172,6 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
 }
 
 -(void) HandleRtmCallReq: (EventData) eventData{
-    /*
-     if(acmCallBack != nil){
-     [acmCallBack onCallReceived:dic[@"channel"] fromPeer:peerId];
-     }
-     */
-    
-    //EventData eventData = {EventGotRtmAudioCall, 0,0,0,dic[@"channel"],peerId,acmCallBack};
     AcmCall *call = eventData.param4;
     id<IACMCallBack> callBack =  [ActionManager instance].icmCallBack;
     if(callBack != nil)
@@ -147,14 +188,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
         [callBack onCallReceived:call];
     }
 }
-- (void) HandleAnswerCall: (EventData) eventData{
-   /*
-    OnPhoneAction* onPhone = [[OnPhoneAction alloc]init];
-    
-    [[ActionManager instance] actionChange:self destAction:onPhone];
-    
-   [[ActionManager instance] HandleEvent:eventData];
-    */
+- (void) RequestAcceptDial: (EventData) eventData{
     AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
     if(call == nil && call.role != Subscriber)
     {
@@ -203,13 +237,10 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
                     call.token = data[@"token"];
                 }
                 
-                [RunTimeMsgManager agreePhoneCall:call.callerId userAccount:call.selfId channelID:call.channelId];
-                EventData nextData = { EventBackendAgreeAudioCall,0,0,0,call };
-                OnPhoneAction* onPhone = [[OnPhoneAction alloc]init];
-                
-                [[ActionManager instance] actionChange:self destAction:onPhone];
-                
-                [[ActionManager instance] HandleEvent:nextData];
+                EventData eventData = {EventBackendRequestAcceptDialSucceed,0,0,0,call};
+                dispatch_async(dispatch_get_main_queue(),^{
+                    [[ActionManager instance] HandleEvent:eventData];
+                });
             }
             else
             {
@@ -363,7 +394,6 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
         if(call.channelId != nil)
         {
             [AudioCallManager endAudioCall];
-            //[RunTimeMsgManager rejectPhoneCall:call.callerId userAccount:call.selfId channelID:call.channelId];
             
             NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, EndCallApi];
             NSString *param = [NSString stringWithFormat:@"uid=%@&channel=%@", call.selfId, call.channelId]; //带一个参数key传给服务器

@@ -191,7 +191,7 @@ static ActionManager *actionMgr = nil;
            }];
 }
 
-+ (void)invitePhoneCall: (nonnull Call*) call
++ (void)invitePhoneCall: (nonnull AcmCall*) call
 {
     for (int i=0; i<[call.subscriberList count]; i++) {
         NSString *peerId = call.subscriberList[i];
@@ -202,11 +202,12 @@ static ActionManager *actionMgr = nil;
 }
 
 // 发起邀请
-+ (void)inviteSinglePhoneCall: (nonnull NSString *)remoteUid accountUser:(nullable NSString *)userId channelInfo:(nullable NSString *)channelId call:(nonnull Call*)callInstance{
++ (void)inviteSinglePhoneCall: (nonnull NSString *)remoteUid accountUser:(nullable NSString *)userId channelInfo:(nullable NSString *)channelId call:(nonnull AcmCall*)callInstance{
     NSDictionary * rtmNotifyBean =
     @{@"title":@"audiocall",
       @"accountCaller": userId,
       @"accountRemote":remoteUid,
+      @"subscribers": callInstance.subscriberList,
       @"channel":  channelId,
       };
     
@@ -345,11 +346,18 @@ static ActionManager *actionMgr = nil;
     
 }
 
++ (void) dispatchEndDial: (nullable NSArray *)uidList userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID
+{
+    for(int i = 0; i < uidList.count; i++){
+        [RunTimeMsgManager callerEndDial:uidList[i] userAccount:userID channelID:channelID];
+    }
+}
+
 // 结束通话
-+ (void) leaveCall: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID{
++ (void) callerEndDial: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID{
     NSDictionary * rtmNotifyBean =
-    @{@"title":@"leave",
-      @"accountCaller": userID,
+    @{@"title":@"callerEndDial",
+      @"accountSender": userID,
       @"accountRemote":remoteUid,
       @"channel":  channelID,
       };
@@ -431,7 +439,14 @@ static ActionManager *actionMgr = nil;
         return [_kit createChannelWithId:channelId delegate:delegate];
     }
     
+    
     return nil;
+}
+
++ (void) destroyChannelWithId:(NSString * _Nonnull) channelId{
+    if(_kit != nil){
+        [_kit destroyChannelWithId:channelId];
+    }
 }
 
 
@@ -503,21 +518,22 @@ static ActionManager *actionMgr = nil;
         }
         else
         {
-            Call *instance = [actionMgr.callMgr createReceveCall:dic userAccount:[ActionManager instance].userId];
+            AcmCall *instance = [actionMgr.callMgr createReceveCall:dic userAccount:[ActionManager instance].userId];
             EventData eventData = {EventGotRtmAudioCall, 0,0,0,instance};
             [actionMgr HandleEvent:eventData];
         }
+    }
+    else if( [title isEqualToString:@"callerEndDial"] )
+    {
+        EventData eventData = {EventCallerEndDial, 0,0,0,dic[@"channel"]};
+        [actionMgr HandleEvent:eventData];
     }
     else if( [title isEqualToString:@"reject"] )
     {
         EventData eventData = {EventRtmRejectAudioCall, 0,0,0,dic[@"channel"],peerId,acmCallBack};
         [actionMgr HandleEvent:eventData];
     }
-    else if( [title isEqualToString:@"leave"] )
-    {
-        EventData eventData = {EventRtmLeaveCall, 0,0,0,dic[@"channel"]};
-        [actionMgr HandleEvent:eventData];
-    }
+    
     else if([title isEqualToString:@"ASRSync"])
     {
         EventData eventData = {  EventRemoeAsrResult, 0,0,0,dic};

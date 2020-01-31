@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "../Message/RunTimeMsgManager.h"
+#import "../Action/EventData.h"
+#import "../Action/ActionManager.h"
 
 #import "AcmCall.h"
 
@@ -37,7 +39,6 @@
     
     if(_eventSyncChannel != nil){
         
-        
         [_eventSyncChannel joinWithCompletion:^(AgoraRtmJoinChannelErrorCode errorCode) {
             if(completionBlock != nil){
                 completionBlock(errorCode);
@@ -50,6 +51,88 @@
     return NO;
 }
 
+
+-(void)CallEnd{
+    if(_eventSyncChannel != nil){
+        [_eventSyncChannel leaveWithCompletion:^(AgoraRtmLeaveChannelErrorCode errorCode) {
+            [RunTimeMsgManager destroyChannelWithId:self.channelId];
+        }];
+        
+        _eventSyncChannel = nil;
+    }
+}
+
+- (void)broadcastAsrData: (nonnull NSString *)text timeStamp:(NSTimeInterval)startTime isFinished:(BOOL) finished{
+    
+    if(_eventSyncChannel == nil){
+        return;
+    }
+        
+    
+    NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+    NSTimeInterval msgStamp=[dat timeIntervalSince1970];
+    NSNumber *asrTimeStamp = [NSNumber numberWithDouble:startTime];
+    NSNumber *msgTimeStamp = [NSNumber numberWithDouble:msgStamp];
+    
+    NSDictionary * rtmNotifyBean =
+    @{@"title":@"ASRSync",
+      @"accountSender": self.selfId,
+      @"channel":  self.channelId,
+      @"asrData": text,
+      @"timeStamp": asrTimeStamp,
+      @"isFinished": (finished == TRUE ? @"true" : @"false"),
+      @"msgTimeStamp": msgTimeStamp,
+      };
+    
+    NSError *error;
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:rtmNotifyBean options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    AgoraRtmMessage *rtmMessage = [[AgoraRtmMessage alloc] initWithText:jsonStr];
+    
+    [_eventSyncChannel sendMessage:rtmMessage completion:^(AgoraRtmSendChannelMessageErrorCode errorCode) {
+        
+        
+        //sent((int)errorCode);
+        if(errorCode != AgoraRtmSendPeerMessageErrorOk)
+        {
+            NSString *errNote =  [[NSString alloc] initWithString:[NSString stringWithFormat:@"Send asr data failed:%d", (int)errorCode]];
+            
+            NSLog(@"%@",errNote);
+        }
+        
+    }];
+}
+
+- (void) broadcastLeaveCall{
+    // 不用发送broadcast 退出后，事件频道会收到 memberLeft 事件
+    /*
+    NSDictionary * rtmNotifyBean =
+    @{@"title":@"leave",
+      @"accountSender": self.selfId,
+      };
+    
+    NSError *error;
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:rtmNotifyBean options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    
+    AgoraRtmMessage *rtmMessage = [[AgoraRtmMessage alloc] initWithText:jsonStr];
+    
+    [_eventSyncChannel sendMessage:rtmMessage completion:^(AgoraRtmSendChannelMessageErrorCode errorCode) {
+        
+        
+        //sent((int)errorCode);
+        if(errorCode != AgoraRtmSendPeerMessageErrorOk)
+        {
+            NSString *errNote =  [[NSString alloc] initWithString:[NSString stringWithFormat:@"Send leave event failed:%d", (int)errorCode]];
+            
+            NSLog(@"%@",errNote);
+        }
+        
+    }];
+     */
+}
 
 
 
@@ -67,7 +150,7 @@
  @param member The user joining the channel. See AgoraRtmMember.
  */
 - (void)channel:(AgoraRtmChannel * _Nonnull)channel memberJoined:(AgoraRtmMember * _Nonnull)member{
-    
+
 }
 
 /**
@@ -83,7 +166,8 @@
  @param member The channel member that leaves the channel. See AgoraRtmMember.
  */
 - (void)channel:(AgoraRtmChannel * _Nonnull)channel memberLeft:(AgoraRtmMember * _Nonnull)member{
-    
+    EventData eventData = {EventRtmLeaveCall, 0,0,0,member.userId,self};
+    [[ActionManager instance] HandleEvent:eventData];
 }
 
 /**
@@ -99,8 +183,43 @@
  @param member The message sender. See AgoraRtmMember.
  */
 - (void)channel:(AgoraRtmChannel * _Nonnull)channel messageReceived:(AgoraRtmMessage * _Nonnull)message fromMember:(AgoraRtmMember * _Nonnull)member{
+    NSLog(@"event channel Message received from %@: %@", message.text, member.userId);
+    NSData *jsonData = [message.text dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+    NSString *title = dic[@"title"];
+    /*
+    if( [title isEqualToString:@"reject"] )
+    {
+        EventData eventData = {EventRtmRejectAudioCall, 0,0,0,dic[@"channel"],peerId,acmCallBack};
+        [actionMgr HandleEvent:eventData];
+    }
     
-}
+    else
+     */
+     if([title isEqualToString:@"ASRSync"])
+    {
+        EventData eventData = {  EventRemoeAsrResult, 0,0,0,dic,self};
+        [[ActionManager instance] HandleEvent:eventData];
+    }
+    /*
+     else if( [title isEqualToString:@"leave"] )
+     {
+         EventData eventData = {EventRtmLeaveCall, 0,0,0,dic[@"accountSender"],self};
+         [[ActionManager instance] HandleEvent:eventData];
+     }
+    
+    else if([title isEqualToString:@"agreeCall"])
+    {
+        EventData eventData = {EventRtmAgreeAudioCall, 0,0,0,dic[@"channel"]};
+        [actionMgr HandleEvent:eventData];
+    }
+    else if([title isEqualToString:@"robotAnswerCall"])
+    {
+        EventData eventData = {EventRTMRobotAnser, 0,0,0,dic[@"channel"]};
+        [actionMgr HandleEvent:eventData];
+    }
+     */
+     }
 
 
 /**
@@ -119,19 +238,13 @@
 
 
 /**
- Occurs when the number of the channel members changes, and returns the new number.
- 
- **NOTE**
- 
- - When the number of channel members &le; 512, the SDK returns this callback when the number changes and at a MAXIMUM speed of once per second.
- - When the number of channel members exceeds 512, the SDK returns this callback when the number changes and at a MAXIMUM speed of once every three seconds.
- - You will receive this callback when successfully joining an RTM channel, so we recommend implementing this callback to receive timely updates on the number of the channel members.
- 
- @param channel The channel, to which the local user belongs. See AgoraRtmChannel.
- @param count Member count of this channel.
+事件更新频道人员更新回调
  */
 - (void)channel:(AgoraRtmChannel * _Nonnull)channel memberCount:(int)count{
-    
+    /*
+    EventData eventData = {EventEventChannelMemberCountUpdated, count,0,0,self};
+    [[ActionManager instance] HandleEvent:eventData];
+*/
 }
 
 

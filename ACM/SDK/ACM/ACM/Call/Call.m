@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "AcmCall.h"
 #import "../Action/ActionManager.h"
+#import "AcmCall.h"
 
 
 @interface Call()
@@ -50,15 +51,20 @@
     }
 }
 
+-(void)dialringTimeout{
+    EventData eventData = {EventDialingTimeout,0,0,0,self};
+    [[ActionManager instance] HandleEvent:eventData];
+}
+
 -(void)updateStage: (CallStage) stage{
-   // self.stage = stage;
+    // self.stage = stage;
     _stage = stage;
     if(_stage == Dialing)
     {
         if(_dialTimer == nil)
         {
             _dialTimer = [NSTimer scheduledTimerWithTimeInterval:[ActionManager instance].dialingTimetout repeats:NO block:^(NSTimer * _Nonnull timer) {
-                 [self dialringTimeout];
+                [self dialringTimeout];
             }];
         }
     }
@@ -69,11 +75,12 @@
             [_dialTimer invalidate];
         }
     }
-}
-
--(void)dialringTimeout{
-    EventData eventData = {EventDialingTimeout,0,0,0,self};
-    [[ActionManager instance] HandleEvent:eventData];
+    
+    if(_stage == Finished)
+    {
+        AcmCall *sonCall = (AcmCall *)self;
+        [sonCall CallEnd];
+    }
 }
 
 -(void)endObserverMode

@@ -57,15 +57,15 @@ static NSString *DialRobot = @"/dapi/call/robot";
     {
         [self DispatchPhoneCallRequest:eventData];
     }
-    else if(eventData.type == EventRtmAgreeAudioCall)       // step 7 接听方用户同意接听电话
+    else if(eventData.type == EventRtmAgreeAudioCall)       // step 4 接听方用户同意接听电话
     {
         [self prepareOnPhoneCall:eventData];
     }
-    else if(eventData.type == EventRTMRobotAnser)         //  step 7 接听方用户使用助手接听电话
+    else if(eventData.type == EventRTMRobotAnser)         //  step 5 接听方用户使用助手接听电话
     {
         [self prepareOnPhoneCall:eventData];
     }
-    else if(eventData.type == EventDidJoinedOfUid)       // step 8 第一个用户进入通话通道
+    else if(eventData.type == EventDidJoinedOfUid)       // step 6 第一个用户进入通话通道
     {
         [self HandleEventDidJoinedOfUid:eventData];
     }
@@ -433,7 +433,10 @@ static NSString *DialRobot = @"/dapi/call/robot";
         if(call.channelId != nil)
         {
             [AudioCallManager endAudioCall];
-            [RunTimeMsgManager leaveCall:call.subscriberList[0]  userAccount:self.actionMgr.userId  channelID:call.channelId];
+            
+            // 拨号间断退出时，发送p2p 消息取消电话
+            [RunTimeMsgManager dispatchEndDial:call.subscriberList  userAccount:self.actionMgr.userId  channelID:call.channelId];
+           
             
             NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, EndCallApi];
             NSString *param = [NSString stringWithFormat:@"uid=%@&channel=%@", call.selfId, call.channelId]; //带一个参数key传给服务器
