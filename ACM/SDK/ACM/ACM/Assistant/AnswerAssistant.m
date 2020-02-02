@@ -22,7 +22,7 @@
         
         self.contents = [NSMutableArray array];
         self.config = [[VoiceConfig alloc]init];
-        self.enable = false;
+        self.enable = true;
     }
     return self;
 }

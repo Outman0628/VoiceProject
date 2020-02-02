@@ -14,6 +14,7 @@
 @class AnswerAssistant;
 
 typedef void (^AssistantBlock)(AssistantCode code, NSError * _Nullable subCode);
+typedef void (^AnswerAssistantBlock)( AnswerAssistant *_Nullable answerAssistant, AssistantCode code);
 
 
 @interface VoiceConfig : NSObject
@@ -29,8 +30,9 @@ typedef void (^AssistantBlock)(AssistantCode code, NSError * _Nullable subCode);
 
 /*
  * 获取本机语音应答助手配置
+ * 如果本地没有缓存，将会从服务器拉取配置，服务器也没有配置，则block 中 answerAssistant 为空
  */
-+(nullable AnswerAssistant *)getAnswerAsistant;
++(void)getAnswerAsistant:(AnswerAssistantBlock _Nonnull ) block;
 
 /*
  * 设置或更新本机语音应答助手配置
@@ -51,6 +53,7 @@ typedef void (^AssistantBlock)(AssistantCode code, NSError * _Nullable subCode);
  * 获取音色名称表
  */
 +(NSArray *_Nullable)getCandidates;
+
 
 @end
 

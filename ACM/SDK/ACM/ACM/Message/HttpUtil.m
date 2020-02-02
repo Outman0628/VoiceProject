@@ -30,10 +30,10 @@
     [[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
         NSInteger code = [(NSHTTPURLResponse *)response statusCode];
-        NSLog(@"response code:%ldd", (long)code);
+        NSLog(@"response code:%ld", (long)code);
         if([(NSHTTPURLResponse *)response statusCode] == 200){
             NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            NSLog(@"Resonpse data:%@", str);
+            NSLog(@"req:%@ Resonpse data:%@", stringUrl, str);
         }
         
         if(completionHandler != nil){

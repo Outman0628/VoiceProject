@@ -143,8 +143,8 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
             [call.callback onlineMemberUpdated:[call getOnlineMembers]];
         }
         
-        // 1-1 通话，人数为0时退出通话，多人通话时由APP处理
-        if( call.getOnlineMembers.count == 0  && call.subscriberList.count == 1){
+        // 人数为0时退出通话，多人通话时由APP处理
+        if( call.getOnlineMembers.count == 0 ){
             EventData data = {EventNoMemberEndCall,0,0,0,call};
             [[ActionManager instance] HandleEvent:data];
         }

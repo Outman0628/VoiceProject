@@ -16,6 +16,8 @@
 #import "TtsFileManager.h"
 #import "AuditTask.h"
 #import "UpDateConfigTask.h"
+#import "../Message/HttpUtil.h"
+#import "../Action/ActionManager.h"
 
 @interface VoiceConfig ()
 
@@ -52,15 +54,17 @@
 
 static Assistant *instance = nil;
 
-+(nullable AnswerAssistant *)getAnswerAsistant{
++(void)getAnswerAsistant:(AnswerAssistantBlock _Nonnull ) block{
     [Assistant createInstanceIfNeeded];
     
     if(instance != nil)
     {
-        return [instance.answerAss clone];
-    }else
+        
+        [instance getAnswerAsistant:block];
+        
+    }else if(block != nil)
     {
-        return nil;
+        block(nil, AssistantNotInited);
     }
     
 }
@@ -186,11 +190,138 @@ static Assistant *instance = nil;
     
     
     // todo read answer ass from the local config file
-    _answerAss = [[AnswerAssistant alloc]init];
+    _answerAss = nil;//[[AnswerAssistant alloc]init];
     
     _ttsFileMgr = [[TtsFileManager alloc]init];
     self.isWorking = NO;
 }
+
+-(void)getAnswerAsistant:(AnswerAssistantBlock _Nonnull ) block{
+    AnswerAssistant *ass = nil;
+    if(instance.answerAss != nil)
+    {
+        ass = [instance.answerAss clone];
+        if(block != nil){
+            block(ass,AssistantOK);
+        }
+    }else{
+        [self getAnswerAssistantFromServer:^(AnswerAssistant * _Nullable answerAssistant, AssistantCode code) {
+            if(code == AssistantOK && answerAssistant != nil){
+                self.answerAss = answerAssistant;
+            }
+            
+            if( block != nil ){
+                block(answerAssistant,code);
+            }
+        }];
+    }
+    
+    
+}
+
+-(void)getAnswerAssistantFromServer:(AnswerAssistantBlock _Nonnull ) block{
+    
+    ActionManager *actionMgr = [ActionManager instance];
+    if(actionMgr == nil || actionMgr.userId == nil){
+        if(block != nil)
+        {
+            block(nil, AssistantNotInited);
+        }
+        return;
+    }
+    
+    
+    NSString *stringUrl = [NSString stringWithFormat:@"%@%@",actionMgr.host, AnswerAssistantSettingApi];
+    
+    
+    NSDictionary * phoneCallParam =
+    @{@"uid": [ActionManager instance].userId,
+      };
+    
+    
+    NSError *error;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:phoneCallParam options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *param = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    
+    [HttpUtil HttpPost:stringUrl Param:param Callback:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+        if([(NSHTTPURLResponse *)response statusCode] == 200){
+            NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSData *jsonData = [str dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+            
+            BOOL ret = dic[@"success"];
+            
+            if(ret == YES)
+            {
+                @try{
+                    NSArray *assList = dic[@"data"];
+                    
+                    AnswerAssistant *ansswerAss = [[AnswerAssistant alloc] init];
+                    VoiceConfig *voiceConfig = nil;
+                    
+                    if(assList != nil){
+                        for(int i = 0; i < assList.count; i++)
+                        {
+                            
+                            AssistanItem *assItem = [[AssistanItem alloc] init];
+                            NSNumber *num = assList[0][@"before_second"];
+                            assItem.interval = num.integerValue;
+                            assItem.content = assList[0][@"Content"];
+                            
+                            if(voiceConfig == nil){
+                                NSDictionary *configDic = assList[0][@"voiceConfig"];
+                                if( configDic != nil ){
+                                    voiceConfig = [[VoiceConfig alloc] init];
+                                    voiceConfig.speechVolume = ((NSNumber *)configDic[@"speechVolume"]).integerValue;
+                                    voiceConfig.speechSpeed = ((NSNumber *)configDic[@"speechSpeed"]).integerValue;
+                                    voiceConfig.speechPich = ((NSNumber *)configDic[@"speechPich"]).integerValue;
+                                    voiceConfig.curSpeakerIndex = ((NSNumber *)configDic[@"curSpeakerIndex"]).integerValue;
+                                    
+                                    ansswerAss.config = voiceConfig;
+                                }
+                            }
+                            
+                            [ansswerAss.contents addObject:assItem];
+                        }
+                    }
+                    
+                    if(block != nil){
+                        dispatch_async(dispatch_get_main_queue(),^{
+                            block(ansswerAss,AssistantOK);
+                        });
+                    }
+                    
+                } @catch (NSException *exception){
+                    if(block != nil){
+                        dispatch_async(dispatch_get_main_queue(),^{
+                            block(nil,AssistantErrorIncorrectAnswerAssistantContent);
+                        });
+                    }
+                }
+            }
+            else
+            {
+                // 通知错误发生
+                if(block != nil){
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        block(nil,AssistantErrorIncorrectAnswerAssistantContent);
+                    });
+                }
+            }
+        }
+        else{
+            // 通知错误发生
+            if(block != nil){
+                dispatch_async(dispatch_get_main_queue(),^{
+                    block(nil,AssistantErrorServer);
+                });
+            }
+        }
+    }];
+    
+}
+
 // 更新接听配置
 -(void)updateAnserAssistant:(nonnull AnswerAssistant*) answerAssistant CallBack:(id <AssistantCallBack> _Nullable)delegate{
     

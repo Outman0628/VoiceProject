@@ -26,10 +26,33 @@
 {
     if (self = [super init]) {
         self.eventSyncChannel = nil;
+        _rejectDialSubscriberList = [NSMutableArray array];
     }
     return self;
 }
 
+- (void) addRejectDialMember: (NSString *)uid{
+    if(uid != nil){
+        for(int i = 0; i < _rejectDialSubscriberList.count; i++){
+            if([uid isEqualToString:_rejectDialSubscriberList[i]]){
+                return;
+            }
+        }
+        
+        [_rejectDialSubscriberList addObject:uid];
+    }
+}
+
+- (void) removeRejectDialMember: (NSString *)uid{
+    if(uid != nil){
+        for(int i = 0; i < _rejectDialSubscriberList.count; i++){
+            if([uid isEqualToString:_rejectDialSubscriberList[i]]){
+                [_rejectDialSubscriberList removeObjectAtIndex:i];
+                return;
+            }
+        }
+    }
+}
 
 
 -(BOOL)joinEventSyncChannel:(AgoraRtmJoinChannelBlock _Nullable)completionBlock{
@@ -107,6 +130,9 @@
 - (void) broadcastLeaveCall{
     // 不用发送broadcast 退出后，事件频道会收到 memberLeft 事件
     /*
+    if(_eventSyncChannel == nil)
+        return;
+    
     NSDictionary * rtmNotifyBean =
     @{@"title":@"leave",
       @"accountSender": self.selfId,
@@ -134,6 +160,82 @@
      */
 }
 
+- (void) broadcastRejectDial{
+    
+    if(_eventSyncChannel == nil)
+        return;
+    
+     NSDictionary * rtmNotifyBean =
+     @{@"title":@"rejectDial",
+     };
+     
+     NSError *error;
+     
+     NSData *data = [NSJSONSerialization dataWithJSONObject:rtmNotifyBean options:NSJSONWritingPrettyPrinted error:&error];
+     NSString *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+     
+     AgoraRtmMessage *rtmMessage = [[AgoraRtmMessage alloc] initWithText:jsonStr];
+     
+     [_eventSyncChannel sendMessage:rtmMessage completion:^(AgoraRtmSendChannelMessageErrorCode errorCode) {
+     
+         if(errorCode != AgoraRtmSendPeerMessageErrorOk)
+         {
+         NSString *errNote =  [[NSString alloc] initWithString:[NSString stringWithFormat:@"Send leave event failed:%d", (int)errorCode]];
+         
+         NSLog(@"%@",errNote);
+         }
+         
+         }];
+}
+
+- (void) broadcastAgreePhoneCall{
+    NSDictionary * rtmNotifyBean =
+    @{@"title":@"agreeCall",
+      };
+    
+    NSError *error;
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:rtmNotifyBean options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    
+    AgoraRtmMessage *rtmMessage = [[AgoraRtmMessage alloc] initWithText:jsonStr];
+    
+    [_eventSyncChannel sendMessage:rtmMessage completion:^(AgoraRtmSendChannelMessageErrorCode errorCode) {
+        
+        if(errorCode != AgoraRtmSendPeerMessageErrorOk)
+        {
+            NSString *errNote =  [[NSString alloc] initWithString:[NSString stringWithFormat:@"Send agreeCall event failed:%d", (int)errorCode]];
+            
+            NSLog(@"%@",errNote);
+        }
+        
+    }];
+}
+
+- (void) broadcastRobotAnswerPhoneCall{
+    NSDictionary * rtmNotifyBean =
+    @{@"title":@"robotAnswerCall",
+      };
+    
+    NSError *error;
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:rtmNotifyBean options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    
+    AgoraRtmMessage *rtmMessage = [[AgoraRtmMessage alloc] initWithText:jsonStr];
+    
+    [_eventSyncChannel sendMessage:rtmMessage completion:^(AgoraRtmSendChannelMessageErrorCode errorCode) {
+        
+        if(errorCode != AgoraRtmSendPeerMessageErrorOk)
+        {
+            NSString *errNote =  [[NSString alloc] initWithString:[NSString stringWithFormat:@"Send robotAnswerCall event failed:%d", (int)errorCode]];
+            
+            NSLog(@"%@",errNote);
+        }
+        
+    }];
+}
+
 
 
 /////////////////////////////////////////AgoraRtmChannelDelegate
@@ -153,34 +255,18 @@
 
 }
 
-/**
- Occurs when a channel member leaves the channel.
- 
- When a remote channel member calls the [leaveWithCompletion]([AgoraRtmChannel leaveWithCompletion:]) method and successfully leaves the channel, the local user receives this callback.
- 
- **Note**
- 
- This callback is disabled when the number of the channel members exceeds 512.
- 
- @param channel The channel that the user leaves. See AgoraRtmChannel.
- @param member The channel member that leaves the channel. See AgoraRtmMember.
+/*
+ * 成员离开通道
  */
 - (void)channel:(AgoraRtmChannel * _Nonnull)channel memberLeft:(AgoraRtmMember * _Nonnull)member{
+    /*
     EventData eventData = {EventRtmLeaveCall, 0,0,0,member.userId,self};
     [[ActionManager instance] HandleEvent:eventData];
+     */
 }
 
-/**
- Occurs when receiving a channel message.
- 
- When a remote channel member calls the [sendMessage]([AgoraRtmChannel sendMessage:completion:]) method and successfully sends out a channel message, the local user receives this callback.
- 
- @param channel The channel, to which the local user belongs. See AgoraRtmChannel.
- @param message The received channel message. See AgoraRtmMessage.
- 
- **NOTE** Ensure that you check the `type` property when receiving the message instance: If the message type is `AgoraRtmMessageTypeRaw`, you need to downcast the received instance from AgoraRtmMessage to AgoraRtmRawMessage. See AgoraRtmMessageType.
- 
- @param member The message sender. See AgoraRtmMember.
+/*
+ * 事件频道事件消息
  */
 - (void)channel:(AgoraRtmChannel * _Nonnull)channel messageReceived:(AgoraRtmMessage * _Nonnull)message fromMember:(AgoraRtmMember * _Nonnull)member{
     NSLog(@"event channel Message received from %@: %@", message.text, member.userId);
@@ -196,11 +282,27 @@
     
     else
      */
-     if([title isEqualToString:@"ASRSync"])
-    {
+     if([title isEqualToString:@"ASRSync"]){
         EventData eventData = {  EventRemoeAsrResult, 0,0,0,dic,self};
         [[ActionManager instance] HandleEvent:eventData];
     }
+     else if([title isEqualToString:@"rejectDial"]){
+         [self addRejectDialMember:member.userId];
+         EventData eventData = {EventRtmRejectAudioCall, 0,0,0,self.channelId,member.userId,[ActionManager instance].icmCallBack};
+         
+         [[ActionManager instance] HandleEvent:eventData];
+     }
+     else if([title isEqualToString:@"agreeCall"])
+     {
+         [self removeRejectDialMember:member.userId];
+         EventData eventData = {EventRtmAgreeAudioCall, 0,0,0,self.channelId};
+         [[ActionManager instance] HandleEvent:eventData];
+     }
+     else if([title isEqualToString:@"robotAnswerCall"])
+     {
+         EventData eventData = {EventRTMRobotAnswer, 0,0,0,self.channelId};
+         [[ActionManager instance] HandleEvent:eventData];
+     }
     /*
      else if( [title isEqualToString:@"leave"] )
      {
@@ -208,16 +310,8 @@
          [[ActionManager instance] HandleEvent:eventData];
      }
     
-    else if([title isEqualToString:@"agreeCall"])
-    {
-        EventData eventData = {EventRtmAgreeAudioCall, 0,0,0,dic[@"channel"]};
-        [actionMgr HandleEvent:eventData];
-    }
-    else if([title isEqualToString:@"robotAnswerCall"])
-    {
-        EventData eventData = {EventRTMRobotAnser, 0,0,0,dic[@"channel"]};
-        [actionMgr HandleEvent:eventData];
-    }
+    
+
      */
      }
 
@@ -241,6 +335,9 @@
 事件更新频道人员更新回调
  */
 - (void)channel:(AgoraRtmChannel * _Nonnull)channel memberCount:(int)count{
+    
+    NSLog(@"-----> event chanel member:%d",count);
+    
     /*
     EventData eventData = {EventEventChannelMemberCountUpdated, count,0,0,self};
     [[ActionManager instance] HandleEvent:eventData];

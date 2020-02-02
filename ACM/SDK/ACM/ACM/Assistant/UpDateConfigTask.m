@@ -160,7 +160,8 @@ static NSString *UpdateAnswerAssistantApi = @"/dapi/account/reject-tone";
                     NSString *fileName = retFile[0];
                     if(fileName != nil && fileName.length > 0){
                         // 添加文件记录
-                        NSMutableDictionary *updatedContentItem = [[NSMutableDictionary alloc] initWithObjects:@[fileName, [NSNumber numberWithInteger:item.interval], item.content] forKeys:@[@"url", @"before_second", @"Content"]];
+                        NSMutableDictionary *configDic = [[NSMutableDictionary alloc] initWithObjects:@[[NSNumber numberWithInteger:self.voiceConfig.speechVolume], [NSNumber numberWithInteger:self.voiceConfig.speechSpeed],[NSNumber numberWithInteger:self.voiceConfig.speechPich],[NSNumber numberWithInteger:self.voiceConfig.curSpeakerIndex] ] forKeys:@[@"speechVolume", @"speechSpeed", @"speechPich", @"curSpeakerIndex"]];
+                        NSMutableDictionary *updatedContentItem = [[NSMutableDictionary alloc] initWithObjects:@[fileName, [NSNumber numberWithInteger:item.interval], item.content, configDic] forKeys:@[@"url", @"before_second", @"Content", @"voiceConfig"]];
                         
                         [self.updatedContents addObject:updatedContentItem];
                         [self UploadFiles];

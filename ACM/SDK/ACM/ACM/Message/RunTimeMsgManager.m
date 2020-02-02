@@ -207,7 +207,7 @@ static ActionManager *actionMgr = nil;
     @{@"title":@"audiocall",
       @"accountCaller": userId,
       @"accountRemote":remoteUid,
-      @"subscribers": callInstance.subscriberList,
+      //@"subscribers": callInstance.subscriberList,
       @"channel":  channelId,
       };
     
@@ -474,7 +474,7 @@ static ActionManager *actionMgr = nil;
      NSData *jsonData = [jsonStr dataUsingEncoding:NSUTF8StringEncoding];
      NSDictionary *resultDic1 = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
      */
-    NSLog(@"Message received from %@: %@", message.text, peerId);
+    NSLog(@"P2P Message received from %@: %@", message.text, peerId);
     NSData *jsonData = [message.text dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
     NSString *title = dic[@"title"];
@@ -510,7 +510,7 @@ static ActionManager *actionMgr = nil;
         //- (void)onCallReceived:(NSString * _Nonnull)channel fromPeer:(NSString * _Nonnull)peerId;
         NSLog(@"rtm audio call from:%@", peerId );
         
-        
+        /*
         if([actionMgr.callMgr IsActiveCall:dic[@"channel"]] == YES) // 通话已经在处理中，丢弃后到的通话
         {
             NSLog(@"Drop phone call:%@ from RTM as same call already exist!", dic[@"channel"]);
@@ -522,6 +522,9 @@ static ActionManager *actionMgr = nil;
             EventData eventData = {EventGotRtmAudioCall, 0,0,0,instance};
             [actionMgr HandleEvent:eventData];
         }
+         */
+        AcmCall *instance = [actionMgr.callMgr createReceveCall:dic userAccount:[ActionManager instance].userId];
+        [actionMgr.callMgr ValidateIncomeCall:instance IsApnsCall:NO];
     }
     else if( [title isEqualToString:@"callerEndDial"] )
     {
@@ -546,7 +549,7 @@ static ActionManager *actionMgr = nil;
     }
     else if([title isEqualToString:@"robotAnswerCall"])
     {
-        EventData eventData = {EventRTMRobotAnser, 0,0,0,dic[@"channel"]};
+        EventData eventData = {EventRTMRobotAnswer, 0,0,0,dic[@"channel"]};
         [actionMgr HandleEvent:eventData];
     }
 }

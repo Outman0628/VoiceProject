@@ -36,6 +36,8 @@
             NSLog(@"apns audio call from:%@", userInfo[@"accountCaller"] );
             
             
+            
+            /*
             if([actionMgr.callMgr IsActiveCall:userInfo[@"channel"]] == YES) // 通话已经在处理中，丢弃后到的通话
             {
                 NSLog(@"phone call:%@ from APNS drop as same call already exist!", userInfo[@"channel"]);
@@ -47,6 +49,9 @@
                 EventData eventData = {EventGotApnsAudioCall, 0,0,0,instance};
                 [actionMgr HandleEvent:eventData];
             }
+             */
+            AcmCall *instance =  [actionMgr.callMgr createReceveCall:userInfo userAccount:[ActionManager instance].userId];
+            [actionMgr.callMgr ValidateIncomeCall:instance IsApnsCall:YES];
         }
     }
     

@@ -57,9 +57,13 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     {
         [self HandleRejectCall:eventData];
     }
-    else if(eventData.type == EventRobotAnswerCall)
+    else if(eventData.type == EventRobotAnswerCall)    // 请求后台委托机器人接听
     {
         [self HandleRobotAnswerCall:eventData];
+    }
+    else if(eventData.type == EventRobotAnsweredCall)  // 委托机器人接听成功，发送广播消息，进入onphone state
+    {
+        [self HandleEventRobotAnsweredCall:eventData];
     }
     else if(eventData.type == EventDialingTimeout)
     {
@@ -81,14 +85,21 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
 
 - (void) ReadyForOnPhone: (EventData) eventData{
      AcmCall *call = eventData.param4;
-     [RunTimeMsgManager agreePhoneCall:call.callerId userAccount:call.selfId channelID:call.channelId];
-     EventData nextData = { EventBackendAgreeAudioCall,0,0,0,call };
-     OnPhoneAction* onPhone = [[OnPhoneAction alloc]init];
-     
-     [[ActionManager instance] actionChange:self destAction:onPhone];
-     
-     [[ActionManager instance] HandleEvent:nextData];
     
+    
+    if(call != nil){
+        
+        //[RunTimeMsgManager agreePhoneCall:call.callerId userAccount:call.selfId channelID:call.channelId];
+        
+        [call broadcastAgreePhoneCall];
+        
+        EventData nextData = { EventBackendAgreeAudioCall,0,0,0,call };
+         OnPhoneAction* onPhone = [[OnPhoneAction alloc]init];
+        
+         [[ActionManager instance] actionChange:self destAction:onPhone];
+        
+         [[ActionManager instance] HandleEvent:nextData];
+    }
 }
 
 - (void) JoinSyncChannel: (EventData ) eventData{
@@ -188,6 +199,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
         [callBack onCallReceived:call];
     }
 }
+
 - (void) RequestAcceptDial: (EventData) eventData{
     AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
     if(call == nil && call.role != Subscriber)
@@ -269,6 +281,56 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     }] resume];
 }
 
+- (void) HandleEventRobotAnsweredCall: (EventData) eventData{
+    AcmCall *call = eventData.param4;
+    
+    // step 1 加入事件频道
+    BOOL joinEventChannelRet = [call joinEventSyncChannel:^(AgoraRtmJoinChannelErrorCode errorCode) {
+        if(AgoraRtmJoinChannelErrorOk == errorCode){
+            
+            // step 2 广播代接事件
+            [call broadcastRobotAnswerPhoneCall];
+            
+            // step 3 跳转到onphone state
+            OnPhoneAction* onPhone = [[OnPhoneAction alloc]init];
+
+            [[ActionManager instance] actionChange:self destAction:onPhone];
+            
+            EventData nextEventdata = {EventRobotAnsweredCall,0,0,0,call};
+            
+            [[ActionManager instance] HandleEvent:nextEventdata];
+            
+            dispatch_async(dispatch_get_main_queue(),^{
+                
+                [call.callback didPhoneDialResult: AcmDialRobotAnswered];
+            });
+        }
+        else{
+            NSLog(@"ACM Err: failed to join event channel:%ld", (long)errorCode);
+            [self quitIncomeDialingPhoneCall:call];
+            if(call != nil && call.callback != nil)
+            {
+                
+                [call.callback didPhoneDialResult:AcmDialErrorJoinEventSyncChannel];
+            }
+        }
+    }];
+    
+    if(joinEventChannelRet == NO){
+        [self quitIncomeDialingPhoneCall:call];
+        if(call != nil && call.callback != nil)
+        {
+            
+            [call.callback didPhoneDialResult:AcmDialErrorJoinEventSyncChannel];
+        }
+    }
+    
+    
+    
+    
+    
+}
+
 - (void) HandleRobotAnswerCall: (EventData) eventData{
     AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
     if(call == nil && call.role != Subscriber)
@@ -319,19 +381,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
             }
             
             EventData nextEventdata = {EventRobotAnsweredCall,0,0,0,call};
-            
-            OnPhoneAction* onPhone = [[OnPhoneAction alloc]init];
-            
-            [RunTimeMsgManager robotAnswerPhoneCall:call.callerId userAccount:call.selfId channelID:call.channelId];
-            
-            [[ActionManager instance] actionChange:self destAction:onPhone];
-            
             [[ActionManager instance] HandleEvent:nextEventdata];
-            
-            dispatch_async(dispatch_get_main_queue(),^{
-                
-                [call.callback didPhoneDialResult: AcmDialRobotAnswered];
-            });
         }
         else
         {
@@ -362,7 +412,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
 
 - (void) HandleRejectCall: (EventData) eventData{
     
-    
+    /*
     AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
     if(call != nil){
         [RunTimeMsgManager rejectPhoneCall:call.callerId userAccount:call.selfId channelID:call.channelId];
@@ -374,6 +424,36 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     {
         
         [call.callback didPhoneDialResult:AcmSelfCancelDial];
+    }
+     */
+    
+    AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
+    
+    // step 1 进入事件频道
+    BOOL joinEventChannelRet = [call joinEventSyncChannel:^(AgoraRtmJoinChannelErrorCode errorCode) {
+        if(AgoraRtmJoinChannelErrorOk == errorCode){
+            // step 2 广播拒接消息
+            [call broadcastRejectDial];
+        }
+        else{
+            NSLog(@"ACM Err: failed to join event channel:%ld", (long)errorCode);
+            
+        }
+        [self quitIncomeDialingPhoneCall:call];
+        if(call != nil && call.callback != nil)
+        {
+            
+            [call.callback didPhoneDialResult:AcmSelfCancelDial];
+        }
+    }];
+    
+    if(joinEventChannelRet == NO){
+        [self quitIncomeDialingPhoneCall:call];
+        if(call != nil && call.callback != nil)
+        {
+            
+            [call.callback didPhoneDialResult:AcmDialErrorJoinEventSyncChannel];
+        }
     }
     
 }

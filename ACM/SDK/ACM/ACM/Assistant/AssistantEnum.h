@@ -63,6 +63,11 @@ typedef NS_ENUM(NSInteger, AssistantCode) {
      语音助手繁忙，有正在执行的试听或是设置更新行为
      */
     AssistantSettingBusy = -9,
+    
+    /**
+     服务器返回错误配置数据
+     */
+    AssistantErrorIncorrectAnswerAssistantContent = -10,
 };
 
 #endif /* AssistantEnum_h */

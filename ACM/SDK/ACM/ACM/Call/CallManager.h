@@ -38,14 +38,6 @@
 -(id _Nullable )init;
 
 /*
- 检测通话是否已经存在
- 
- @param channelId 通话 channel
- @return YES 通话已经存在，No 通话不存在
- */
--(BOOL )IsActiveCall: (nonnull NSString *)channelId;
-
-/*
 生成新的接听通话记录
  @param callReq 通话请求内容
  @param userId 本机用户id
@@ -71,6 +63,11 @@
  获取通话当前活跃的通话对象
  */
 -( nullable AcmCall * )getActiveCall;
+
+/*
+ * 校验电话有消息
+ */
+-(void) ValidateIncomeCall: (AcmCall *_Nonnull)call IsApnsCall:(BOOL) isApnsCall;
 
 @end
 

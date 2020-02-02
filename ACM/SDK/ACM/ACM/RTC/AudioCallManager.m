@@ -155,7 +155,11 @@ static AudioCallManager *instance = nil;
     [[ActionManager instance].asrMgr startAsr];
     NSNumber *num = [NSNumber numberWithInteger:uid];
     NSString *userAccount = [_channelMemberList objectForKey:num];
-    if(userAccount != nil){
+    
+    if(userAccount == nil ){     //didUpdatedUserInfo 可能会在 didJoinedOfUid 之后调用，当没有记录userAccount 时先行保存
+        [_channelMemberList setObject:@"" forKey: [NSNumber numberWithInteger:uid]];
+    }
+    else if(userAccount != nil && userAccount.length > 0){
         EventData eventData = {EventDidJoinedOfUid, (int)uid,(int)elapsed,0,userAccount};
         [[ActionManager instance]  HandleEvent:eventData];
     }
@@ -169,11 +173,20 @@ static AudioCallManager *instance = nil;
 
 - (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didUpdatedUserInfo:(AgoraUserInfo * _Nonnull)userInfo withUid:(NSUInteger)uid{
     NSLog(@"didUpdatedUserInfo userAccount:%@  uid:%lu", userInfo.userAccount, (unsigned long)userInfo.uid);
+    NSNumber *num = [NSNumber numberWithInteger:userInfo.uid];
+    NSString *userAccount = [_channelMemberList objectForKey:num];
+    
     [_channelMemberList setObject:userInfo.userAccount forKey: [NSNumber numberWithInteger:userInfo.uid]];
+    
+    if(userAccount != nil && userAccount.length == 0)  // didJoinedOfUid 先调用场景
+    {
+        EventData eventData = {EventDidJoinedOfUid, (int)userInfo.uid,0,0,userInfo.userAccount};
+        [[ActionManager instance]  HandleEvent:eventData];
+    }
 }
 
 - (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didOfflineOfUid:(NSUInteger)uid reason:(AgoraUserOfflineReason)reason{
-   //  NSLog(@"didOfflineOfUid userAccount:%lu  reason:%lu", (unsigned long)uid , reason);
+    NSLog(@"didOfflineOfUid userAccount:%lu  reason:%lu", (unsigned long)uid , reason);
     NSNumber *num = [NSNumber numberWithInteger:uid];
     NSString *userAccount = [_channelMemberList objectForKey:num];
     

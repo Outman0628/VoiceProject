@@ -22,6 +22,7 @@ static NSString *DialApi = @"/dapi/call/user";
 static NSString *DialRobot = @"/dapi/call/robot";
 
 
+
 @interface DialAction()
 
 @property ActionManager* actionMgr;
@@ -61,7 +62,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
     {
         [self prepareOnPhoneCall:eventData];
     }
-    else if(eventData.type == EventRTMRobotAnser)         //  step 5 接听方用户使用助手接听电话
+    else if(eventData.type == EventRTMRobotAnswer)         //  step 5 接听方用户使用助手接听电话
     {
         [self prepareOnPhoneCall:eventData];
     }
@@ -76,18 +77,19 @@ static NSString *DialRobot = @"/dapi/call/robot";
     
     else if(eventData.type == EventLeaveCall)
     {
-        [self leaveCall:eventData];
+        [self cancelDial:eventData];
     }
     
     else if(eventData.type == EventRtmRejectAudioCall)
     {
         [self HandleRemoteRejectcall:eventData];
     }
-    
+    /*
     else if(eventData.type == EventRtmLeaveCall)
     {
         [self remoteLeaveCall:eventData];
     }
+     */
      
     else if(eventData.type == EventRtmDialFailed)
     {
@@ -117,7 +119,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
 - (void) handleRtcError: (EventData) eventData{
     AcmCall *call = [[ActionManager instance].callMgr getActiveCall];
     
-    [self quitDialingPhoneCall:call EndCode:AcmDialErrorJoinChannel];
+    [self quitDialingPhoneCall:call EndCode:AcmDialErrorJoinChannel NeedSendNotification:YES];
     
     if(call != nil && call.callback != nil)
     {
@@ -128,7 +130,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
 - (void) handleDialingTimeout: (EventData) eventData{
     AcmCall *call = eventData.param4;
     
-    [self quitDialingPhoneCall:call EndCode:AcmDialingTimeout];
+    [self quitDialingPhoneCall:call EndCode:AcmDialingTimeout NeedSendNotification:NO];
 }
 
 - (void) prepareOnPhoneCall: (EventData) eventData{
@@ -172,12 +174,12 @@ static NSString *DialRobot = @"/dapi/call/robot";
         }
         else{
             NSLog(@"ACM Err: failed to join event channel:%ld", (long)errorCode);
-            [self quitDialingPhoneCall:call EndCode:AcmDialErrorJoinEventSyncChannel];
+            [self quitDialingPhoneCall:call EndCode:AcmDialErrorJoinEventSyncChannel NeedSendNotification:YES];
         }
     }];
     
     if(joinEventChannelRet == NO){
-        [self quitDialingPhoneCall:call EndCode:AcmDialErrorJoinEventSyncChannel];
+        [self quitDialingPhoneCall:call EndCode:AcmDialErrorJoinEventSyncChannel NeedSendNotification:YES];
     }
 }
 
@@ -201,9 +203,17 @@ static NSString *DialRobot = @"/dapi/call/robot";
     NSString *stringUrl = [NSString stringWithFormat:@"%@%@",self.actionMgr.host, DialApi];
     AcmCall *call = eventData.param6;
     
+    NSMutableDictionary *extra_info = [[NSMutableDictionary alloc] initWithObjects:@[[ActionManager instance].userId, [NSNumber numberWithInteger:call.callType], call.subscriberList] forKeys:@[@"CallerId", @"Type", @"Subscribers"]];
+    
+    NSError *err;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:extra_info options:0 error:&err];
+    
+    NSString *jsonString = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
+    
     NSDictionary * phoneCallParam =
     @{@"src_uid": [ActionManager instance].userId,
       @"dst_uid": call.subscriberList,
+      @"extra_msg": jsonString,
       };
     
     
@@ -231,8 +241,6 @@ static NSString *DialRobot = @"/dapi/call/robot";
                     dispatch_async(dispatch_get_main_queue(),^{
                         [[ActionManager instance] HandleEvent:eventData];
                     });
-                    
-                    
                 }
                 else
                 {
@@ -352,8 +360,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
         }
     }] resume];
 }
-// 以后更新为Cancel call
-- (void) leaveCall: (EventData) eventData{
+- (void) cancelDial: (EventData) eventData{
     AcmCall * call = eventData.param4;
     /*
     if(call.role == Originator)
@@ -369,7 +376,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
     }
      */
     
-    [self quitDialingPhoneCall:call EndCode:AcmSelfCancelDial];
+    [self quitDialingPhoneCall:call EndCode:AcmSelfCancelDial NeedSendNotification:YES];
     
 }
  
@@ -392,26 +399,20 @@ static NSString *DialRobot = @"/dapi/call/robot";
     [self JumpBackToMonitorAction];
     */
     
-    [self quitDialingPhoneCall:call EndCode:AcmDialRemoteReject];
+    // 所有人通话对象挂断来电结束通话
+    if(call.rejectDialSubscriberList.count == call.subscriberList.count){
+        [self quitDialingPhoneCall:call EndCode:AcmDialRemoteReject NeedSendNotification:NO];
+    }
 }
 
-// change to cancel call
+// 远端退出通话在onphone 中处理
+/*
 - (void) remoteLeaveCall: (EventData) eventData{
     AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
-    
-    /*
-    if(call != nil)
-    {
-        [call updateStage:Finished];
-        if(call.callback != nil)
-        {
-            [call.callback didPhoneCallResult:AcmPhoneCallCodeRemoteEnd];
-        }
-        [self JumpBackToMonitorAction];
-    }
-     */
-    [self quitDialingPhoneCall:call EndCode:AcmDialRemoteReject];
+ 
+    [self quitDialingPhoneCall:call EndCode:AcmDialRemoteReject NeedSendNotification:YES];
 }
+*/
  
 
 - (void) handleEventDidRTCJoinChannel: (EventData) eventData{
@@ -426,7 +427,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
     
 }
     
-- (void) quitDialingPhoneCall: (AcmCall *) call EndCode:(AcmDialCode) code{
+- (void) quitDialingPhoneCall: (AcmCall *) call EndCode:(AcmDialCode) code  NeedSendNotification:(BOOL) isNeedSendNotification{
     
     if(call != nil && ( call.stage == Dialing || call.stage == PrepareOnphone )){
         [call updateStage:Finished];
@@ -434,8 +435,12 @@ static NSString *DialRobot = @"/dapi/call/robot";
         {
             [AudioCallManager endAudioCall];
             
+            
             // 拨号间断退出时，发送p2p 消息取消电话
-            [RunTimeMsgManager dispatchEndDial:call.subscriberList  userAccount:self.actionMgr.userId  channelID:call.channelId];
+            if(isNeedSendNotification)
+            {
+                [RunTimeMsgManager dispatchEndDial:call.subscriberList  userAccount:self.actionMgr.userId  channelID:call.channelId];
+            }
            
             
             NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, EndCallApi];

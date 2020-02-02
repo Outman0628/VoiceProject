@@ -12,6 +12,8 @@
 typedef void (^HttpResponseCallback)(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error);
 
 #define EndCallApi  @"/dapi/call/end"
+#define AnswerAssistantSettingApi @"/dapi/account/get-reject-tone"
+#define ActiveCallApi @"/dapi/call/msg"
 
 @interface HttpUtil : NSObject
 

@@ -14,7 +14,9 @@
 
 @class AgoraRtmChannel;
 
-@interface AcmCall : Call 
+@interface AcmCall : Call
+
+@property (readonly) NSMutableArray *  _Nonnull rejectDialSubscriberList;    // 拒接电话成员
 
 /*
  *生成通话内部同步信息通道
@@ -36,7 +38,25 @@
  */
 - (void) broadcastAsrData: (nonnull NSString *)text timeStamp:(NSTimeInterval)startTime isFinished:(BOOL) finished;
 
+/*
+ * 广播离开通话 （暂时没有用，通过eventChanel memberLeft 事件实现）
+ */
 - (void) broadcastLeaveCall;
+
+/*
+ * 广播挂断来电
+ */
+- (void) broadcastRejectDial;
+
+/*
+ * 广播同意电话
+ */
+- (void) broadcastAgreePhoneCall;
+
+/*
+ * 广播委托机器人接听
+ */
+- (void) broadcastRobotAnswerPhoneCall;
 
 @end
 

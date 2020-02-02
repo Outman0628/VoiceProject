@@ -29,17 +29,17 @@
 
 + (void)invitePhoneCall: (nonnull AcmCall *) call;
 
-+ (void)rejectPhoneCall: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID;
+//+ (void)rejectPhoneCall: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID;
 
-+ (void)agreePhoneCall: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID;
+//+ (void)agreePhoneCall: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID;
 
-+ (void)robotAnswerPhoneCall: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID;
+//+ (void)robotAnswerPhoneCall: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID;
 
 //+ (void) leaveCall: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID;
 
 + (void) dispatchEndDial: (nullable NSArray *)uidList userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID;
 
-+ (void)syncAsrData: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID asrData:(nonnull NSString *)text timeStamp:(NSTimeInterval)startTime isFinished:(BOOL) finished;
+//+ (void)syncAsrData: (nullable NSString *)remoteUid userAccount:(nullable NSString *)userID  channelID:(nullable NSString *)channelID asrData:(nonnull NSString *)text timeStamp:(NSTimeInterval)startTime isFinished:(BOOL) finished;
 
 + (AgoraRtmChannel * _Nullable)createChannel:(NSString * _Nonnull)channelId
                                           Delegate:(id <AgoraRtmChannelDelegate> _Nullable)delegate;

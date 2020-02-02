@@ -110,7 +110,7 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     EventDialingTimeout = 31,
     
     // 接听方机器人应答
-    EventRTMRobotAnser = 32,
+    EventRTMRobotAnswer = 32,
     
     // 接听方机器人应答
     EventUpdateDialingTimer = 33,
