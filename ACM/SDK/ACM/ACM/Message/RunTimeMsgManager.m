@@ -523,8 +523,8 @@ static ActionManager *actionMgr = nil;
             [actionMgr HandleEvent:eventData];
         }
          */
-        AcmCall *instance = [actionMgr.callMgr createReceveCall:dic userAccount:[ActionManager instance].userId];
-        [actionMgr.callMgr ValidateIncomeCall:instance IsApnsCall:NO];
+        //AcmCall *instance = [actionMgr.callMgr createReceveCall:dic userAccount:[ActionManager instance].userId];
+        [actionMgr.callMgr ValidateIncomeCall:dic[@"channel"] IsApnsCall:NO];
     }
     else if( [title isEqualToString:@"callerEndDial"] )
     {

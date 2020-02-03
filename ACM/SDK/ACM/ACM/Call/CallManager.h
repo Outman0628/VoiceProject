@@ -43,7 +43,7 @@
  @param userId 本机用户id
  @return 通话记录
  */
--( nonnull AcmCall * )createReceveCall: (nonnull NSDictionary *)callReq userAccount:(nonnull NSString *)userId;
+//-( nonnull AcmCall * )createReceveCall: (nonnull NSDictionary *)callReq userAccount:(nonnull NSString *)userId;
 
 /*
  更新的拨打通话记录
@@ -67,7 +67,12 @@
 /*
  * 校验电话有消息
  */
--(void) ValidateIncomeCall: (AcmCall *_Nonnull)call IsApnsCall:(BOOL) isApnsCall;
+-(void) ValidateIncomeCall: (NSString *_Nonnull)channelId IsApnsCall:(BOOL) isApnsCall;
+
+/*
+ * 添加已校验的通话
+ */
+-(void) AddValidatedIncomeCall: (AcmCall *_Nonnull) call;
 
 @end
 

@@ -25,7 +25,10 @@
     
     request.HTTPBody = [param dataUsingEncoding:NSUTF8StringEncoding];
     
+    [request setValue:@"close" forHTTPHeaderField:@"Connection"];
+    
     NSURLSession *session = [NSURLSession sharedSession];
+
     
     [[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         

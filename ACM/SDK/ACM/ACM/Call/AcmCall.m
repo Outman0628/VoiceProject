@@ -342,6 +342,13 @@
     EventData eventData = {EventEventChannelMemberCountUpdated, count,0,0,self};
     [[ActionManager instance] HandleEvent:eventData];
 */
+    // 从后台获取的activeCallList 数据更为全面
+    if(count > 1 && self.stage == Validating){
+        [self updateStage:Dialing];
+        [[ActionManager instance].callMgr AddValidatedIncomeCall:self];
+        EventData eventData = {EventGotRtmAudioCall, 0,0,0,self};
+        [[ActionManager instance] HandleEvent:eventData];
+    }
 }
 
 

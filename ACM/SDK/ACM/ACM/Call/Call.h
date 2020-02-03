@@ -23,18 +23,20 @@ typedef NS_ENUM(NSInteger, CallType) {
 
 // 电话阶段
 typedef NS_ENUM(NSInteger, CallStage) {
+    // 校验阶段
+    Validating = 1,
     
     // 拨号阶段
-    Dialing = 1,
+    Dialing = 2,
     
     // 拨号收到首个应答回复，准备进入通话间断
-    PrepareOnphone = 2,
+    PrepareOnphone = 3,
     
     // 通话阶段
-    OnPhone = 3,
+    OnPhone = 4,
     
     // 通话结束
-    Finished = 4,
+    Finished = 5,
 };
 
 // 本机在电话中的角色

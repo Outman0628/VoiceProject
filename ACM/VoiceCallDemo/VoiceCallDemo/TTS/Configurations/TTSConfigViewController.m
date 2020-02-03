@@ -86,14 +86,12 @@ __strong static NSString* currentOfflineChineseModelName;
 @interface TTSConfigViewController ()
 @property (nonatomic,strong)NSMutableArray* selectionControllerSelectedIndexes;
 @property (nonatomic)SelectionControllerSelectProperty ongoing_multiselection;
-@property AnswerAssistant *ass;
 @end
 
 @implementation TTSConfigViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.ass = [Assistant getAnswerAsistant];
 }
 
 - (void)ttsEedNotif:(NSNotification *)notif{

@@ -16,6 +16,8 @@
 
 @interface AAViewController () <AssistantCallBack>
 
+@property (weak, nonatomic) IBOutlet UIView *rootView;
+
 @property (weak, nonatomic) IBOutlet UIView *AssistantItemView1;
 
 @property (weak, nonatomic) IBOutlet UIView *AssistantItemView2;
@@ -27,6 +29,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *auditButton;
 
 @property (weak, nonatomic) IBOutlet UIButton *updateButton;
+\
+@property (weak, nonatomic) IBOutlet UIButton *settingButton;
 
 @property (weak, nonatomic) IBOutlet UISwitch *assSwitch;
 
@@ -38,19 +42,56 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self initAssView];
     
+    self.auditButton.enabled = false;
+    self.updateButton.enabled = false;
+    self.assSwitch.enabled = false;
+    self.settingButton.enabled = false;
+    
+    [self clearAssView];
+    
+    [Assistant getAnswerAsistant:^(AnswerAssistant * _Nullable answerAssistant, AssistantCode code) {
+        if(code == AssistantOK && answerAssistant != nil){
+            self.answerAss = answerAssistant;
+            [self initAssView];
+        }else{
+            [self showAlert: [NSString stringWithFormat:@"获取当前语音助手参数错误:@%ld", (long)code]];
+            self.auditButton.enabled = false;
+            self.updateButton.enabled = false;
+            self.assSwitch.enabled = false;
+            self.settingButton.enabled = false;
+        }
+        
+    }];
 
 }
 
-
-
--(void) initAssView{
-    self.answerAss = [[AnswerAssistant alloc]init];
+-(void) clearAssView{
     [self ClearAssistantItem:_AssistantItemView1];
     [self ClearAssistantItem:_AssistantItemView2];
     [self ClearAssistantItem:_AssistantItemView3];
     [self ClearAssistantItem:_AssistantItemView4];
+}
+
+
+-(void) initAssView{
+    
+    self.auditButton.enabled = true;
+    self.updateButton.enabled = true;
+    self.assSwitch.enabled = true;
+    self.settingButton.enabled = true;
+    
+    for(int i = 0; i < self.answerAss.contents.count; i++){
+        if( i == 0){
+            [self SetAssistantItem:_AssistantItemView1 AssItem:self.answerAss.contents[i]];
+        }else if( i == 1){
+            [self SetAssistantItem:_AssistantItemView2 AssItem:self.answerAss.contents[i]];
+        }else if( i == 2){
+            [self SetAssistantItem:_AssistantItemView3 AssItem:self.answerAss.contents[i]];
+        }else if( i == 3){
+            [self SetAssistantItem:_AssistantItemView4 AssItem:self.answerAss.contents[i]];
+        }
+    }
 }
 
 - (IBAction)itemSwitch:(id)sender {
@@ -100,7 +141,30 @@
         {
             ((UITextView *)subView).text = @"";
         }
+        else if([subView isKindOfClass:[UISwitch class]])
+        {
+            ((UISwitch *)subView).on = false;
+        }
     }
+}
+
+-(void) SetAssistantItem:(nonnull UIView *)view AssItem:(AssistanItem *)item{
+    for(UIView *subView in view.subviews)
+    {
+        if([subView isKindOfClass:[UITextView class]])
+        {
+            ((UITextView *)subView).text = item.content;
+        }
+        else if([subView isKindOfClass:[UITextField class]])
+        {
+            ((UITextField *)subView).text = [NSString stringWithFormat:@"%ld",(long)item.interval ];
+        }
+        else if([subView isKindOfClass:[UISwitch class]])
+        {
+            ((UISwitch *)subView).on = true;
+        }
+    }
+
 }
 
 - (IBAction)answerAssistantSwitch:(id)sender {
@@ -149,6 +213,7 @@
 }
 
 - (void)updateAnswerAssistantResult:(AssistantCode) code Error:(NSError * _Nullable) subCode{
+    [self showAlert:[NSString stringWithFormat:@"callback 更新语音助手结果 %ld", (long)code]];
     _auditButton.enabled = true;
     _updateButton.enabled = true;
     _assSwitch.enabled = true;
@@ -172,7 +237,18 @@
 }
 
 - (IBAction)updateAss:(id)sender {
-
+    NSMutableArray *assItems = nil;
+    if([self generateAnswerAssItem:&assItems])
+    {
+        _answerAss.contents = assItems;
+        [Assistant updateAnswerAssistantParam:_answerAss  CallBack:self ];
+        _auditButton.enabled = false;
+        _updateButton.enabled = false;
+        _assSwitch.enabled = false;
+    }else
+    {
+        [self showAlert:@"参数错误请检查"];
+    }
 }
 
 -(BOOL) generateAnswerAssItem: (NSMutableArray **)items{

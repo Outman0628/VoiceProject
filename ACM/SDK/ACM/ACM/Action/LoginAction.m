@@ -11,6 +11,7 @@
 #import "../Message/RunTimeMsgManager.h"
 #import "ActionManager.h"
 #import "IACMCallBack.h"
+#import "../Message/HttpUtil.h"
 
 static NSString *BackLoginApi = @"/dapi/account/update";
 
@@ -64,6 +65,8 @@ static NSString *BackLoginApi = @"/dapi/account/update";
 }
 
 - (void) BackendLogin{
+    
+    /*
     NSString *stringUrl = [NSString stringWithFormat:@"%@%@",self.actionMgr.host, BackLoginApi];
     
     NSURL *url = [NSURL URLWithString:stringUrl];
@@ -123,8 +126,55 @@ static NSString *BackLoginApi = @"/dapi/account/update";
             });
         }
     }] resume];
+    */
     
-
+   NSString *stringUrl = [NSString stringWithFormat:@"%@%@",self.actionMgr.host, BackLoginApi];
+    
+   NSString *bodyString = [NSString stringWithFormat:@"uid=%@&device=%@&apns_token=%@", self.userId,@"ios",self.apnsToken];
+    
+    [HttpUtil HttpPost:stringUrl Param:bodyString Callback:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+        if([(NSHTTPURLResponse *)response statusCode] == 200){
+            NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSData *jsonData = [str dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+            
+            BOOL ret = dic[@"success"];
+            AcmLoginErrorCode errCode;
+            
+            if(ret == YES)
+            {
+                
+                [self.actionMgr setUserId:self.userId];
+                [self.actionMgr actionDone:self];
+                
+                errCode = AcmRtmLoginErrorOk;
+            }
+            else
+            {
+                self.userId = nil;
+                [RunTimeMsgManager logoutACM];
+                errCode = AcmLoginBackendErrorUnknow;
+                
+            }
+            
+            if(self.completionBlock != nil)
+            {
+                
+                dispatch_async(dispatch_get_main_queue(),^{
+                    self.completionBlock(errCode);
+                });
+            }
+            
+        }
+        else{
+            self.userId = nil;
+            [RunTimeMsgManager logoutACM];
+            dispatch_async(dispatch_get_main_queue(),^{
+                self.completionBlock(AcmLoginBackendErrorUnknow);
+            });
+        }
+    }];
 }
 
 -(void) onRTMLoginResult:(EventData) eventData

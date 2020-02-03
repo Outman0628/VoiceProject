@@ -24,6 +24,7 @@
 //@property (nonatomic, copy) NSString *peerId;
 @property Call* inComeCall;
 @property Call* outComeCall;
+@property NSInteger callTimerCount;
 @property AVAudioPlayer* player;
 
 //@property (nonatomic, copy) NSString *dialChannelId;
@@ -72,6 +73,7 @@
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     appDelegate.viewController = self;
     self.inited = false;
+    _callTimerCount = 600;
    /*
     NSString *token=[[NSUserDefaults standardUserDefaults] valueForKey:@"APNSToken"];
     if(token != nil)
@@ -85,6 +87,13 @@
         NSLog(@"获取推送token 失败!");
     }
    */
+    
+    #if (TARGET_IPHONE_SIMULATOR)
+    [ACM initManager:@"bc6642a5ce2c423c8419c20e2e9e239f" backendHost:@"http://voice.enjoyst.com" apnsToken:@"simulatorToken" acmCallback:self ];
+    [ACM updateDialingTimer:_callTimerCount];
+    [self autoLogin];
+    #endif
+    
     [self initControls];
     //[self showAlert:@"测试窗体"];
     
@@ -94,7 +103,7 @@
     if(token != nil)
     {
         [ACM initManager:@"bc6642a5ce2c423c8419c20e2e9e239f" backendHost:@"http://voice.enjoyst.com" apnsToken:token acmCallback:self ];
-        [ACM updateDialingTimer:30];
+        [ACM updateDialingTimer:_callTimerCount];
         [self autoLogin];
     }
     else
@@ -107,8 +116,10 @@
     
     if(self.inited == YES)
     {
-        [ACM handleApnsMessage:message];
+        BOOL ret;
+        ret = [ACM handleApnsMessage:message];
         self.apnsMsg = nil;
+        self.remoteMsgLabel.text = [NSString stringWithFormat:@"4已调用SDK 处理apns 消息:%@", ret ? @"True" : @"False" ];
     }
     else
     {
@@ -187,8 +198,6 @@
 
 - (IBAction)sendMsg:(id)sender {
     
-    [self auditAssistant];
-    return;
     
     if(!self.checkParameters)
     {
@@ -269,13 +278,15 @@
         else{
             
             self.inited = true;
-            [self showAlert: @"注册成功"];
+            //[self showAlert: @"注册成功"];
+            self.remoteMsgLabel.text = @"注册成功";
             
             if(self.apnsMsg != nil)
             {
                 [ACM handleApnsMessage:self.apnsMsg];
                 
-                [self showAlert: @"倒入push msg"];
+                //[self showAlert: @"倒入push msg"];
+                self.remoteMsgLabel.text = @"导入push msg";
             }
             [self saveUser:self.userIdTextField.text];
             self.userIdTextField.enabled = false;
@@ -300,12 +311,15 @@
         return;
     }
     
+    NSArray *peersList = [self.remoteUserIdTextField.text componentsSeparatedByString:@";"];
+    self.outComeCall = [ACM ringGroupAudioCall:peersList ircmCallback:self];
+    /*
     NSString *remoteUid = self.remoteUserIdTextField.text;
     self.outComeCall = [ACM ringAudioCall:remoteUid ircmCallback:self];
-
+    */
    
     self.callPanel.hidden = false;
-    self.remoteUserIdLabel.text = remoteUid;
+    self.remoteUserIdLabel.text = self.remoteUserIdTextField.text;
     
 }
 
@@ -463,13 +477,17 @@
 #pragma mark - IACMCallBack
 - (void)connectionStateChanged:(AgoraRtmConnectionState)state reason:(AgoraRtmConnectionChangeReason)reason{
     
-    NSString *message = [NSString stringWithFormat:@"connection state changed: %ld", state];
+    NSString *message = [NSString stringWithFormat:@"demo connection state changed: %ld", state];
     NSLog(@"%@",message);
     
     if(state == AgoraRtmConnectionStateAborted)
     {
         [self showAlert:@"该账号在其他设备登录，您已下线!"];
         self.regBtn.enabled = true;
+        self.userIdTextField.enabled = true;
+    }
+    else if(state ==  AgoraRtmConnectionStateReconnecting){
+        [self showAlert:@"断线重连中"];
     }
     
 }
@@ -514,6 +532,14 @@
     self.answerPanel.hidden = true;
 }
 
+- (void) debugInfo:(nonnull NSString *) debugInfo{
+    
+    dispatch_async(dispatch_get_main_queue(),^{
+        self.remoteMsgLabel.text = debugInfo;
+    });
+    
+}
+
 
 - (void)onRemoteLeaveCall:(NSString * _Nonnull)channel fromPeer:(NSString * _Nonnull)peerId{
    
@@ -524,6 +550,14 @@
 }
 
 #pragma mark - IRTCCallBack
+
+- (void)onlineMemberUpdated:(NSArray *_Nonnull) onlineMemberList{
+    if(onlineMemberList != nil)
+    {
+        NSLog(@"频道在线人员:%@", onlineMemberList);
+        
+    }
+}
 
 // 拨号结果
 - (void)didPhoneDialResult:(AcmDialCode)dialCode{
@@ -584,7 +618,7 @@
 - (void)onRemoteText: (nonnull NSString *)text remoteAccount:(nonnull NSString *)remoteUid timeStamp:(NSTimeInterval)startTime msgStamp:(NSTimeInterval)msgTimestamp isFinished:(BOOL) finished
 {
     NSLog(@"ASR remote1. from:%@ Text:%@ timeStamp:%f msgTimeStamp:%f isFinished:%d", remoteUid,text,startTime,msgTimestamp, finished);
-    self.remoteMsgLabel.text = [NSString stringWithFormat:@"asrRmote: %@", text];
+    self.remoteMsgLabel.text = [NSString stringWithFormat:@"asr from %@: %@", remoteUid, text];
 }
 
 

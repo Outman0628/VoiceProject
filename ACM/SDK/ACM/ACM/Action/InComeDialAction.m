@@ -48,11 +48,17 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     }
     else if(eventData.type == EventBackendRequestAcceptDialSucceed)  // step 3 创建消息同步通道
     {
+        [self ReadyForOnPhone:eventData];
+    }
+    /*
+    else if(eventData.type == EventBackendRequestAcceptDialSucceed)  // step 3 创建消息同步通道
+    {
         [self JoinSyncChannel:eventData];
     }
     else if(eventData.type == EventJoinEventSyncChannelSucceed){    // step 4 回复拨号者，并进入通话状态
         [self ReadyForOnPhone:eventData];
     }
+     */
     else if(eventData.type == EventRejectAudioCall)
     {
         [self HandleRejectCall:eventData];
@@ -102,6 +108,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     }
 }
 
+/*
 - (void) JoinSyncChannel: (EventData ) eventData{
     AcmCall *call = eventData.param4;
     
@@ -130,6 +137,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
         }
     }
 }
+ */
 
 // 拨号过程中遇到问题结束拨号
 - (void) handleRtcError: (EventData) eventData{
@@ -427,6 +435,8 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     }
      */
     
+    
+    /*
     AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
     
     // step 1 进入事件频道
@@ -454,6 +464,17 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
             
             [call.callback didPhoneDialResult:AcmDialErrorJoinEventSyncChannel];
         }
+    }
+    */
+    
+    AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];    
+    [call broadcastRejectDial];
+    
+    [self quitIncomeDialingPhoneCall:call];
+    if(call != nil && call.callback != nil)
+    {
+        
+        [call.callback didPhoneDialResult:AcmSelfCancelDial];
     }
     
 }

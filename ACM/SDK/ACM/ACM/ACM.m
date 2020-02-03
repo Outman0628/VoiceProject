@@ -152,12 +152,12 @@ static ActionManager *actionMgr = nil;
  
 
 + (BOOL) handleApnsMessage:(nonnull NSDictionary *)message{
-    
+    [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"acm handleApnsMessage 1"]];
     BOOL ret = NO;
     if(actionMgr != nil)
     {
-        [ApnsMessageManager handleApnsMessage:message actionManager:actionMgr];
-        ret = YES;
+        ret = [ApnsMessageManager handleApnsMessage:message actionManager:actionMgr];
+       
     }
     
     return ret;

@@ -44,7 +44,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="接听用户ID" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="73W-es-xnI">
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="接听用户ID，多用户用 ; 号间隔" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="73W-es-xnI">
                                 <rect key="frame" x="124" y="305" width="238" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
@@ -206,14 +206,6 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GrN-a4-mNg">
-                                <rect key="frame" x="340" y="80" width="62" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="回复助手"/>
-                                <connections>
-                                    <action selector="answerAssistSetting:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Q4q-0h-Jbv"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qp4-4m-a0L">
                                 <rect key="frame" x="-1" y="74" width="413" height="45"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -226,17 +218,15 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="s92-zq-VZ7">
-                        <leftBarButtonItems>
-                            <barButtonItem title="回复助手" id="6xB-k0-kcq">
-                                <connections>
-                                    <segue destination="hs2-HK-ZVy" kind="show" id="wU7-Cs-q3p"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem title="Item" id="Plz-5w-5TM"/>
-                        </leftBarButtonItems>
+                        <barButtonItem key="leftBarButtonItem" title="回复助手" id="6xB-k0-kcq">
+                            <connections>
+                                <segue destination="hs2-HK-ZVy" kind="show" id="wU7-Cs-q3p"/>
+                            </connections>
+                        </barButtonItem>
                         <rightBarButtonItems>
                             <barButtonItem title="Item" id="zds-Ab-auj"/>
                             <barButtonItem title="Item" id="oX0-9T-XFW"/>
+                            <barButtonItem title="Item" id="Plz-5w-5TM"/>
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
@@ -504,6 +494,8 @@
                         <outlet property="AssistantItemView4" destination="shy-vZ-U94" id="4TO-FA-ZcE"/>
                         <outlet property="assSwitch" destination="S63-jd-lQU" id="i4V-qj-ngS"/>
                         <outlet property="auditButton" destination="wAt-Ou-lYM" id="Z0V-m7-Twt"/>
+                        <outlet property="rootView" destination="6pe-v1-VHz" id="9mU-C9-F42"/>
+                        <outlet property="settingButton" destination="IGG-KF-t8h" id="VbT-ja-zw3"/>
                         <outlet property="updateButton" destination="NKb-Vd-51l" id="reS-PH-dpB"/>
                     </connections>
                 </viewController>
