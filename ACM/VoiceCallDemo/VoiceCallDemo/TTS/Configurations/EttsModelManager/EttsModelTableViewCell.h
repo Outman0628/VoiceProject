@@ -7,8 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "BDS_EttsModelManagerInterface.h"
-#import "BDSTTSEventManager.h"
 
 typedef enum AudioModelStatus{
     AudioModelStatus_notReady = 0,
@@ -21,7 +19,7 @@ typedef enum AudioModelStatus{
 
 @class EttsModelViewController;
 @class EttsModelTableViewCell;
-@interface AudioModel : NSObject<EttsModelDownloaderDelegate>
+@interface AudioModel : NSObject
 @property(nonatomic,strong)NSString* modelName;
 @property(nonatomic,strong)NSString* modelSpeaker;
 @property(nonatomic,strong)NSString* modelTextDataPath;
@@ -33,7 +31,6 @@ typedef enum AudioModelStatus{
 @property(nonatomic,strong)NSString* modelID;
 @property(nonatomic,strong)NSString* modelDownloadHandle;
 @property(nonatomic)AudioModelStatus status;
-@property(nonatomic,strong)BDSTTSEventManager* modelManager;
 @property(nonatomic,weak)EttsModelViewController* delegate;
 -(void)actionButtonTapped;
 -(void)stopDownload;

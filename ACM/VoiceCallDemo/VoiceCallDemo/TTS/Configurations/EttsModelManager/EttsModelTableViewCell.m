@@ -7,7 +7,6 @@
 //
 
 #import "EttsModelTableViewCell.h"
-#import "EttsModelViewController.h"
 @implementation AudioModel
 
 -(instancetype)init{
@@ -20,41 +19,14 @@
 -(void)actionButtonTapped{
     switch (self.status) {
         case AudioModelStatus_notReady:
-        case AudioModelStatus_downloadError:
-        {
-            // start download
-            if(!self.modelManager){
-                self.modelManager = [BDSTTSEventManager createEventManagerWithName:(NSString*)BDS_ETTS_MODEL_MANAGER_NAME];
-            }
-            NSMutableDictionary* commandParams = [[NSMutableDictionary alloc] init];
-            [commandParams setObject:self forKey:BDS_ETTS_MODEL_MANAGER_CALLBACK_DELEGATE];
-            [commandParams setObject:self.modelID forKey:BDS_ETTS_MODEL_MANAGER_MODEL_ID];
-            [self.modelManager sendCommand:(NSString*)BDS_ETTS_MODEL_MANAGER_COMMAND_DOWNLOAD withParameters:commandParams];
-            self.status = AudioModelStatus_queing;
-            [self.modelUI backendUpdated];
-            break;
-        }
+
         case AudioModelStatus_queing:
             // do nothing, obscure status between sending download request and getting callback
             break;
         case AudioModelStatus_queued:
-        case AudioModelStatus_downloading:
-        {
-            // stop download
-            if(!self.modelManager){
-                self.modelManager = [BDSTTSEventManager createEventManagerWithName:(NSString*)BDS_ETTS_MODEL_MANAGER_NAME];
-            }
-            NSMutableDictionary* commandParams = [[NSMutableDictionary alloc] init];
-            [commandParams setObject:self.modelDownloadHandle forKey:BDS_ETTS_MODEL_MANAGER_MODEL_DOWNLOAD_HANDLE];
-            [self.modelManager sendCommand:(NSString*)BDS_ETTS_MODEL_MANAGER_COMMAND_DOWNLOAD_STOP withParameters:commandParams];
-            self.status = AudioModelStatus_notReady;
-            [self.modelUI backendUpdated];
-            break;
-        }
+
         case AudioModelStatus_usable:
             // load to offline engine
-            [self.delegate loadAudioModelWithName:self.modelName modelLanguage:self.modelLanguage modelTextData:self.modelTextDataPath modelSpeechData:self.modelSpeechDataPath];
-            break;
         default:
             break;
     }
@@ -64,12 +36,6 @@
     if(self.status == AudioModelStatus_queing){
         self.status = AudioModelStatus_notReady;    // should stop
     }
-    if(!self.modelManager){
-        self.modelManager = [BDSTTSEventManager createEventManagerWithName:(NSString*)BDS_ETTS_MODEL_MANAGER_NAME];
-    }
-    NSMutableDictionary* commandParams = [[NSMutableDictionary alloc] init];
-    [commandParams setObject:self.modelDownloadHandle forKey:BDS_ETTS_MODEL_MANAGER_MODEL_DOWNLOAD_HANDLE];
-    [self.modelManager sendCommand:(NSString*)BDS_ETTS_MODEL_MANAGER_COMMAND_DOWNLOAD_STOP withParameters:commandParams];
     self.status = AudioModelStatus_notReady;
 }
 
@@ -122,7 +88,6 @@
         self.status = AudioModelStatus_downloadError;
     }else{
         self.status = AudioModelStatus_usable;
-        [self.delegate modelDownloadSucceeded];
     }
     if(self.modelUI){
         [self.modelUI backendUpdated];
