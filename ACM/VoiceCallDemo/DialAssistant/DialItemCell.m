@@ -24,6 +24,14 @@
     [super setSelected:selected animated:animated];
     
     // Configure the view for the selected state
+
+    
+    
+}
+- (IBAction)checkDetail:(id)sender {
+    if(_delegate != nil){
+        [_delegate jumpToDetail];
+    }
 }
 
 @end

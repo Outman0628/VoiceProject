@@ -52,6 +52,10 @@
 		63C7B61A23EA96D900A374FF /* DAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C7B61923EA96D900A374FF /* DAViewController.m */; };
 		63C7B61D23EA9FBB00A374FF /* DialItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C7B61C23EA9FBB00A374FF /* DialItemCell.m */; };
 		63C7B62023EAB3CF00A374FF /* DAOperateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C7B61F23EAB3CF00A374FF /* DAOperateCell.m */; };
+		63C7B62323EABE5C00A374FF /* DAItemDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C7B62223EABE5C00A374FF /* DAItemDetailViewController.m */; };
+		63C7B62723EAD00500A374FF /* DAItemOperationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C7B62623EAD00500A374FF /* DAItemOperationCell.m */; };
+		63C7B62A23EAD03100A374FF /* DAItemDatetimeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C7B62923EAD03100A374FF /* DAItemDatetimeCell.m */; };
+		63C7B62D23EAD05400A374FF /* DAItemContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C7B62C23EAD05400A374FF /* DAItemContentCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -140,6 +144,14 @@
 		63C7B61C23EA9FBB00A374FF /* DialItemCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DialItemCell.m; sourceTree = "<group>"; };
 		63C7B61E23EAB3C100A374FF /* DAOperateCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DAOperateCell.h; sourceTree = "<group>"; };
 		63C7B61F23EAB3CF00A374FF /* DAOperateCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DAOperateCell.m; sourceTree = "<group>"; };
+		63C7B62123EABE5100A374FF /* DAItemDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DAItemDetailViewController.h; sourceTree = "<group>"; };
+		63C7B62223EABE5C00A374FF /* DAItemDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DAItemDetailViewController.m; sourceTree = "<group>"; };
+		63C7B62523EACFF900A374FF /* DAItemOperationCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DAItemOperationCell.h; sourceTree = "<group>"; };
+		63C7B62623EAD00500A374FF /* DAItemOperationCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DAItemOperationCell.m; sourceTree = "<group>"; };
+		63C7B62823EAD02700A374FF /* DAItemDatetimeCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DAItemDatetimeCell.h; sourceTree = "<group>"; };
+		63C7B62923EAD03100A374FF /* DAItemDatetimeCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DAItemDatetimeCell.m; sourceTree = "<group>"; };
+		63C7B62B23EAD04800A374FF /* DAItemContentCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DAItemContentCell.h; sourceTree = "<group>"; };
+		63C7B62C23EAD05400A374FF /* DAItemContentCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DAItemContentCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -341,6 +353,7 @@
 		63C7B61723EA960600A374FF /* DialAssistant */ = {
 			isa = PBXGroup;
 			children = (
+				63C7B62423EACFA400A374FF /* DAItem */,
 				63C7B61823EA96BF00A374FF /* DAViewController.h */,
 				63C7B61923EA96D900A374FF /* DAViewController.m */,
 				63C7B61B23EA9FAB00A374FF /* DialItemCell.h */,
@@ -349,6 +362,21 @@
 				63C7B61F23EAB3CF00A374FF /* DAOperateCell.m */,
 			);
 			path = DialAssistant;
+			sourceTree = "<group>";
+		};
+		63C7B62423EACFA400A374FF /* DAItem */ = {
+			isa = PBXGroup;
+			children = (
+				63C7B62123EABE5100A374FF /* DAItemDetailViewController.h */,
+				63C7B62223EABE5C00A374FF /* DAItemDetailViewController.m */,
+				63C7B62523EACFF900A374FF /* DAItemOperationCell.h */,
+				63C7B62623EAD00500A374FF /* DAItemOperationCell.m */,
+				63C7B62823EAD02700A374FF /* DAItemDatetimeCell.h */,
+				63C7B62923EAD03100A374FF /* DAItemDatetimeCell.m */,
+				63C7B62B23EAD04800A374FF /* DAItemContentCell.h */,
+				63C7B62C23EAD05400A374FF /* DAItemContentCell.m */,
+			);
+			path = DAItem;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -493,6 +521,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				63B356E023BE67A80034F54B /* ViewController.m in Sources */,
+				63C7B62D23EAD05400A374FF /* DAItemContentCell.m in Sources */,
 				63155EB923D80D92000762DA /* TTSConfigViewController.m in Sources */,
 				63155EBB23D80D92000762DA /* NavigationTableViewCell.m in Sources */,
 				63155EBD23D80D92000762DA /* SliderTableViewCell.m in Sources */,
@@ -505,9 +534,12 @@
 				63B356DD23BE67A80034F54B /* AppDelegate.m in Sources */,
 				630F77E923D5C98E0071DF9F /* AAViewController.m in Sources */,
 				63155EB823D80D92000762DA /* EttsModelTableViewCell.m in Sources */,
+				63C7B62323EABE5C00A374FF /* DAItemDetailViewController.m in Sources */,
 				63C7B61A23EA96D900A374FF /* DAViewController.m in Sources */,
 				63C7B61D23EA9FBB00A374FF /* DialItemCell.m in Sources */,
 				63C7B62023EAB3CF00A374FF /* DAOperateCell.m in Sources */,
+				63C7B62723EAD00500A374FF /* DAItemOperationCell.m in Sources */,
+				63C7B62A23EAD03100A374FF /* DAItemDatetimeCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

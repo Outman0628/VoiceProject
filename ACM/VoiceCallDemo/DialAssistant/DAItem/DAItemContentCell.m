@@ -1,5 +1,5 @@
 //
-//  DAOperateCell.m
+//  DAItemContentCell.m
 //  VoiceCallDemo
 //
 //  Created by David on 2020/2/5.
@@ -7,14 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "DAOperateCell.h"
+#import "DAItemContentCell.h"
 
-
-@interface DAOperateCell()
+@interface DAItemContentCell()
 
 @end
 
-@implementation DAOperateCell
+@implementation DAItemContentCell
+
 - (void)awakeFromNib {
     // Initialization code
     [super awakeFromNib];
@@ -23,15 +23,7 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
     
-    if(_delegate != nil){
-        [_delegate addNewDialTask];
-    }
+    // Configure the view for the selected state
 }
-- (IBAction)checkDetail:(id)sender {
-    if(_delegate != nil){
-        [_delegate addNewDialTask];
-    }
-}
-
 
 @end

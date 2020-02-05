@@ -10,7 +10,17 @@
 #define DialItemCell_h
 
 #import <UIKit/UIKit.h>
+
+@protocol DAItemCellDelegate <NSObject>
+
+-(void) jumpToDetail;
+
+@end
+
 @interface DialItemCell : UITableViewCell
+
+@property (nonatomic,weak) id<DAItemCellDelegate> delegate;
+
 @property (nonatomic, strong) IBOutlet UIButton *delBtn;
 @property (nonatomic, strong) IBOutlet UIButton *detailBtn;
 @property (nonatomic, strong) IBOutlet UIDatePicker *datePicker;

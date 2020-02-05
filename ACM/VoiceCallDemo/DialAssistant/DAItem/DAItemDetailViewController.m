@@ -1,5 +1,5 @@
 //
-//  DAViewController.m
+//  DAItemDetailViewController.m
 //  VoiceCallDemo
 //
 //  Created by David on 2020/2/5.
@@ -7,22 +7,21 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "DAViewController.h"
-#import "DialItemCell.h"
-#import "DAOperateCell.h"
-#import "DAItem/DAItemDetailViewController.h"
+#import "DAItemDetailViewController.h"
 
-enum DialSettingSectionCount{
-    SettingOperation = 0,
-    SettingItem,
-    SettingSectionCount,
+
+enum DialItemDetailCount{
+    ItemSettingOperation = 0,
+    ItemDatetime,
+    ItemContent,
+    ItemSettingSectionCount,
 };
 
-@interface DAViewController() <DAOperateCellDelegate, DAItemCellDelegate>
+@interface DAItemDetailViewController()
 
 @end
 
-@implementation DAViewController
+@implementation DAItemDetailViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -31,10 +30,10 @@ enum DialSettingSectionCount{
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     /*
-    if(self.selectionControllerSelectedIndexes != nil){
-        [self processMultiselectResult];
-    }
-    [self.tableView reloadData];
+     if(self.selectionControllerSelectedIndexes != nil){
+     [self processMultiselectResult];
+     }
+     [self.tableView reloadData];
      */
 }
 
@@ -46,17 +45,19 @@ enum DialSettingSectionCount{
 #pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
-    return SettingSectionCount;
+    return ItemSettingSectionCount;
     
     
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     switch (section) {
-        case SettingOperation:
+        case ItemSettingOperation:
             return 1;
-        case SettingItem:
-            return 2;
+        case ItemDatetime:
+            return 1;
+        case ItemContent:
+            return 3;
         default:
             break;
     }
@@ -68,11 +69,14 @@ enum DialSettingSectionCount{
     UILabel* l = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 35)];
     [l setBackgroundColor:[UIColor grayColor]];
     switch (section) {
-        case SettingOperation:
+        case ItemSettingOperation:
             [l setText:[[NSBundle mainBundle] localizedStringForKey:@"操作" value:@"" table:@"Localizable"]];
             break;
-        case SettingItem:
-            [l setText:[[NSBundle mainBundle] localizedStringForKey:@"拨打计划" value:@"" table:@"Localizable"]];
+        case ItemDatetime:
+            [l setText:[[NSBundle mainBundle] localizedStringForKey:@"时间" value:@"" table:@"Localizable"]];
+            break;
+        case ItemContent:
+            [l setText:[[NSBundle mainBundle] localizedStringForKey:@"机器人语音列表" value:@"" table:@"Localizable"]];
             break;
         default:
             break;
@@ -85,13 +89,23 @@ enum DialSettingSectionCount{
     return 35;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if(indexPath.section == ItemContent){
+        return 180;
+    }
+    return 40;
+}
+
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     switch(indexPath.section){
-        case SettingOperation:
-            return [tableView dequeueReusableCellWithIdentifier:@"Dial_Schedule_Operate_CELL" forIndexPath:indexPath];
-        case SettingItem:
-            return [self cellForDialItem:tableView IndexPath:indexPath];
-            
+        case ItemSettingOperation:
+            return [tableView dequeueReusableCellWithIdentifier:@"DA_Detail_OPERATE_CELL" forIndexPath:indexPath];
+        case ItemDatetime:
+            return [tableView dequeueReusableCellWithIdentifier:@"DA_DETAIL_DATE_CELL" forIndexPath:indexPath];
+        case ItemContent:
+            return [tableView dequeueReusableCellWithIdentifier:@"DA_VOICE_CONTENT_CELL" forIndexPath:indexPath];
         default:
             break;
     }
@@ -99,25 +113,13 @@ enum DialSettingSectionCount{
 }
 
 - (UITableViewCell*)cellForDialItem:(UITableView *)tableView IndexPath:(NSIndexPath *)indexPath{
-
+    
+    /*
     DialItemCell *cell = (DialItemCell *)[tableView dequeueReusableCellWithIdentifier:@"ASS_DIAL_ITEM" forIndexPath:indexPath];
-    cell.delegate = self;
+    
     return cell;
-}
-
-
-#pragma mark - DAOperateCellDelegate
--(void) addNewDialTask{
-    
-}
-
-#pragma mark - DAItemCellDelegate
--(void)jumpToDetail{
-    NSString * storyboardName = @"Main";
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle: nil];
-    DAItemDetailViewController * vc = (DAItemDetailViewController*)[storyboard instantiateViewControllerWithIdentifier:@"DA_ITEM_DETAIL_CONFIG"];
-    
-    [self.navigationController pushViewController:vc animated:YES];
+     */
+    return nil;
 }
 
 @end

@@ -10,7 +10,15 @@
 #define DAOperateCell_h
 
 #import <UIKit/UIKit.h>
+
+@protocol DAOperateCellDelegate <NSObject>
+
+-(void) addNewDialTask;
+
+@end
+
 @interface DAOperateCell : UITableViewCell
+@property (nonatomic,weak) id<DAOperateCellDelegate> delegate;
 @property (nonatomic, strong) IBOutlet UIButton *addDABtn;
 @end
 
