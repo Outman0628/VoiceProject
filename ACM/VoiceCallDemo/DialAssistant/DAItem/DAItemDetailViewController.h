@@ -8,9 +8,14 @@
 
 #ifndef DAItemDetailViewController_h
 #define DAItemDetailViewController_h
-#import <UIKit/UIKit.h>
 
-@interface DAItemDetailViewController : UITableViewController
+#import <UIKit/UIKit.h>
+#import <ACM/DialAssistant.h>
+#import "BasicViewController.h"
+
+//@interface DAItemDetailViewController : UITableViewController
+@interface DAItemDetailViewController : BasicViewController
+@property  DialAssistant* dialAss;
 @end
 
 #endif /* DAItemDetailViewController_h */

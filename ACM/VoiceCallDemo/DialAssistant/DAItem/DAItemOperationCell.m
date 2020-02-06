@@ -27,4 +27,33 @@
     // Configure the view for the selected state
 }
 
+- (IBAction)auditAss:(id)sender {
+    if(_delegate != nil)
+    {
+        [_delegate auditAss];
+    }
+}
+
+
+- (IBAction)updateAss:(id)sender {
+    if(_delegate != nil)
+    {
+        [_delegate updateAss];
+    }
+}
+
+- (IBAction)voiceSetting:(id)sender {
+    if(_delegate != nil)
+    {
+        [_delegate assVoiceSeting];
+    }
+}
+
+- (IBAction)newContent:(id)sender {
+    if(_delegate != nil)
+    {
+        [_delegate addContent];
+    }
+}
+
 @end

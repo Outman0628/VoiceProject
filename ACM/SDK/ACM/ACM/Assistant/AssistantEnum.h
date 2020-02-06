@@ -55,7 +55,7 @@ typedef NS_ENUM(NSInteger, AssistantCode) {
     AssistantErrorUdateSeverTTSfile = -7,
     
     /**
-     更新服务器机器人配置错误
+     更新语音助手机器人配置错误
      */
     AssistantErrorUdateSeverAssConfig = -8,
     

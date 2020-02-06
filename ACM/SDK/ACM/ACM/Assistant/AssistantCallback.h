@@ -27,12 +27,20 @@
 - (void)auditResult:(AssistantCode) code Error:(NSError * _Nullable) subCode;
 
 /**
- 试听结果
+ 更新接听助手结果回调
  
  @param code 试听结果，参见AssistantCode.
   @param subCode 出错项对应的具体错误
  */
 - (void)updateAnswerAssistantResult:(AssistantCode) code Error:(NSError * _Nullable) subCode;
+
+/**
+ 更新拨打助手结果回调
+ 
+ @param code 试听结果，参见AssistantCode.
+ @param subCode 出错项对应的具体错误
+ */
+- (void)updateDialAssistantResult:(AssistantCode) code Error:(NSError * _Nullable) subCode;
 
 
 @end

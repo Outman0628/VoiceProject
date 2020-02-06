@@ -123,7 +123,7 @@ __strong static NSString* currentOfflineChineseModelName;
         case SelectionControllerSelectProperty_ONLINE_SPEAKER:
         {
             if(selected.count > 0){
-                self.answerAss.config.curSpeakerIndex = ((NSNumber *)[selected objectAtIndex:0]).integerValue;
+                self.config.curSpeakerIndex = ((NSNumber *)[selected objectAtIndex:0]).integerValue;
             }
 
             break;
@@ -206,7 +206,7 @@ __strong static NSString* currentOfflineChineseModelName;
             SliderTableViewCell* cell = (SliderTableViewCell*)[tableView dequeueReusableCellWithIdentifier:@"SLIDER_CELL" forIndexPath:path];
             cell.PROPERTY_ID = EDIT_PROPERTY_ID_VOLUME;
             
-            NSInteger currentValue = self.answerAss.config.speechVolume;
+            NSInteger currentValue = self.config.speechVolume;
             
             [cell.valueSlider setMaximumValue:15.0];
             [cell.valueSlider setMinimumValue:0.0];
@@ -223,7 +223,7 @@ __strong static NSString* currentOfflineChineseModelName;
             SliderTableViewCell* cell = (SliderTableViewCell*)[tableView dequeueReusableCellWithIdentifier:@"SLIDER_CELL" forIndexPath:path];
             cell.PROPERTY_ID = EDIT_PROPERTY_ID_SPEED;
 
-            NSInteger currentValue = self.answerAss.config.speechSpeed;
+            NSInteger currentValue = self.config.speechSpeed;
             
             [cell.valueSlider setMaximumValue:9.0];
             [cell.valueSlider setMinimumValue:0.0];
@@ -240,7 +240,7 @@ __strong static NSString* currentOfflineChineseModelName;
             SliderTableViewCell* cell = (SliderTableViewCell*)[tableView dequeueReusableCellWithIdentifier:@"SLIDER_CELL" forIndexPath:path];
             cell.PROPERTY_ID = EDIT_PROPERTY_ID_PITCH;
             
-            NSInteger currentValue = self.answerAss.config.speechPich;
+            NSInteger currentValue = self.config.speechPich;
             
             [cell.valueSlider setMaximumValue:9.0];
             [cell.valueSlider setMinimumValue:0.0];
@@ -279,7 +279,7 @@ __strong static NSString* currentOfflineChineseModelName;
             /**
             [cell.currentValueLabel setText:[self onlineSpeakerDescriptionFromID:[[[BDSSpeechSynthesizer sharedInstance] getSynthParamforKey:BDS_SYNTHESIZER_PARAM_SPEAKER withError:nil] integerValue]]];
              */
-            NSString *player = [self onlineSpeakerDescriptionFromID:self.answerAss.config.curSpeakerIndex];
+            NSString *player = [self onlineSpeakerDescriptionFromID:self.config.curSpeakerIndex];
             [cell.currentValueLabel setText:player];
             return cell;
         }
@@ -412,7 +412,7 @@ __strong static NSString* currentOfflineChineseModelName;
                     vc.isMultiSelect = NO;
                     vc.allowNoneSelected = NO;
                     
-                    NSInteger currentSpeaker = self.answerAss.config.curSpeakerIndex;
+                    NSInteger currentSpeaker = self.config.curSpeakerIndex;
                     NSMutableArray* availableItems = [[NSMutableArray alloc] init];
                     for (NSInteger i = 0; i < [Assistant getCandidates].count; i++) {
                         [availableItems addObject:[self onlineSpeakerDescriptionFromID:i]];
@@ -474,13 +474,13 @@ __strong static NSString* currentOfflineChineseModelName;
 -(void)sliderValueChanged:(float)newValue forProperty:(NSString*)propertyID fromSlider:(SliderTableViewCell*)src{
     if([EDIT_PROPERTY_ID_VOLUME isEqualToString:propertyID]){
         
-        self.answerAss.config.speechVolume = newValue;
+        self.config.speechVolume = newValue;
     }
     else if([EDIT_PROPERTY_ID_SPEED isEqualToString:propertyID]){
-        self.answerAss.config.speechSpeed = newValue;
+        self.config.speechSpeed = newValue;
     }
     else if([EDIT_PROPERTY_ID_PITCH isEqualToString:propertyID]){
-        self.answerAss.config.speechPich = newValue;
+        self.config.speechPich = newValue;
     }
 }
 #pragma mark - InputTableViewCellDelegate

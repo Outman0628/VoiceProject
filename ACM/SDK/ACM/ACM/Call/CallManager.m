@@ -169,13 +169,11 @@
  */
 -(void)getBackendRecentActiveCall:(NSString *_Nonnull)uid Block:(void(^_Nullable)(NSArray *_Nullable activeCallList))block{
     
-    [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"getBackendRecentActiveCall 1" ]];
-    
     if(uid == nil){
         if(block != nil){
             block(nil);
         }
-         [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"getBackendRecentActiveCall 2" ]];
+  
         return;
     }
     
@@ -191,10 +189,7 @@
     NSData *data = [NSJSONSerialization dataWithJSONObject:phoneCallParam options:NSJSONWritingPrettyPrinted error:&error];
     NSString *param = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
     
-     [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"getBackendRecentActiveCall 3" ]];
     [HttpUtil HttpPost:stringUrl Param:param Callback:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        
-         [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"getBackendRecentActiveCall 4" ]];
         
         if([(NSHTTPURLResponse *)response statusCode] == 200){
             NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -205,13 +200,11 @@
             
             if(ret == YES)
             {
-                 [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"getBackendRecentActiveCall 5" ]];
                 
                 NSMutableArray *activeCalls = [NSMutableArray array];
                 NSArray *data = dic[@"data"];
                 
                 if(data != nil && data.count > 0){
-                     [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"getBackendRecentActiveCall 6" ]];
                     for(int i = 0; i < data.count; i++){
                         @try{
                             AcmCall *instance = [[AcmCall alloc]init];
@@ -232,7 +225,6 @@
                             // 如果是拨号者，放弃通话
                             if([instance.callerId isEqualToString:[ActionManager instance].userId])
                             {
-                                 [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"getBackendRecentActiveCall 7" ]];
                                 continue;
                             }
                             
@@ -243,7 +235,6 @@
                             
                             [activeCalls addObject:instance];
                         } @catch (NSException *exc){
-                             [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"getBackendRecentActiveCall 8" ]];
                             continue;
                         }
                     }
@@ -254,7 +245,6 @@
                         });
                     }
                 }else{
-                     [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"getBackendRecentActiveCall 9" ]];
                     if(block != nil){
                         block(nil);
                     }
@@ -262,14 +252,12 @@
             }
             else
             {
-                 [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"getBackendRecentActiveCall 10" ]];
                 if(block != nil){
                     block(nil);
                 }
             }
         }
         else{
-            [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"%@", error ]];
             if(block != nil){
                 block(nil);
             }
@@ -279,8 +267,6 @@
 
 -(void) ValidateIncomeCall: (NSString *_Nonnull)channelId IsApnsCall:(BOOL) isApnsCall{
     
-    [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"validate phone call:%@", isApnsCall ? @"apns" : @"rtm" ]];
-    
     if([self IsValidatedCall:channelId] == YES){
         if(isApnsCall){
             NSLog(@"Drop phone call:%@ from APNS as same call already exist!", channelId);
@@ -289,19 +275,16 @@
             NSLog(@"Drop phone call:%@ from RTM as same call already exist!", channelId);
         }
         
-        [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"already validated call:%@", isApnsCall ? @"apns" : @"rtm" ]];
         return;
     }
     
     
     [self.validateCallList addObject:channelId];
     
-    [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"try to get backend active call:%@", isApnsCall ? @"apns" : @"rtm" ]];
     
     [self  getBackendRecentActiveCall:[ActionManager instance].userId Block:^(NSArray * _Nullable activeCallList) {
         //[[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"got backend active call response" ]];
         if(activeCallList != nil){
-            [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"got active call list:%ld  for:%@", activeCallList.count, isApnsCall ? @"apns" : @"rtm" ]];
             for(int i = 0; i < activeCallList.count; i ++){
                 AcmCall *itemCall = activeCallList[i];
                 if([channelId isEqualToString:itemCall.channelId]){
@@ -319,7 +302,6 @@
                     
                     // 加入eventChannel
                     [itemCall joinEventSyncChannel:^(AgoraRtmJoinChannelErrorCode errorCode) {
-                        [[ActionManager instance].icmCallBack debugInfo:[NSString stringWithFormat:@"join event sync channel:%ld for:%@", errorCode,isApnsCall ? @"apns" : @"rtm"]];
                         if(errorCode != AgoraRtmJoinChannelErrorOk && errorCode != AgoraRtmJoinChannelErrorAlreadyJoined){
                             NSLog(@"ACC error: failed to joinEventSyncChannel:%ld",errorCode );
                             [itemCall updateStage:Finished];

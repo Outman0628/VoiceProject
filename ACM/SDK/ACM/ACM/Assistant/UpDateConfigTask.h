@@ -14,7 +14,12 @@
 @interface UpDateConfigTask : NSObject
 
 
--(BOOL )updateConfig: (NSMutableArray *_Nonnull) contents  Config:(VoiceConfig *)config completionBlock: (AssistantBlock _Nullable )completionHandler;
+//-(BOOL )updateConfig: (NSMutableArray *_Nonnull) contents  Config:(VoiceConfig *)config completionBlock: (AssistantBlock _Nullable )completionHandler;
+
+
+-(BOOL )updateAnswerAssistantConfig: (AnswerAssistant *_Nonnull) AAss  completionBlock: (AssistantBlock _Nullable )completionHandler;
+
+-(BOOL )updateDialAssistantConfig: (DialAssistant *_Nonnull) DAss  completionBlock: (AssistantBlock _Nullable )completionHandler;
 
 @end
 

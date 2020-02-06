@@ -11,13 +11,16 @@
 #import "AssistantItem.h"
 #import "../Action/ActionManager.h"
 #import "TtsFileManager.h"
+#import "AnswerAssistant.h"
+#import "DialAssistant.h"
+#import "../Message/HttpUtil.h"
 
 
 
 @interface  UpDateConfigTask()
 @property NSMutableArray* updateItems;
-@property AssistantBlock callBack;
-@property NSMutableArray *updatedContents;   // 上传完成后对象
+//@property AssistantBlock callBack;
+   @property NSMutableArray *updatedContents;   // 上传完成后对象
 @property VoiceConfig *voiceConfig;
 @end
 
@@ -28,6 +31,7 @@ static NSString *UpdateAnswerAssistantApi = @"/dapi/account/reject-tone";
 
 #define HTTP_CONTENT_BOUNDARY @"WANPUSH"
 
+/*
 -(BOOL )updateConfig: (NSMutableArray *_Nonnull) contents Config:(VoiceConfig *)config completionBlock: (AssistantBlock _Nullable )completionHandler{
     
     _voiceConfig = config;
@@ -51,7 +55,94 @@ static NSString *UpdateAnswerAssistantApi = @"/dapi/account/reject-tone";
     
     return NO;
 }
+ */
 
+-(BOOL )updateAnswerAssistantConfig: (AnswerAssistant *_Nonnull) AAss  completionBlock: (AssistantBlock _Nullable )completionHandler{
+    _voiceConfig = AAss.config;
+    if(_updateItems == nil && AAss.contents != nil && AAss.contents.count > 0)
+    {
+        _updateItems = [NSMutableArray array];
+        _updatedContents = [NSMutableArray array];
+        
+        for(int i = 0; i < AAss.contents.count; i++)
+        {
+            AssistanItem *item = [AAss.contents[i] clone];
+            [_updateItems addObject:item];
+            
+        }
+        
+        [self UploadAssFiles:^(AssistantCode code, NSError * _Nullable subCode) {
+            if(code == AssistantOK){
+                [self SetAnswerAssistantConfig:AAss completionBlock:completionHandler];
+            }else{
+                if(completionHandler != nil){
+                    completionHandler(code, subCode);
+                }
+            }
+        }];
+        return YES;
+    }
+    return NO;
+}
+
+-(BOOL )updateDialAssistantConfig: (DialAssistant *_Nonnull) DAss  completionBlock: (AssistantBlock _Nullable )completionHandler{
+    _voiceConfig = DAss.config;
+    if(_updateItems == nil && DAss.contents != nil && DAss.contents.count > 0)
+    {
+        _updateItems = [NSMutableArray array];
+        _updatedContents = [NSMutableArray array];
+        
+        for(int i = 0; i < DAss.contents.count; i++)
+        {
+            AssistanItem *item = [DAss.contents[i] clone];
+            [_updateItems addObject:item];
+            
+        }
+        
+        [self UploadAssFiles:^(AssistantCode code, NSError * _Nullable subCode) {
+            if(code == AssistantOK){
+                [self SetDialAssistantConfig:DAss completionBlock:completionHandler];
+            }else{
+                if(completionHandler != nil){
+                    completionHandler(code, subCode);
+                }
+            }
+        }];
+        return YES;
+    }
+    return NO;
+}
+
+-(void)UploadAssFiles: (AssistantBlock _Nullable )completionHandler{
+    if(_updateItems.count > 0)
+    {
+        AssistanItem *item = _updateItems[0];
+        [_updateItems removeObject:item];
+        
+        ActionManager *actionMgr = [ActionManager instance];
+        if(actionMgr == nil || actionMgr.userId == nil)
+        {
+            completionHandler(AssistantNotInited, nil);
+           
+        }
+        else{
+            NSString *filePath = nil;
+            [TtsFileManager generateFileName:item.content fullName:&filePath Config:_voiceConfig];
+            
+            
+            NSString *stringUrl = [NSString stringWithFormat:@"%@%@",actionMgr.host, FileUploadApi];
+            //[self httpUploadFile:stringUrl FilePath:filePath DataType:@"multipart/form-data"];
+            [self httpUploadFile:stringUrl FilePath:filePath DataType:@"audio/mpeg" AssistantItem:item CallBack:completionHandler];
+            
+        }
+    }
+    else{
+        //  上传完成，更新配置
+        completionHandler(AssistantOK, nil);
+    }
+}
+
+/*
 -(void)UploadFiles{
     if(_updateItems.count > 0)
     {
@@ -82,7 +173,9 @@ static NSString *UpdateAnswerAssistantApi = @"/dapi/account/reject-tone";
         [self UpdateAnswerAssistantConfig];
     }
 }
+ */
 
+/*
 -(void)uploadFailed:(NSError *)error{
     
     [_updateItems removeAllObjects];
@@ -95,29 +188,10 @@ static NSString *UpdateAnswerAssistantApi = @"/dapi/account/reject-tone";
     }
                    
 }
+ */
 
--(void)configFailed:(NSError *)error{
-    
-    [_updateItems removeAllObjects];
-    
-    if(self.callBack != nil)
-    {
-        dispatch_async(dispatch_get_main_queue(),^{
-            self.callBack(AssistantErrorUdateSeverAssConfig, error);
-        });
-    }
-}
 
--(void)configDone{
-    
-    if(self.callBack != nil)
-    {
-        dispatch_async(dispatch_get_main_queue(),^{
-            self.callBack(AssistantOK, nil);});
-    }
-}
-
--(void)httpUploadFile:(NSString*)strUrl FilePath:(NSString*)filePath  DataType:(NSString*)dataType AssistantItem:(AssistanItem *)item{
+-(void)httpUploadFile:(NSString*)strUrl FilePath:(NSString*)filePath  DataType:(NSString*)dataType AssistantItem:(AssistanItem *)item CallBack: (AssistantBlock _Nullable )completionHandler{
    
     NSURL* url = [NSURL URLWithString:strUrl];
     NSString* fileName = [filePath lastPathComponent];
@@ -164,34 +238,155 @@ static NSString *UpdateAnswerAssistantApi = @"/dapi/account/reject-tone";
                         NSMutableDictionary *updatedContentItem = [[NSMutableDictionary alloc] initWithObjects:@[fileName, [NSNumber numberWithInteger:item.interval], item.content, configDic] forKeys:@[@"url", @"before_second", @"Content", @"voiceConfig"]];
                         
                         [self.updatedContents addObject:updatedContentItem];
-                        [self UploadFiles];
+                        //[self UploadFiles];
+                        [self UploadAssFiles:completionHandler];
                         
                     }else{
                         NSLog(@"TTS error update tts file to server failed!");
-                        [self uploadFailed:error];
+                        dispatch_async(dispatch_get_main_queue(),^{
+                            completionHandler(AssistantErrorUdateSeverTTSfile, error);
+                        });
                     }
                     
                 }else{
                     NSLog(@"TTS error update tts file to server failed!");
-                    [self uploadFailed:error];
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        completionHandler(AssistantErrorUdateSeverTTSfile, error);
+                    });
                 }
                 
             } else {
                 
                 NSLog(@"TTS error update tts file to server failed!");
-                [self uploadFailed:error];
+                dispatch_async(dispatch_get_main_queue(),^{
+                    completionHandler(AssistantErrorUdateSeverTTSfile, error);
+                });
             }
         }
         else{
             NSLog(@"TTS error server error!");
-            [self uploadFailed:error];
+            
+            dispatch_async(dispatch_get_main_queue(),^{
+                completionHandler(AssistantErrorUdateSeverTTSfile, error);
+            });
         }
     }];
     [dataTask resume];
 }
 
+- (void) SetAnswerAssistantConfig: (AnswerAssistant *_Nonnull) AAss  completionBlock: (AssistantBlock _Nullable )completionHandler {
+    NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, UpdateAnswerAssistantApi];
+    
+    NSMutableDictionary *config = [[NSMutableDictionary alloc] initWithObjects:@[[ActionManager instance].userId, _updatedContents] forKeys:@[@"uid", @"tone_list"]];
+    
+    NSError *error;
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:config options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    
+    NSURL *url = [NSURL URLWithString:stringUrl];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    
+    request.timeoutInterval = 5.0;
+    
+    request.HTTPMethod = @"POST";
+    
+    NSString *bodyString = jsonStr; //带一个参数key传给服务器
+    
+    request.HTTPBody = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    
+    [[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSInteger code = [(NSHTTPURLResponse *)response statusCode];
+        NSLog(@"response code:%ldd", (long)code);
+        if([(NSHTTPURLResponse *)response statusCode] == 200){
+            NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSData *jsonData = [str dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+            
+            BOOL ret = dic[@"success"];
+            
+            
+            if(ret == YES)
+            {
+                if(completionHandler != nil)
+                {
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        completionHandler(AssistantOK, nil);});
+                }
+            }
+            else
+            {
+                if(completionHandler != nil)
+                {
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        completionHandler(AssistantErrorUdateSeverAssConfig, nil);});
+                }
+            }
+        }
+        else{
+          
+            if(completionHandler != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(),^{
+                    completionHandler(AssistantErrorUdateSeverAssConfig, error);});
+            }
+        }
+    }] resume];
+}
 
-- (void) UpdateAnswerAssistantConfig{
+- (void) SetDialAssistantConfig: (DialAssistant *_Nonnull) DAss  completionBlock: (AssistantBlock _Nullable )completionHandler {
+    NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, UpdateDialTaskApi];
+    
+    NSMutableDictionary *config = [[NSMutableDictionary alloc] initWithObjects:@[ DAss.assId, [ActionManager instance].userId, DAss.subscribers, [NSString stringWithFormat:@"%@", DAss.dialDateTime], _updatedContents] forKeys:@[@"id", @"src_uid", @"dst_uid", @"call_time", @"tone_list"]];
+    
+    NSError *error;
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:config options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *param = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    
+    [HttpUtil HttpPost:stringUrl Param:param Callback:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+
+        if([(NSHTTPURLResponse *)response statusCode] == 200){
+            NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSData *jsonData = [str dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+            
+            BOOL ret = dic[@"success"];
+            
+            
+            if(ret == YES)
+            {
+                if(completionHandler != nil)
+                {
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        completionHandler(AssistantOK, nil);});
+                }
+            }
+            else
+            {
+                if(completionHandler != nil)
+                {
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        completionHandler(AssistantErrorUdateSeverAssConfig, nil);});
+                }
+            }
+        }
+        else{
+            
+            if(completionHandler != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(),^{
+                    completionHandler(AssistantErrorUdateSeverAssConfig, error);});
+            }
+        }
+    }];
+}
+
+/*
+- (void) UpdateAnswerAssistantConfig {
     NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, UpdateAnswerAssistantApi];
     
     NSMutableDictionary *config = [[NSMutableDictionary alloc] initWithObjects:@[[ActionManager instance].userId, _updatedContents] forKeys:@[@"uid", @"tone_list"]];
@@ -241,5 +436,6 @@ static NSString *UpdateAnswerAssistantApi = @"/dapi/account/reject-tone";
         }
     }] resume];
 }
+ */
 
 @end

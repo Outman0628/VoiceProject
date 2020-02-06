@@ -9,8 +9,21 @@
 #ifndef DAItemOperationCell_h
 #define DAItemOperationCell_h
 
+@protocol DAItemOperationDelegate <NSObject>
+
+-(void) auditAss;
+
+-(void) updateAss;
+
+-(void) assVoiceSeting;
+
+-(void) addContent;
+
+@end
+
 #import <UIKit/UIKit.h>
 @interface DAItemOperationCell : UITableViewCell
+@property (nonatomic,weak) id<DAItemOperationDelegate> delegate;
 @property (nonatomic, strong) IBOutlet UIButton *auditBtn;
 @property (nonatomic, strong) IBOutlet UIButton *updateBtn;
 @property (nonatomic, strong) IBOutlet UIButton *settingBtn;

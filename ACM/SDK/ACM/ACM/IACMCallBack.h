@@ -50,7 +50,7 @@
  */
 - (void)onCallEnd:(nonnull Call *)call endCode:(AcmMsgType)dialCode;
 
-- (void) debugInfo:(nonnull NSString *) debugInfo;
+//- (void) debugInfo:(nonnull NSString *) debugInfo;
 
 @end
 

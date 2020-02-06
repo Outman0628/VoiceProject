@@ -18,6 +18,7 @@
 #import "UpDateConfigTask.h"
 #import "../Message/HttpUtil.h"
 #import "../Action/ActionManager.h"
+#import "DialAssistant.h"
 
 @interface VoiceConfig ()
 
@@ -115,6 +116,44 @@ static Assistant *instance = nil;
     if(instance != nil)
     {
         [instance cancelAuditAnswerAssistant:answerAssistant];
+    }
+}
+
+
++(void)getDialAsistant:(DialAssistantBlock _Nonnull ) block{
+    
+}
+
++(void)updateDialAssistantParam:(nonnull DialAssistant*) dialAssistant  CallBack:(id <AssistantCallBack> _Nullable)delegate{
+    [Assistant createInstanceIfNeeded];
+    
+    if(instance != nil)
+    {
+        [instance updateDialAssistant:dialAssistant CallBack:delegate];
+    }
+    else
+    {
+        if(delegate != nil)
+        {
+            [delegate updateDialAssistantResult:AssistantNotInited Error:nil];
+        }
+    }
+}
+
+
++(void)auditionDialAssistant:(nonnull DialAssistant*) dialAssistant  CallBack:(id <AssistantCallBack> _Nullable)delegate{
+    [Assistant createInstanceIfNeeded];
+    
+    if(instance != nil)
+    {
+        [instance auditDialAssistant:dialAssistant CallBack:delegate];
+    }
+    else
+    {
+        if(delegate != nil)
+        {
+            [delegate auditResult:AssistantNotInited Error:nil];
+        }
     }
 }
 
@@ -347,7 +386,7 @@ static Assistant *instance = nil;
                 if(code == AssistantOK){
                     // 获取语音文件成功，继续更新服务器配置
                      NSLog(@"TTS tts files are prepared, is going to update server config");
-                    [self updateServerSetting:answerAssistant completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
+                    [self updateAAssServerSetting:answerAssistant completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
                         if(delegate != nil)
                         {
                             [delegate updateAnswerAssistantResult:code Error:subCode];
@@ -381,9 +420,73 @@ static Assistant *instance = nil;
     }
 }
 
--(void)updateServerSetting:(nonnull AnswerAssistant*) answerAssistant completionBlock: (AssistantBlock _Nullable )completionHandler{
+// 更新拨打计划
+-(void)updateDialAssistant:(nonnull DialAssistant*) dialAssistant CallBack:(id <AssistantCallBack> _Nullable)delegate{
+    
+    if(self.isWorking)
+    {
+        if(delegate != nil){
+            [delegate updateDialAssistantResult:AssistantSettingBusy Error:nil];
+        }
+        
+        return;
+    }
+    
+    if([self checkDialAssistantParam:dialAssistant])
+    {
+        DialAssistant *updateAss = [dialAssistant copy];
+        
+        if( updateAss.contents != nil && updateAss.contents.count > 0)
+        {
+            self.isWorking = YES;
+            [_ttsMgr updateTTSConfig:dialAssistant.config];
+            [_ttsFileMgr prepareVoiceFiles:updateAss.contents ttsManager:_ttsMgr Config:dialAssistant.config completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
+                
+                if(code == AssistantOK){
+                    // 获取语音文件成功，继续更新服务器配置
+                    NSLog(@"TTS tts files are prepared, is going to update server config");
+                    [self updateDAssServerSetting:dialAssistant completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
+                        if(delegate != nil)
+                        {
+                            [delegate updateDialAssistantResult:code Error:subCode];
+                        }
+                        self.isWorking = NO;
+                        self.updateConfigTask = nil;
+                    }];
+                }
+                else
+                {
+                    self.isWorking = NO;
+                    if(delegate != nil){
+                        [delegate updateDialAssistantResult:code Error:subCode];
+                    }
+                }
+                
+            }];
+        }
+        else
+        {
+            [self disableAnswerAssistant:self.answerAss completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
+                
+            }];
+        }
+    }
+    else
+    {
+        if(delegate != nil){
+            [delegate updateDialAssistantResult:AssistantErrorParam Error:nil];
+        }
+    }
+}
+
+-(void)updateAAssServerSetting:(nonnull AnswerAssistant*) answerAssistant completionBlock: (AssistantBlock _Nullable )completionHandler{
     _updateConfigTask = [[UpDateConfigTask alloc] init];
-    [_updateConfigTask updateConfig:answerAssistant.contents Config:answerAssistant.config completionBlock:completionHandler];
+    [_updateConfigTask updateAnswerAssistantConfig:answerAssistant completionBlock:completionHandler];
+}
+
+-(void)updateDAssServerSetting:(nonnull DialAssistant*) dialAssistant completionBlock: (AssistantBlock _Nullable )completionHandler{
+    _updateConfigTask = [[UpDateConfigTask alloc] init];
+    [_updateConfigTask updateDialAssistantConfig:dialAssistant completionBlock:completionHandler];
 }
 
 // 试听
@@ -410,13 +513,7 @@ static Assistant *instance = nil;
                 if(code == AssistantOK){
                     // 获取语音文件成功，继续更新服务器配置
                     NSLog(@"TTS tts files are prepared, is going to play them");
-                    [self auditAnswerAssistantFiles:answerAssistant completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
-/*
-                        if(completionHandler != nil)
-                        {
-                            completionHandler(code, subCode);
-                        }
-*/
+                    [self auditAssistantFiles:answerAssistant.contents VoiceSetting:answerAssistant.config completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
                         if(delegate != nil)
                         {
                             [delegate auditResult:code Error:subCode];
@@ -446,9 +543,70 @@ static Assistant *instance = nil;
     }
 }
 
+// 试听
+-(void)auditDialAssistant:(nonnull DialAssistant*) dialAssistant CallBack:(id <AssistantCallBack> _Nullable)delegate{
+    
+    if(self.isWorking)
+    {
+        if(delegate != nil){
+            [delegate auditResult:AssistantSettingBusy Error:nil];
+        }
+        
+        return;
+    }
+    
+    if([self checkDialAssistantParam:dialAssistant])
+    {
+        DialAssistant *updateDAss = [dialAssistant copy];
+        
+        if( updateDAss.contents != nil && updateDAss.contents.count > 0)
+        {
+            self.isWorking = YES;
+            [_ttsMgr updateTTSConfig:dialAssistant.config];
+            [_ttsFileMgr prepareVoiceFiles:dialAssistant.contents ttsManager:_ttsMgr Config:dialAssistant.config completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
+                if(code == AssistantOK){
+                    // 获取语音文件成功，继续更新服务器配置
+                    NSLog(@"TTS tts files are prepared, is going to play them");
+                    [self auditAssistantFiles:dialAssistant.contents VoiceSetting:dialAssistant.config completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
+                        if(delegate != nil)
+                        {
+                            [delegate auditResult:code Error:subCode];
+                        }
+                        self.isWorking = NO;
+                        self.auditTask = nil;
+                    }];
+                }
+                else
+                {
+                    self.isWorking = NO;
+                    if(delegate != nil)
+                    {
+                        [delegate auditResult:code Error:subCode];
+                    }
+                }
+                
+            }];
+        }
+    }
+    else
+    {
+        if(delegate != nil)
+        {
+            [delegate auditResult:AssistantErrorParam Error:nil];
+        }
+    }
+}
+
+/*
 -(void)auditAnswerAssistantFiles:(nonnull AnswerAssistant*) answerAssistant completionBlock: (AssistantBlock _Nullable )completionHandler{
     _auditTask = [[AuditTask alloc]init];
     [_auditTask audit:answerAssistant.contents  Config:answerAssistant.config completionBlock:completionHandler];
+}
+ */
+
+-(void)auditAssistantFiles:(nonnull NSMutableArray*) contents VoiceSetting:(VoiceConfig *) config completionBlock: (AssistantBlock _Nullable )completionHandler{
+    _auditTask = [[AuditTask alloc]init];
+    [_auditTask audit:contents  Config:config completionBlock:completionHandler];
 }
 
 // 取消试听
@@ -475,6 +633,48 @@ static Assistant *instance = nil;
     }
     if(ass.config.curSpeakerIndex < 0 || ass.config.curSpeakerIndex >= self.speakerCadidates.count)
     {
+        return false;
+    }
+    
+    // contents 必须是 AssistanItem 类型
+    if(ass.contents != nil)
+    {
+        for (int i=0; i<[ass.contents count]; i++) {
+            NSObject *item = ass.contents[i];
+            
+            if(![item isMemberOfClass:[AssistanItem class]])
+            {
+                return false;
+            }
+            
+        }
+    }
+    
+    return true;
+}
+
+-(BOOL)checkDialAssistantParam:(nonnull DialAssistant *)ass
+{
+    if(ass == nil)
+        return false;
+    
+    if(ass.config.speechVolume > 15 || ass.config.speechVolume < 0 ){
+        return false;
+    }
+    if(ass.config.speechSpeed > 9 || ass.config.speechSpeed < 0){
+        return false;
+    }
+    
+    if(ass.config.speechPich > 9 || ass.config.speechPich < 0)
+    {
+        return false;
+    }
+    if(ass.config.curSpeakerIndex < 0 || ass.config.curSpeakerIndex >= self.speakerCadidates.count)
+    {
+        return false;
+    }
+    
+    if(ass.dialDateTime == nil ){
         return false;
     }
     

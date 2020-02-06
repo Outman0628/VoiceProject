@@ -120,7 +120,7 @@
     NSString * storyboardName = @"Main";
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle: nil];
     TTSConfigViewController * vc = (TTSConfigViewController*)[storyboard instantiateViewControllerWithIdentifier:@"TTS_CONFIG"];
-    vc.answerAss = self.answerAss;
+    vc.config = self.answerAss.config;
     [self.navigationController pushViewController:vc animated:YES];
 }
 

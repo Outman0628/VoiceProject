@@ -18,12 +18,20 @@
 - (void)awakeFromNib {
     // Initialization code
     [super awakeFromNib];
+    
+    self.contentTextView.returnKeyType =UIReturnKeyDone;
+    self.intervalTextField.returnKeyType =UIReturnKeyDone;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
     
     // Configure the view for the selected state
+    
+    [_contentTextView resignFirstResponder];
+    [_intervalTextField resignFirstResponder];
 }
+
+
 
 @end

@@ -108,7 +108,11 @@ enum DialSettingSectionCount{
 
 #pragma mark - DAOperateCellDelegate
 -(void) addNewDialTask{
+    NSString * storyboardName = @"Main";
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle: nil];
+    DAItemDetailViewController * vc = (DAItemDetailViewController*)[storyboard instantiateViewControllerWithIdentifier:@"DA_ITEM_DETAIL_CONFIG"];
     
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - DAItemCellDelegate

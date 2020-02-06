@@ -12,9 +12,11 @@
 #import "AssistantCallback.h"
 
 @class AnswerAssistant;
+@class DialAssistant;
 
 typedef void (^AssistantBlock)(AssistantCode code, NSError * _Nullable subCode);
 typedef void (^AnswerAssistantBlock)( AnswerAssistant *_Nullable answerAssistant, AssistantCode code);
+typedef void (^DialAssistantBlock)( NSArray *_Nullable dialAssistantList, AssistantCode code);
 
 
 @interface VoiceConfig : NSObject
@@ -48,6 +50,22 @@ typedef void (^AnswerAssistantBlock)( AnswerAssistant *_Nullable answerAssistant
  * 取消试听
  */
 +(void)cancelAuditionAnswerAssistant:(nonnull AnswerAssistant*) answerAssistant;
+
+/*
+ * 获取本机拨打助手配置
+ */
++(void)getDialAsistant:(DialAssistantBlock _Nonnull ) block;
+
+
+/*
+ * 预设文字试听,以配置中的参数进行试听
+ */
++(void)auditionDialAssistant:(nonnull DialAssistant*) dialAssistant  CallBack:(id <AssistantCallBack> _Nullable)delegate;
+
+/*
+ * 设置或更新本机语音应答助手配置
+ */
++(void)updateDialAssistantParam:(nonnull DialAssistant*) dialAssistant  CallBack:(id <AssistantCallBack> _Nullable)delegate;
 
 /*
  * 获取音色名称表

@@ -891,16 +891,25 @@
                                             <rect key="frame" x="20" y="6" width="31" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="试听"/>
+                                            <connections>
+                                                <action selector="auditAss:" destination="btz-qm-xFc" eventType="touchUpInside" id="uSl-Nu-7VN"/>
+                                            </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VE5-jO-W0O">
                                             <rect key="frame" x="83" y="6" width="31" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="保存"/>
+                                            <connections>
+                                                <action selector="updateAss:" destination="btz-qm-xFc" eventType="touchUpInside" id="jWN-Sa-XsC"/>
+                                            </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="szj-wy-pR1">
                                             <rect key="frame" x="146" y="6" width="31" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="设置"/>
+                                            <connections>
+                                                <action selector="voiceSetting:" destination="btz-qm-xFc" eventType="touchUpInside" id="YwR-6S-hKo"/>
+                                            </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YjX-bZ-svY">
                                             <rect key="frame" x="338" y="4" width="43" height="38"/>
@@ -909,6 +918,9 @@
                                             <state key="normal" title="新增">
                                                 <color key="titleColor" red="0.0" green="0.66666668650000005" blue="0.081154983289999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </state>
+                                            <connections>
+                                                <action selector="newContent:" destination="btz-qm-xFc" eventType="touchUpInside" id="raA-cx-0uT"/>
+                                            </connections>
                                         </button>
                                     </subviews>
                                 </tableViewCellContentView>
@@ -1005,6 +1017,11 @@
                     </tableView>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RfU-Hf-d6f" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="lOM-Ej-W09">
+                    <connections>
+                        <action selector="DismissKeboard:" destination="0oy-WM-AZh" id="i8i-QE-1fx"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1705.7971014492755" y="994.56521739130437"/>
         </scene>

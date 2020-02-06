@@ -23,7 +23,8 @@
 @interface TTSConfigViewController : UITableViewController<SwitchTableViewCellDelegate,SliderTableViewCellDelegate,InputTableViewCellDelegate>
 @property (nonatomic)BOOL isAudioSessionManagementEnabled;
 @property (nonatomic,weak)id<SettingsViewControllerDelegate> configDelegate;
-@property AnswerAssistant *answerAss;
+//@property AnswerAssistant *answerAss;
+@property VoiceConfig *config;
 +(void)loadedAudioModelWithName:(NSString*)modelName forLanguage:(NSString*)language;
 
 @end

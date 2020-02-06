@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "DAItemDetailViewController.h"
+#import "DAItemOperationCell.h"
+#import "DAItemDatetimeCell.h"
+#import "DAItemContentCell.h"
+#import <ACM/DialAssistant.h>
+#import <ACM/AssistantItem.h>
+#import <ACM/Assistant.h>
+#import "TTSConfigViewController.h"
 
 
 enum DialItemDetailCount{
@@ -17,14 +24,19 @@ enum DialItemDetailCount{
     ItemSettingSectionCount,
 };
 
-@interface DAItemDetailViewController()
+@interface DAItemDetailViewController() <DAItemOperationDelegate, AssistantCallBack>
 
+@property NSMutableArray *contentViewList;
+@property (weak, nonatomic) IBOutlet UIView *rootView;
+@property (strong, nonatomic) IBOutletCollection(UITapGestureRecognizer) NSArray *testRootView;
 @end
 
 @implementation DAItemDetailViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _dialAss = [[DialAssistant alloc] init];
+    _contentViewList = [NSMutableArray array];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -42,6 +54,22 @@ enum DialItemDetailCount{
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)DismissKeboard:(id)sender {
+    for(int i = 0; i < _contentViewList.count; i++){
+        [self DismissKeboard:_contentViewList[i]];
+    }
+}
+
+
+
+- (void)DismissItemKeyboard:(nonnull UIView *)view{
+    for(UIView *subView in view.subviews)
+    {
+        [subView resignFirstResponder];
+    }
+}
+
+
 #pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
@@ -57,7 +85,7 @@ enum DialItemDetailCount{
         case ItemDatetime:
             return 1;
         case ItemContent:
-            return 3;
+            return 1;
         default:
             break;
     }
@@ -101,25 +129,124 @@ enum DialItemDetailCount{
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     switch(indexPath.section){
         case ItemSettingOperation:
-            return [tableView dequeueReusableCellWithIdentifier:@"DA_Detail_OPERATE_CELL" forIndexPath:indexPath];
+            //return [tableView dequeueReusableCellWithIdentifier:@"DA_Detail_OPERATE_CELL" forIndexPath:indexPath];
+            return [self cellForSetting:tableView IndexPath:indexPath];
         case ItemDatetime:
             return [tableView dequeueReusableCellWithIdentifier:@"DA_DETAIL_DATE_CELL" forIndexPath:indexPath];
+            
         case ItemContent:
-            return [tableView dequeueReusableCellWithIdentifier:@"DA_VOICE_CONTENT_CELL" forIndexPath:indexPath];
+            //return [tableView dequeueReusableCellWithIdentifier:@"DA_VOICE_CONTENT_CELL" forIndexPath:indexPath];
+            return [self cellForContent:tableView IndexPath:indexPath];
         default:
             break;
     }
     return [tableView dequeueReusableCellWithIdentifier:@"NAVIGATE_CELL" forIndexPath:indexPath];
 }
 
-- (UITableViewCell*)cellForDialItem:(UITableView *)tableView IndexPath:(NSIndexPath *)indexPath{
+- (UITableViewCell*)cellForSetting:(UITableView *)tableView IndexPath:(NSIndexPath *)indexPath{
     
-    /*
-    DialItemCell *cell = (DialItemCell *)[tableView dequeueReusableCellWithIdentifier:@"ASS_DIAL_ITEM" forIndexPath:indexPath];
-    
+    DAItemOperationCell *cell = (DAItemOperationCell *) [tableView dequeueReusableCellWithIdentifier:@"DA_Detail_OPERATE_CELL" forIndexPath:indexPath];
+    cell.delegate = self;
     return cell;
-     */
-    return nil;
+}
+
+- (UITableViewCell*)cellForContent:(UITableView *)tableView IndexPath:(NSIndexPath *)indexPath{
+    
+    DAItemContentCell *cell = (DAItemContentCell *) [tableView dequeueReusableCellWithIdentifier:@"DA_VOICE_CONTENT_CELL" forIndexPath:indexPath];
+    [_contentViewList addObject:cell];
+    return cell;
+}
+
+
+-(BOOL) generateAssItem: (NSMutableArray **)items{
+    
+    NSMutableArray *contents = [NSMutableArray array];
+    
+    AssistanItem *item = nil;
+    
+    for(int i = 0; i < _contentViewList.count; i++){
+        if([self getAssItem:_contentViewList[i] AssRetItem:&item])
+        {
+            if(item != nil){
+                [contents addObject:item];
+            }
+        }
+        else{
+            return NO;
+        }
+    }
+    
+    
+    *items = contents;
+    
+    return YES;
+}
+
+-(BOOL) getAssItem: (nonnull DAItemContentCell *)contentCell AssRetItem:(AssistanItem **)item{
+    
+    AssistanItem *retItem = [[AssistanItem alloc]init];
+    
+    retItem.content = contentCell.contentTextView.text;
+    retItem.interval = [contentCell.intervalTextField.text integerValue];
+    
+    if(retItem.interval < 0 || retItem.content == nil || retItem.content.length == 0)
+    {
+        return NO;
+    }
+    *item = retItem;
+    
+    return TRUE;
+}
+
+
+///////////////////////// from DAItemOperationDelegate
+
+-(void) auditAss{
+    NSMutableArray *assItems = nil;
+    if([self generateAssItem:&assItems])
+    {
+        _dialAss.contents = assItems;
+        [Assistant auditionDialAssistant:_dialAss  CallBack:self ];
+        
+    }else
+    {
+        [self showAlert:@"参数错误请检查"];
+    }
+    
+}
+
+-(void) updateAss{
+    //
+    
+    NSMutableArray *assItems = nil;
+    if([self generateAssItem:&assItems])
+    {
+        _dialAss.contents = assItems;
+        [Assistant updateDialAssistantParam:_dialAss  CallBack:self ];
+        
+    }else
+    {
+        [self showAlert:@"参数错误请检查"];
+    }
+}
+
+-(void) assVoiceSeting{
+    NSString * storyboardName = @"Main";
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle: nil];
+    TTSConfigViewController * vc = (TTSConfigViewController*)[storyboard instantiateViewControllerWithIdentifier:@"TTS_CONFIG"];
+    vc.config = self.dialAss.config;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+-(void) addContent{}
+
+////////////////////// from AssistantCallback
+- (void)auditResult:(AssistantCode) code Error:(NSError * _Nullable) subCode{
+    [self showAlert:[NSString stringWithFormat:@"callback 试听结果 %ld", (long)code]];
+}
+
+- (void)updateDialAssistantResult:(AssistantCode) code Error:(NSError * _Nullable) subCode{
+    [self showAlert:[NSString stringWithFormat:@"callback 更新结果 %ld", (long)code]];
 }
 
 @end

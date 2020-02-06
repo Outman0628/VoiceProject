@@ -151,8 +151,7 @@ static ActionManager *actionMgr = nil;
 }
  
 
-+ (BOOL) handleApnsMessage:(nonnull NSDictionary *)message{
-    [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"acm handleApnsMessage 1"]];
++ (BOOL) handleApnsMessage:(nonnull NSDictionary *)message{    
     BOOL ret = NO;
     if(actionMgr != nil)
     {

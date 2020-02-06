@@ -20,11 +20,8 @@
 {         
     BOOL ret = NO;
     
-    [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"handleApnsMessage"]];
-    
     if(message != nil && message[@"aps"] != nil && message[@"aps"][@"userInfo"] != nil)
     {
-        [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"handleApnsMessage 1"]];
         
         //NSDictionary *userInfo = message[@"aps"][@"userInfo"];
         
@@ -35,7 +32,6 @@
         
         if( [userInfo[@"title"] isEqualToString:@"audiocall"] )
         {
-            [[ActionManager instance].icmCallBack debugInfo: [NSString stringWithFormat:@"handleApnsMessage 2"]];
             
             //- (void)onCallReceived:(NSString * _Nonnull)channel fromPeer:(NSString * _Nonnull)peerId;
             NSLog(@"apns audio call from:%@", userInfo[@"accountCaller"] );
