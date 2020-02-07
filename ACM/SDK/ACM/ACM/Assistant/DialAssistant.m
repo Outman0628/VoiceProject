@@ -24,9 +24,7 @@
         self.contents = [NSMutableArray array];
         self.config = [[VoiceConfig alloc]init];
         self.dialDateTime = [[NSDate alloc ] init];
-        self.subscribers = [NSMutableArray array];
-        [self.subscribers addObject:@"515"];
-        [self.subscribers addObject:@"501"];
+        self.subscribers = [NSMutableArray array];        
     }
     return self;
 }

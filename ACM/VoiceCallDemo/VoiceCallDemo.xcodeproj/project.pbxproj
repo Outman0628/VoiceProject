@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		630ED8C923ED0720004257BF /* DASubscribersCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630ED8C823ED0720004257BF /* DASubscribersCell.m */; };
 		630F77E923D5C98E0071DF9F /* AAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630F77E823D5C98E0071DF9F /* AAViewController.m */; };
 		63155EB623D80D92000762DA /* SelectionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63155E9923D80D92000762DA /* SelectionTableViewController.m */; };
 		63155EB823D80D92000762DA /* EttsModelTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63155E9C23D80D92000762DA /* EttsModelTableViewCell.m */; };
@@ -76,6 +77,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		630ED8C723ED0714004257BF /* DASubscribersCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DASubscribersCell.h; sourceTree = "<group>"; };
+		630ED8C823ED0720004257BF /* DASubscribersCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DASubscribersCell.m; sourceTree = "<group>"; };
 		630F77E723D5C9730071DF9F /* AAViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AAViewController.h; sourceTree = "<group>"; };
 		630F77E823D5C98E0071DF9F /* AAViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AAViewController.m; sourceTree = "<group>"; };
 		63155E9923D80D92000762DA /* SelectionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectionTableViewController.m; sourceTree = "<group>"; };
@@ -375,6 +378,8 @@
 				63C7B62923EAD03100A374FF /* DAItemDatetimeCell.m */,
 				63C7B62B23EAD04800A374FF /* DAItemContentCell.h */,
 				63C7B62C23EAD05400A374FF /* DAItemContentCell.m */,
+				630ED8C723ED0714004257BF /* DASubscribersCell.h */,
+				630ED8C823ED0720004257BF /* DASubscribersCell.m */,
 			);
 			path = DAItem;
 			sourceTree = "<group>";
@@ -539,6 +544,7 @@
 				63C7B61D23EA9FBB00A374FF /* DialItemCell.m in Sources */,
 				63C7B62023EAB3CF00A374FF /* DAOperateCell.m in Sources */,
 				63C7B62723EAD00500A374FF /* DAItemOperationCell.m in Sources */,
+				630ED8C923ED0720004257BF /* DASubscribersCell.m in Sources */,
 				63C7B62A23EAD03100A374FF /* DAItemDatetimeCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

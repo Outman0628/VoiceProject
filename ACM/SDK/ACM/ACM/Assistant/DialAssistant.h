@@ -17,7 +17,7 @@
 
 @interface DialAssistant : NSObject
 
-@property (readonly) NSString *assId;             // 记录ID，由服务器生成
+@property NSString *assId;                   // 记录ID，由服务器生成
 @property VoiceConfig *config;              // 声音设置
 @property NSDate *dialDateTime;                 // 定时拨打时间
 @property NSMutableArray *contents;         // 内容，放置 AssistantItem 对象

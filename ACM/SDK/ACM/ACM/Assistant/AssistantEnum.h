@@ -65,9 +65,14 @@ typedef NS_ENUM(NSInteger, AssistantCode) {
     AssistantSettingBusy = -9,
     
     /**
-     服务器返回错误配置数据
+     服务器返回接听助手错误配置数据
      */
     AssistantErrorIncorrectAnswerAssistantContent = -10,
+    
+    /**
+     服务器返回拨打助手错误配置数据
+     */
+    AssistantErrorIncorrectDialAssistantContent = -11,
 };
 
 #endif /* AssistantEnum_h */

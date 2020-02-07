@@ -11,6 +11,7 @@
 #import "DialItemCell.h"
 #import "DAOperateCell.h"
 #import "DAItem/DAItemDetailViewController.h"
+#import <ACM/Assistant.h>
 
 enum DialSettingSectionCount{
     SettingOperation = 0,
@@ -19,13 +20,22 @@ enum DialSettingSectionCount{
 };
 
 @interface DAViewController() <DAOperateCellDelegate, DAItemCellDelegate>
-
+@property NSMutableArray *dialAssistantList;
 @end
 
 @implementation DAViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [Assistant getDialAsistant:^(NSArray * _Nullable dialAssistantList, AssistantCode code) {
+        if(code != AssistantOK){
+            [self showAlert: [NSString stringWithFormat:@"获取拨打任务失败:%ld", (long)code]];
+            return;
+        }else{
+            self.dialAssistantList = [dialAssistantList mutableCopy];
+            [self.tableView reloadData];
+        }
+    }];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -54,9 +64,22 @@ enum DialSettingSectionCount{
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     switch (section) {
         case SettingOperation:
-            return 1;
+            if(_dialAssistantList == nil)
+            {
+                return 0;
+            }
+            else{
+                return 1;
+            }
+            
         case SettingItem:
-            return 2;
+            if(_dialAssistantList == nil)
+            {
+                return 0;
+            }
+            else{
+                return _dialAssistantList.count;
+            }
         default:
             break;
     }
@@ -99,10 +122,15 @@ enum DialSettingSectionCount{
 }
 
 - (UITableViewCell*)cellForDialItem:(UITableView *)tableView IndexPath:(NSIndexPath *)indexPath{
-
-    DialItemCell *cell = (DialItemCell *)[tableView dequeueReusableCellWithIdentifier:@"ASS_DIAL_ITEM" forIndexPath:indexPath];
-    cell.delegate = self;
-    return cell;
+    if( indexPath.row < _dialAssistantList.count ){
+        DialItemCell *cell = (DialItemCell *)[tableView dequeueReusableCellWithIdentifier:@"ASS_DIAL_ITEM" forIndexPath:indexPath];
+        cell.datePicker.date = ((DialAssistant *)_dialAssistantList[indexPath.row]).dialDateTime;
+        cell.delegate = self;
+        cell.dialAss = _dialAssistantList[indexPath.row];
+        return cell;
+    }else{
+        return nil;
+    }
 }
 
 
@@ -116,12 +144,47 @@ enum DialSettingSectionCount{
 }
 
 #pragma mark - DAItemCellDelegate
--(void)jumpToDetail{
+-(void) jumpToDetail: (NSObject *)dialAss{
     NSString * storyboardName = @"Main";
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle: nil];
     DAItemDetailViewController * vc = (DAItemDetailViewController*)[storyboard instantiateViewControllerWithIdentifier:@"DA_ITEM_DETAIL_CONFIG"];
-    
+    vc.dialAss = (DialAssistant *)dialAss;
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+///////////////////////////////// for ShowAlertProtocol
+- (void)showAlert:(NSString * _Nonnull)message handle:(void (^_Nullable)(UIAlertAction * _Nullable))handle {
+    [self.view endEditing:true];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:handle];
+    [alert addAction:action];
+    
+    [self presentViewController:alert animated:true completion:nil];
+}
+
+- (void)showAlertWidthCancel:(NSString * _Nonnull)message handle:(void (^_Nullable)(UIAlertAction * _Nullable))handle {
+    [self.view endEditing:true];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:handle];
+    [alert addAction:action];
+    
+    action = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:handle];
+    [alert addAction:action];
+    [self presentViewController:alert animated:true completion:nil];
+}
+
+- (void)showAlert:(NSString * _Nonnull)message; {
+    [self showAlert:message handle:nil];
+}
+
+
+- (void)showAlertWidthCancel:(NSString * _Nonnull)message Callback:(OKCallback _Nullable)completionBlock {
+    [self showAlertWidthCancel:message handle:^(UIAlertAction * _Nullable action) {
+        if([action.title isEqualToString:@"OK"])
+        {
+            completionBlock(true);
+        }
+    }];
 }
 
 @end

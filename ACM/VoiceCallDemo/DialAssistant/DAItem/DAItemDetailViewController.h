@@ -13,8 +13,8 @@
 #import <ACM/DialAssistant.h>
 #import "BasicViewController.h"
 
-//@interface DAItemDetailViewController : UITableViewController
-@interface DAItemDetailViewController : BasicViewController
+@interface DAItemDetailViewController : UITableViewController  <ShowAlertProtocol>
+//@interface DAItemDetailViewController : BasicViewController
 @property  DialAssistant* dialAss;
 @end
 

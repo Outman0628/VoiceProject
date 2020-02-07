@@ -13,13 +13,14 @@
 
 @protocol DAItemCellDelegate <NSObject>
 
--(void) jumpToDetail;
+-(void) jumpToDetail: (NSObject *)dialAss;
 
 @end
 
 @interface DialItemCell : UITableViewCell
 
 @property (nonatomic,weak) id<DAItemCellDelegate> delegate;
+@property  NSObject *dialAss;
 
 @property (nonatomic, strong) IBOutlet UIButton *delBtn;
 @property (nonatomic, strong) IBOutlet UIButton *detailBtn;

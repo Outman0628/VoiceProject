@@ -121,7 +121,12 @@ static Assistant *instance = nil;
 
 
 +(void)getDialAsistant:(DialAssistantBlock _Nonnull ) block{
+    [Assistant createInstanceIfNeeded];
     
+    if(instance != nil)
+    {
+        [instance getDialAssistantsFromServer:block];
+    }
 }
 
 +(void)updateDialAssistantParam:(nonnull DialAssistant*) dialAssistant  CallBack:(id <AssistantCallBack> _Nullable)delegate{
@@ -359,6 +364,148 @@ static Assistant *instance = nil;
         }
     }];
     
+}
+
+-(void)getDialAssistantsFromServer:(DialAssistantBlock _Nonnull ) block{
+    
+    NSMutableArray *dialAssList = [NSMutableArray array];
+    
+    ActionManager *actionMgr = [ActionManager instance];
+    if(actionMgr == nil || actionMgr.userId == nil){
+        if(block != nil)
+        {
+            block(nil, AssistantNotInited);
+        }
+        return;
+    }
+    
+    
+    NSString *stringUrl = [NSString stringWithFormat:@"%@%@",actionMgr.host, DialAssistantSettingApi];
+    
+    
+    NSDictionary * phoneCallParam =
+    @{@"uid": [ActionManager instance].userId,
+      };
+    
+    
+    NSError *error;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:phoneCallParam options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *param = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    
+    [HttpUtil HttpPost:stringUrl Param:param Callback:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+        if([(NSHTTPURLResponse *)response statusCode] == 200){
+            NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSData *jsonData = [str dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+            
+            BOOL ret = dic[@"success"];
+            
+            if(ret == YES)
+            {
+                @try{
+                    NSDictionary *data = dic[@"data"];
+                    if(data != nil){
+                        NSArray *rows = data[@"rows"];
+                        if(rows != nil){
+                            for(int i = 0; i < rows.count; i++){
+                                
+                                    DialAssistant *daa = [[DialAssistant alloc] init];
+                                    daa.assId = rows[i][@"id"];
+                                    daa.subscribers = rows[i][@"dst_uid"];
+                                    
+                                   
+                                    //设置转换格式
+                                    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
+                                    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                                    //NSString转NSDate
+                                    daa.dialDateTime=[formatter dateFromString:rows[i][@"call_time"]];
+                                    
+                                    [self parseToneList:daa ToneList:rows[i][@"tone_list"]];
+                                    
+                                    [dialAssList addObject:daa];
+                                
+                            }
+                            
+                            dispatch_async(dispatch_get_main_queue(),^{
+                                block(dialAssList,AssistantOK);
+                            });
+                            
+                        }else{
+                            if(block != nil){
+                                dispatch_async(dispatch_get_main_queue(),^{
+                                    block(nil,AssistantErrorIncorrectDialAssistantContent);
+                                });
+                            }
+                        }
+                    }else{
+                        if(block != nil){
+                            dispatch_async(dispatch_get_main_queue(),^{
+                                block(nil,AssistantErrorIncorrectDialAssistantContent);
+                            });
+                        }
+                    }
+
+                } @catch (NSException *exception){
+                    if(block != nil){
+                        dispatch_async(dispatch_get_main_queue(),^{
+                            block(nil,AssistantErrorIncorrectDialAssistantContent);
+                        });
+                    }
+                }
+            }
+            else
+            {
+                // 通知错误发生
+                if(block != nil){
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        block(nil,AssistantErrorIncorrectDialAssistantContent);
+                    });
+                }
+            }
+        }
+        else{
+            // 通知错误发生
+            if(block != nil){
+                dispatch_async(dispatch_get_main_queue(),^{
+                    block(nil,AssistantErrorServer);
+                });
+            }
+        }
+    }];
+    
+}
+
+- (void) parseToneList:(DialAssistant *)dAss ToneList:(NSArray *)toneList{
+    
+    if(toneList != nil && toneList.count > 0)
+    {
+        VoiceConfig *voiceConfig = nil;
+        
+            for(int i = 0; i < toneList.count; i++)
+            {
+                
+                AssistanItem *assItem = [[AssistanItem alloc] init];
+                NSNumber *num = toneList[0][@"before_second"];
+                assItem.interval = num.integerValue;
+                assItem.content = toneList[0][@"Content"];
+                
+                if(voiceConfig == nil){
+                    NSDictionary *configDic = toneList[0][@"voiceConfig"];
+                    if( configDic != nil ){
+                        voiceConfig = [[VoiceConfig alloc] init];
+                        voiceConfig.speechVolume = ((NSNumber *)configDic[@"speechVolume"]).integerValue;
+                        voiceConfig.speechSpeed = ((NSNumber *)configDic[@"speechSpeed"]).integerValue;
+                        voiceConfig.speechPich = ((NSNumber *)configDic[@"speechPich"]).integerValue;
+                        voiceConfig.curSpeakerIndex = ((NSNumber *)configDic[@"curSpeakerIndex"]).integerValue;
+                        
+                        dAss.config = voiceConfig;
+                    }
+                }
+                
+                [dAss.contents addObject:assItem];
+            }
+        }
 }
 
 // 更新接听配置
@@ -675,6 +822,12 @@ static Assistant *instance = nil;
     }
     
     if(ass.dialDateTime == nil ){
+        return false;
+    }
+    
+    NSDate *now = [[NSDate alloc] init];
+    
+    if([now timeIntervalSince1970] > [ass.dialDateTime timeIntervalSince1970] ){
         return false;
     }
     

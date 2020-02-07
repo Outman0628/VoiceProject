@@ -13,6 +13,7 @@ typedef void (^HttpResponseCallback)(NSData * _Nullable data, NSURLResponse * _N
 
 #define EndCallApi  @"/dapi/call/end"
 #define AnswerAssistantSettingApi @"/dapi/account/get-reject-tone"
+#define DialAssistantSettingApi @"/dapi/calltask/list"
 #define ActiveCallApi @"/dapi/call/msg"
 #define UpdateDialTaskApi @"/dapi/calltask/update"
 
