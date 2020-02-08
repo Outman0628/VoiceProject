@@ -111,7 +111,8 @@ enum DialSettingSectionCount{
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     switch(indexPath.section){
         case SettingOperation:
-            return [tableView dequeueReusableCellWithIdentifier:@"Dial_Schedule_Operate_CELL" forIndexPath:indexPath];
+            //return [tableView dequeueReusableCellWithIdentifier:@"Dial_Schedule_Operate_CELL" forIndexPath:indexPath];
+            return [self cellForOperateItem:tableView IndexPath:indexPath];
         case SettingItem:
             return [self cellForDialItem:tableView IndexPath:indexPath];
             
@@ -119,6 +120,13 @@ enum DialSettingSectionCount{
             break;
     }
     return [tableView dequeueReusableCellWithIdentifier:@"NAVIGATE_CELL" forIndexPath:indexPath];
+}
+
+- (UITableViewCell*)cellForOperateItem:(UITableView *)tableView IndexPath:(NSIndexPath *)indexPath{
+    DAOperateCell *cell = (DAOperateCell *)[tableView dequeueReusableCellWithIdentifier:@"Dial_Schedule_Operate_CELL" forIndexPath:indexPath];
+    
+    cell.delegate = self;
+    return cell;
 }
 
 - (UITableViewCell*)cellForDialItem:(UITableView *)tableView IndexPath:(NSIndexPath *)indexPath{
@@ -139,7 +147,7 @@ enum DialSettingSectionCount{
     NSString * storyboardName = @"Main";
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle: nil];
     DAItemDetailViewController * vc = (DAItemDetailViewController*)[storyboard instantiateViewControllerWithIdentifier:@"DA_ITEM_DETAIL_CONFIG"];
-    
+    vc.dialAss = [[DialAssistant alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
 

@@ -804,18 +804,18 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2pz-bW-RCY">
-                                            <rect key="frame" x="332" y="6" width="62" height="30"/>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ioS-a2-lbF">
+                                            <rect key="frame" x="176" y="6" width="62" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="新建计划"/>
+                                            <connections>
+                                                <action selector="newDialPlan:" destination="uCF-af-OnF" eventType="touchUpInside" id="QBx-AM-wI6"/>
+                                            </connections>
                                         </button>
                                     </subviews>
-                                    <constraints>
-                                        <constraint firstItem="2pz-bW-RCY" firstAttribute="centerY" secondItem="otc-wk-PJl" secondAttribute="centerY" id="tNo-9H-4nx"/>
-                                        <constraint firstAttribute="trailing" secondItem="2pz-bW-RCY" secondAttribute="trailing" id="vBE-3r-e0I"/>
-                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="addDABtn" destination="2pz-bW-RCY" id="kA6-OG-77v"/>
+                                    <outlet property="addDABtn" destination="ioS-a2-lbF" id="qlc-Sy-Qdb"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ASS_DIAL_ITEM" id="SDT-Pk-iTm" customClass="DialItemCell">
@@ -1018,6 +1018,9 @@
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" keyboardType="numberPad" returnKeyType="done"/>
+                                                    <connections>
+                                                        <action selector="intervalChanged:" destination="2Q2-kf-vz9" eventType="editingDidEnd" id="WC0-jb-R79"/>
+                                                    </connections>
                                                 </textField>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="07z-fc-OPo">
                                                     <rect key="frame" x="284" y="5" width="76" height="42"/>
@@ -1025,6 +1028,9 @@
                                                     <state key="normal" title="删除">
                                                         <color key="titleColor" red="0.91372549020000005" green="0.23529411759999999" blue="0.058823529409999999" alpha="1" colorSpace="calibratedRGB"/>
                                                     </state>
+                                                    <connections>
+                                                        <action selector="delBtnClicked:" destination="2Q2-kf-vz9" eventType="touchUpInside" id="BLl-3p-RCz"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

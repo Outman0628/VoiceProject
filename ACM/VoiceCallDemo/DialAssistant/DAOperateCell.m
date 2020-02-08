@@ -23,15 +23,13 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
     
-    if(_delegate != nil){
-        [_delegate addNewDialTask];
-    }
-}
-- (IBAction)checkDetail:(id)sender {
-    if(_delegate != nil){
-        [_delegate addNewDialTask];
-    }
+    
 }
 
+- (IBAction)newDialPlan:(id)sender {
+    if(_delegate != nil){
+        [_delegate addNewDialTask];
+    }
+}
 
 @end

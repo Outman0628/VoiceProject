@@ -486,9 +486,9 @@ static Assistant *instance = nil;
             {
                 
                 AssistanItem *assItem = [[AssistanItem alloc] init];
-                NSNumber *num = toneList[0][@"before_second"];
+                NSNumber *num = toneList[i][@"before_second"];
                 assItem.interval = num.integerValue;
-                assItem.content = toneList[0][@"Content"];
+                assItem.content = toneList[i][@"Content"];
                 
                 if(voiceConfig == nil){
                     NSDictionary *configDic = toneList[0][@"voiceConfig"];
@@ -579,7 +579,7 @@ static Assistant *instance = nil;
         return;
     }
     
-    if([self checkDialAssistantParam:dialAssistant])
+    if([self checkDialAssistantParam:dialAssistant IsAudit:NO])
     {
         DialAssistant *updateAss = [dialAssistant copy];
         
@@ -702,7 +702,7 @@ static Assistant *instance = nil;
         return;
     }
     
-    if([self checkDialAssistantParam:dialAssistant])
+    if([self checkDialAssistantParam:dialAssistant IsAudit:YES])
     {
         DialAssistant *updateDAss = [dialAssistant copy];
         
@@ -800,7 +800,7 @@ static Assistant *instance = nil;
     return true;
 }
 
--(BOOL)checkDialAssistantParam:(nonnull DialAssistant *)ass
+-(BOOL)checkDialAssistantParam:(nonnull DialAssistant *)ass IsAudit:(BOOL) isAudit
 {
     if(ass == nil)
         return false;
@@ -827,8 +827,10 @@ static Assistant *instance = nil;
     
     NSDate *now = [[NSDate alloc] init];
     
-    if([now timeIntervalSince1970] > [ass.dialDateTime timeIntervalSince1970] ){
-        return false;
+    if(!isAudit){
+        if(  [now timeIntervalSince1970] > [ass.dialDateTime timeIntervalSince1970] ){
+            return false;
+        }
     }
     
     // contents 必须是 AssistanItem 类型

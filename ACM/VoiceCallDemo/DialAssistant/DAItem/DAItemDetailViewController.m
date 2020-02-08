@@ -26,22 +26,24 @@ enum DialItemDetailCount{
     ItemSettingSectionCount,
 };
 
-@interface DAItemDetailViewController() <DAItemOperationDelegate, AssistantCallBack>
+@interface DAItemDetailViewController() <DAItemOperationDelegate, AssistantCallBack, DAItemConentOperate>
 
-@property NSMutableArray *contentViewList;
+
 @property DASubscribersCell *subscriberCell;
 @property DAItemDatetimeCell *dateCell;
+@property DAItemOperationCell *operateCell;
+
+
 @property (weak, nonatomic) IBOutlet UIView *rootView;
 @property (strong, nonatomic) IBOutletCollection(UITapGestureRecognizer) NSArray *testRootView;
 @end
-
-static int contentRow = 1;
 
 @implementation DAItemDetailViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _contentViewList = [NSMutableArray array];
+   
+   
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -55,9 +57,7 @@ static int contentRow = 1;
 }
 
 - (IBAction)DismissKeboard:(id)sender {
-    for(int i = 0; i < _contentViewList.count; i++){
-        [self DismissKeboard:_contentViewList[i]];
-    }
+    
 }
 
 
@@ -155,52 +155,76 @@ static int contentRow = 1;
 
 - (UITableViewCell*)cellForSubscribers:(UITableView *)tableView IndexPath:(NSIndexPath *)indexPath{
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DA_SUBSCRIBERS_CELL" forIndexPath:indexPath];
-    _subscriberCell = (DASubscribersCell *)cell;
-    _subscriberCell.subscribersTextView.text = @"";
-    for(int i = 0; i < self.dialAss.subscribers.count; i++){
-        if( i == 0 ){
-            _subscriberCell.subscribersTextView.text = [_subscriberCell.subscribersTextView.text stringByAppendingString:[NSString stringWithFormat:@"%@", self.dialAss.subscribers[i]]];
-        }
-        else{
-        _subscriberCell.subscribersTextView.text = [_subscriberCell.subscribersTextView.text stringByAppendingString:[NSString stringWithFormat:@";%@", self.dialAss.subscribers[i]]];
+    if(_subscriberCell == nil){
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DA_SUBSCRIBERS_CELL" forIndexPath:indexPath];
+        _subscriberCell = (DASubscribersCell *)cell;
+        _subscriberCell.subscribersTextView.text = @"";
+        for(int i = 0; i < self.dialAss.subscribers.count; i++){
+            if( i == 0 ){
+                _subscriberCell.subscribersTextView.text = [_subscriberCell.subscribersTextView.text stringByAppendingString:[NSString stringWithFormat:@"%@", self.dialAss.subscribers[i]]];
+            }
+            else{
+            _subscriberCell.subscribersTextView.text = [_subscriberCell.subscribersTextView.text stringByAppendingString:[NSString stringWithFormat:@";%@", self.dialAss.subscribers[i]]];
+            }
         }
     }
-    
-    return cell;
+    return _subscriberCell;
 }
 
 //
 - (UITableViewCell*)cellForDate:(UITableView *)tableView IndexPath:(NSIndexPath *)indexPath{
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DA_DETAIL_DATE_CELL" forIndexPath:indexPath];
-    _dateCell = (DAItemDatetimeCell *)cell;
-    _dateCell.datePicker.date = self.dialAss.dialDateTime;
-    return cell;
+    if(_dateCell == nil){
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DA_DETAIL_DATE_CELL" forIndexPath:indexPath];
+        _dateCell = (DAItemDatetimeCell *)cell;
+        _dateCell.datePicker.date = self.dialAss.dialDateTime;
+    }
+    return _dateCell;
 }
 
 - (UITableViewCell*)cellForSetting:(UITableView *)tableView IndexPath:(NSIndexPath *)indexPath{
     
-    DAItemOperationCell *cell = (DAItemOperationCell *) [tableView dequeueReusableCellWithIdentifier:@"DA_Detail_OPERATE_CELL" forIndexPath:indexPath];
-    cell.delegate = self;
-    return cell;
+    
+    
+    if(_operateCell == nil){
+        DAItemOperationCell *cell = (DAItemOperationCell *) [tableView dequeueReusableCellWithIdentifier:@"DA_Detail_OPERATE_CELL" forIndexPath:indexPath];
+        cell.delegate = self;
+        _operateCell = cell;
+    }
+    return _operateCell;
 }
 
 - (UITableViewCell*)cellForContent:(UITableView *)tableView IndexPath:(NSIndexPath *)indexPath{
+    /*
+    if(indexPath.row >= _contentViewList.count){
+        DAItemContentCell *cell = (DAItemContentCell *) [tableView dequeueReusableCellWithIdentifier:@"DA_VOICE_CONTENT_CELL" forIndexPath:indexPath];
+        [_contentViewList addObject:cell];
+        if(indexPath.row < self.dialAss.contents.count){
+            AssistanItem *item = self.dialAss.contents[indexPath.row];
+            cell.contentTextView.text = item.content;
+            cell.intervalTextField.text = [NSString stringWithFormat:@"%ld",(long)item.interval ];
+        }
+    }
+    return _contentViewList[indexPath.row];
+     */
     
+   
     DAItemContentCell *cell = (DAItemContentCell *) [tableView dequeueReusableCellWithIdentifier:@"DA_VOICE_CONTENT_CELL" forIndexPath:indexPath];
-    [_contentViewList addObject:cell];
+
     if(indexPath.row < self.dialAss.contents.count){
         AssistanItem *item = self.dialAss.contents[indexPath.row];
+        cell.assItem = item;
         cell.contentTextView.text = item.content;
         cell.intervalTextField.text = [NSString stringWithFormat:@"%ld",(long)item.interval ];
+        cell.delegate = self;
     }
+    
     return cell;
 }
 
 
 
-
+/*
 -(BOOL) generateAssItem: (NSMutableArray **)items{
     
     NSMutableArray *contents = [NSMutableArray array];
@@ -226,6 +250,19 @@ static int contentRow = 1;
     
     return YES;
 }
+ */
+- (BOOL) checkAssItemsValue{
+    for(int i = 0; i < _dialAss.contents.count; i++){
+        AssistanItem *item = _dialAss.contents[i];
+        
+        if(item.interval < 0 || item.content == nil || item.content.length == 0)
+        {
+            return NO;
+        }
+    }
+    
+    return YES;
+}
 
 -(BOOL) generateSubscribers{
     BOOL ret = YES;
@@ -245,6 +282,12 @@ static int contentRow = 1;
         [_dialAss.subscribers addObject:peerList[i]];
     }
     return ret;
+}
+
+-(BOOL) generateDate{
+     _dialAss.dialDateTime = _dateCell.datePicker.date;
+    
+    return YES;
 }
 
 -(BOOL) getAssItem: (nonnull DAItemContentCell *)contentCell AssRetItem:(AssistanItem **)item{
@@ -267,10 +310,10 @@ static int contentRow = 1;
 ///////////////////////// from DAItemOperationDelegate
 
 -(void) auditAss{
-    NSMutableArray *assItems = nil;
-    if([self generateAssItem:&assItems])
+   
+    if([self checkAssItemsValue])
     {
-        _dialAss.contents = assItems;
+        
         [Assistant auditionDialAssistant:_dialAss  CallBack:self ];
         
     }else
@@ -282,10 +325,10 @@ static int contentRow = 1;
 
 -(void) updateAss{
     
-    NSMutableArray *assItems = nil;
-    if([self generateAssItem:&assItems] && [self generateSubscribers])
+   
+    if([self checkAssItemsValue] && [self generateSubscribers] && [self generateDate])
     {
-        _dialAss.contents = assItems;
+        
         [Assistant updateDialAssistantParam:_dialAss  CallBack:self ];
         
     }else
@@ -303,8 +346,32 @@ static int contentRow = 1;
 }
 
 -(void) addContent{
-    contentRow++;
-    [self.tableView reloadData];
+    //[self.tableView reloadData];
+   
+    AssistanItem *item = [[AssistanItem alloc] init];
+    [self.dialAss.contents addObject:item];
+   
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.dialAss.contents.count -1 inSection:ItemContent];
+    
+    [self.tableView beginUpdates];
+    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone]; // 插入方法
+    [self.tableView endUpdates];
+    
+}
+
+////////////////////// from DAItemConentOperate
+-(void) delContent: (NSObject *) assItem{
+    if(assItem != nil){
+        AssistanItem *item = (AssistanItem *)assItem;
+        NSInteger index = [self.dialAss.contents indexOfObject:item];
+        [self.dialAss.contents removeObject:item];
+        
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:ItemContent];
+        
+        [self.tableView beginUpdates];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone]; // 插入方法
+        [self.tableView endUpdates];
+    }
 }
 
 ////////////////////// from AssistantCallback

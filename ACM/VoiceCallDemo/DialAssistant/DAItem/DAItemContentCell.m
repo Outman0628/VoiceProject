@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "DAItemContentCell.h"
+#import <ACM/AssistantItem.h>
 
-@interface DAItemContentCell()
+@interface DAItemContentCell() <UITextViewDelegate>
 
 @end
 
@@ -21,6 +22,7 @@
     
     self.contentTextView.returnKeyType =UIReturnKeyDone;
     self.intervalTextField.returnKeyType =UIReturnKeyDone;
+    self.contentTextView.delegate = self;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -32,6 +34,28 @@
     [_intervalTextField resignFirstResponder];
 }
 
+
+- (IBAction)intervalChanged:(id)sender {
+    @try{
+    AssistanItem *retItem = (AssistanItem *)_assItem;
+    retItem.interval = [_intervalTextField.text integerValue];
+    }
+    @catch (NSException *e){
+        
+    }
+}
+
+///////////////// from UITextViewDelegate
+- (void)textViewDidEndEditing:(UITextView *)textView{
+    AssistanItem *retItem = (AssistanItem *)_assItem;
+    retItem.content = _contentTextView.text;
+}
+
+- (IBAction)delBtnClicked:(id)sender {
+    if(_delegate != nil){
+        [_delegate delContent:_assItem];
+    }
+}
 
 
 @end
