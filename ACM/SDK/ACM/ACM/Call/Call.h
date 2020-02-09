@@ -52,11 +52,27 @@ typedef NS_ENUM(NSInteger, RoleType) {
     Observer = 3,
 };
 
+typedef struct{
+
+    UIView * _Nullable localView;      // 本地视频视图
+    AgoraVideoRenderMode renderMode;  //视频显示模式
+    
+    // 视频源相关参数
+    CGSize size;            // 视频分辨率
+    AgoraVideoFrameRate frameRate;   // 帧率
+    NSInteger bitrage;                // 视频码率  相见 AgoraConstants.h
+    AgoraVideoOutputOrientationMode orientationMode; //视频方向
+} VideoParam;
+
 
 @interface Call : NSObject
 
 // 电话类型
 @property CallType callType;
+
+// 视频电话参数，当 callType 为 VideoCall 才会有效
+@property VideoParam videoCallParam;
+
 // 电话阶段
 @property (readonly) CallStage stage;
 // 本机在电话中的角色
@@ -93,8 +109,6 @@ typedef NS_ENUM(NSInteger, RoleType) {
  *添加接听对象
  */
 -(void)addSubscriber: (nonnull NSString *)subscriberId;
-
-
 
 /*
  *结束Observer模式

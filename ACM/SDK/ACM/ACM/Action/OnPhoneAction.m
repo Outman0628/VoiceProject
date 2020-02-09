@@ -11,7 +11,7 @@
 #import "MonitorAction.h"
 #import "../Call/Call.h"
 #import "ActionManager.h"
-#import "../RTC/AudioCallManager.h"
+#import "../RTC/RtcManager.h"
 #import "../Message/RunTimeMsgManager.h"
 #import "../Message/HttpUtil.h"
 
@@ -248,9 +248,9 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
     if(call != nil)
     {
         
-        [AudioCallManager startAudioCall:call.appId user:call.selfId channel:call.channelId rtcToken:call.token callInstance:call];
+        [RtcManager startAudioCall:call.appId user:call.selfId channel:call.channelId rtcToken:call.token callInstance:call];
         
-        [AudioCallManager muteLocalAudioStream:false];
+        [RtcManager muteLocalAudioStream:false];
         
         [call updateStage:OnPhone];
         
@@ -265,10 +265,10 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
     call.role = Observer;
     self.curCall = call;
 
-        [AudioCallManager startAudioCall:call.appId user:call.selfId channel:call.channelId rtcToken:call.token callInstance:call];
+        [RtcManager startAudioCall:call.appId user:call.selfId channel:call.channelId rtcToken:call.token callInstance:call];
     
-    [AudioCallManager muteLocalAudioStream:true];
-    [AudioCallManager muteAllRemoteAudioStreams:true];
+    [RtcManager muteLocalAudioStream:true];
+    [RtcManager muteAllRemoteAudioStreams:true];
     call.localMuteState = true;
     call.remoteMuteState = true;
         
@@ -356,8 +356,8 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
             
             if(ret == YES)
             {
-                [AudioCallManager muteLocalAudioStream:false];
-                [AudioCallManager muteAllRemoteAudioStreams:false];
+                [RtcManager muteLocalAudioStream:false];
+                [RtcManager muteAllRemoteAudioStreams:false];
                 [call endObserverMode];
                 if(completionBlock != nil)
                 {
@@ -403,7 +403,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
         [call updateStage:Finished];
         if(call.channelId != nil)
         {
-            [AudioCallManager endAudioCall];
+            [RtcManager endAudioCall];
             
             NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, EndCallApi];
             NSString *param = [NSString stringWithFormat:@"uid=%@&channel=%@", call.selfId, call.channelId]; //带一个参数key传给服务器

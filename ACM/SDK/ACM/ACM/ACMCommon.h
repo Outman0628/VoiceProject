@@ -52,8 +52,8 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     // 没有成员结束通话
     EventNoMemberEndCall = 12,
     
-    // 拨号
-    EventDial = 13,
+    // 语音拨号
+    EventAudioDial = 13,
     
     // 拨号方结束拨号
     EventCancelCall = 14,
@@ -141,6 +141,9 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     
     // 拨号方结束通话
     EventCallerEndDial = 41,
+    
+    // 视频拨号
+    EventVideoDial = 42,
 
     
     // 拨号

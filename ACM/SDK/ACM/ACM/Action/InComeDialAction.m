@@ -13,7 +13,7 @@
 #import "OnPhoneAction.h"
 #import "../Message/RunTimeMsgManager.h"
 #import "MonitorAction.h"
-#import "../RTC/AudioCallManager.h"
+#import "../RTC/RtcManager.h"
 #import "../Message/HttpUtil.h"
 
 static NSString *RobotAnserApi = @"/dapi/invite/robot";
@@ -494,7 +494,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
         [call updateStage:Finished];
         if(call.channelId != nil)
         {
-            [AudioCallManager endAudioCall];
+            [RtcManager endAudioCall];
             
             NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, EndCallApi];
             NSString *param = [NSString stringWithFormat:@"uid=%@&channel=%@", call.selfId, call.channelId]; //带一个参数key传给服务器

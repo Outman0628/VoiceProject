@@ -12,7 +12,7 @@
 #import "../Message/RunTimeMsgManager.h"
 #import "ActionManager.h"
 #import "IACMCallBack.h"
-#import "../RTC/AudioCallManager.h"
+#import "../RTC/RtcManager.h"
 #import "InComeDialAction.h"
 #import "LoginAction.h"
 
@@ -54,9 +54,9 @@
         [self remoteLeaveCall:eventData];
     }
  */
-    else if(eventData.type == EventDial)
+    else if(eventData.type == EventAudioDial)
     {
-        [self dialPhoneCall:eventData];
+        [self dialAudioPhoneCall:eventData];
     }
     else if(eventData.type == EventDialRobotDemo)
     {
@@ -65,6 +65,9 @@
     else if(eventData.type == EventGotApnsAudioCall)
     {
         [self HandleApnsCallReq:eventData];
+    }
+    else if(eventData.type == EventVideoDial){
+        [self dialVideoPhoneCall:eventData];
     }
     else
     {
@@ -117,8 +120,16 @@
 }
  */
 
--(void) dialPhoneCall:(EventData) eventData{
-    //(nonnull ActionManager *) mgr userAcount:(nonnull NSString *)userId remoteAcount:(nonnull NSString *)peerId{
+-(void) dialAudioPhoneCall:(EventData) eventData{
+    ACMAction* dialAction = [[DialAction alloc]init:self.actionMgr userAcount:self.actionMgr.userId];
+    
+    [self.actionMgr actionChange:self destAction:dialAction];
+    
+    [self.actionMgr HandleEvent:eventData];
+    
+}
+
+-(void) dialVideoPhoneCall:(EventData) eventData{
     ACMAction* dialAction = [[DialAction alloc]init:self.actionMgr userAcount:self.actionMgr.userId];
     
     [self.actionMgr actionChange:self destAction:dialAction];

@@ -78,8 +78,8 @@
 		63B356BE23BE55290034F54B /* RunTimeMsgManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B356BD23BE55290034F54B /* RunTimeMsgManager.m */; };
 		63B356C023BE553B0034F54B /* RunTimeMsgManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B356BF23BE553B0034F54B /* RunTimeMsgManager.h */; };
 		63B356C223BE56B20034F54B /* IACMCallBack.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B356C123BE56B20034F54B /* IACMCallBack.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		63B3572C23BF247C0034F54B /* AudioCallManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B3572B23BF247C0034F54B /* AudioCallManager.h */; };
-		63B3572E23BF24920034F54B /* AudioCallManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B3572D23BF24920034F54B /* AudioCallManager.m */; };
+		63B3572C23BF247C0034F54B /* RtcManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B3572B23BF247C0034F54B /* RtcManager.h */; };
+		63B3572E23BF24920034F54B /* RtcManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B3572D23BF24920034F54B /* RtcManager.m */; };
 		63B3573023BF24AD0034F54B /* IRTCCallBack.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B3572F23BF24AD0034F54B /* IRTCCallBack.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		63B3579123C45F290034F54B /* ACMAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B3579023C45F290034F54B /* ACMAction.h */; };
 		63B3579323C468730034F54B /* ACMAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B3579223C468730034F54B /* ACMAction.m */; };
@@ -196,8 +196,8 @@
 		63B356BF23BE553B0034F54B /* RunTimeMsgManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RunTimeMsgManager.h; sourceTree = "<group>"; };
 		63B356C123BE56B20034F54B /* IACMCallBack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IACMCallBack.h; sourceTree = "<group>"; };
 		63B356C923BE615D0034F54B /* AgoraRtmKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AgoraRtmKit.framework; path = ../../../../agsdks/libs/AgoraRtmKit.framework; sourceTree = "<group>"; };
-		63B3572B23BF247C0034F54B /* AudioCallManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioCallManager.h; sourceTree = "<group>"; };
-		63B3572D23BF24920034F54B /* AudioCallManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioCallManager.m; sourceTree = "<group>"; };
+		63B3572B23BF247C0034F54B /* RtcManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RtcManager.h; sourceTree = "<group>"; };
+		63B3572D23BF24920034F54B /* RtcManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RtcManager.m; sourceTree = "<group>"; };
 		63B3572F23BF24AD0034F54B /* IRTCCallBack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IRTCCallBack.h; sourceTree = "<group>"; };
 		63B3579023C45F290034F54B /* ACMAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ACMAction.h; sourceTree = "<group>"; };
 		63B3579223C468730034F54B /* ACMAction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ACMAction.m; sourceTree = "<group>"; };
@@ -447,8 +447,8 @@
 		63B3572A23BF24140034F54B /* RTC */ = {
 			isa = PBXGroup;
 			children = (
-				63B3572B23BF247C0034F54B /* AudioCallManager.h */,
-				63B3572D23BF24920034F54B /* AudioCallManager.m */,
+				63B3572B23BF247C0034F54B /* RtcManager.h */,
+				63B3572D23BF24920034F54B /* RtcManager.m */,
 			);
 			path = RTC;
 			sourceTree = "<group>";
@@ -531,7 +531,7 @@
 				6349E8E223D15685009EEE99 /* BDSMixedModeSynthesizer.h in Headers */,
 				6349E8E423D15685009EEE99 /* BDSSpeechSynthesizerParams.h in Headers */,
 				63A24F8723CD914900D2ADC4 /* BDSEventManager.h in Headers */,
-				63B3572C23BF247C0034F54B /* AudioCallManager.h in Headers */,
+				63B3572C23BF247C0034F54B /* RtcManager.h in Headers */,
 				63A24F8523CD914900D2ADC4 /* BDSWakeupParameters.h in Headers */,
 				63B357B123C5E69C0034F54B /* DialAction.h in Headers */,
 				63B357A823C4B1B30034F54B /* LoginAction.h in Headers */,
@@ -689,7 +689,7 @@
 				63B3579723C469400034F54B /* ActionManager.m in Sources */,
 				630F77D923D545A90071DF9F /* AuditTask.m in Sources */,
 				6349E8EB23D157B4009EEE99 /* TtsManager.m in Sources */,
-				63B3572E23BF24920034F54B /* AudioCallManager.m in Sources */,
+				63B3572E23BF24920034F54B /* RtcManager.m in Sources */,
 				63B357C223C6D89C0034F54B /* CallManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

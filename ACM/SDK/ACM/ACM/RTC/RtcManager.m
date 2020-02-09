@@ -7,18 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AudioCallManager.h"
+#import "RtcManager.h"
 #import "../Action/ActionManager.h"
 #import "../ASR/AudioStreamMgr.h"
 
 static AgoraRtcEngineKit *_rtcKit = nil;
-static AudioCallManager *instance = nil;
+static RtcManager *instance = nil;
 
-@interface AudioCallManager ()  <AgoraRtcEngineDelegate, AudioStreamPushDelegate>
+@interface RtcManager ()  <AgoraRtcEngineDelegate, AudioStreamPushDelegate>
 @property NSMutableDictionary *channelMemberList;
 @end
 
-@implementation AudioCallManager
+@implementation RtcManager
 
 + (void) startAudioCall: ( nullable NSString *) appId  user:(nullable NSString *)userID  channel:(nullable NSString *)channelId rtcToken:(nullable NSString *)token callInstance:(nonnull AcmCall *) call{
     
@@ -26,7 +26,7 @@ static AudioCallManager *instance = nil;
     
     if(_rtcKit == nil)
     {
-        instance = [AudioCallManager alloc];
+        instance = [RtcManager alloc];
         instance.channelMemberList = [[NSMutableDictionary alloc]init];
          _rtcKit = [AgoraRtcEngineKit sharedEngineWithAppId:appId delegate:instance];
         [instance subScribeAudioStream];
@@ -64,6 +64,10 @@ static AudioCallManager *instance = nil;
     [_rtcKit setEnableSpeakerphone:YES];
 }
 
++ (void) startVideoCall: ( nullable NSString *) appId  callInstance:(nonnull AcmCall *) call{
+    
+}
+
 + (int)muteLocalAudioStream:(BOOL)mute
 {
     if(_rtcKit != nil)
@@ -97,6 +101,13 @@ static AudioCallManager *instance = nil;
         [_rtcKit muteAllRemoteAudioStreams:false];
         [_rtcKit muteLocalAudioStream:false];
     }
+}
+
++ (int)setupLocalVideo:(AgoraRtcVideoCanvas * _Nullable)local{
+    if(_rtcKit != nil){
+        return [_rtcKit setupLocalVideo:local];
+    }
+    return -1;
 }
 
 

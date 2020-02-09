@@ -10,7 +10,7 @@
 #import "ACMAudioInputStream.h"
 #import <AudioToolbox/AudioToolbox.h>
 //#import <AVFoundation/AVAudioSession.h>
-#import "../RTC/AudioCallManager.h"
+#import "../RTC/RtcManager.h"
 
 const int kk_recorder_buffers_number         = 3;
 const int kk_recorder_channels_per_frame     = 1;
@@ -191,7 +191,7 @@ const int kk_recorder_frames_per_package     = 1;
          
        
         
-        [AudioCallManager pushExternalAudioFrameRawData:inBuffer->mAudioData samplenum:inBuffer->mAudioDataByteSize timestampnum:0];
+        [RtcManager pushExternalAudioFrameRawData:inBuffer->mAudioData samplenum:inBuffer->mAudioDataByteSize timestampnum:0];
         if (isRecording) {
             AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, NULL);
         }

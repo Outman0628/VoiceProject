@@ -14,7 +14,7 @@
 #import "MonitorAction.h"
 #import "../Message/RunTimeMsgManager.h"
 #import "../Call/CallManager.h"
-#import "../RTC/AudioCallManager.h"
+#import "../RTC/RtcManager.h"
 #import "../ASR/ACMAudioInputStream.h"
 #import "../ASR/ExternalAudio.h"
 
@@ -136,8 +136,8 @@ static ActionManager* actionMgrInstance = nil;
     AcmCall *call = eventData.param4;
     if(call.stage != Finished)
     {
-        [AudioCallManager muteLocalAudioStream:call.localMuteState];
-        [AudioCallManager muteAllRemoteAudioStreams:call.remoteMuteState];
+        [RtcManager muteLocalAudioStream:call.localMuteState];
+        [RtcManager muteAllRemoteAudioStreams:call.remoteMuteState];
     }
 }
 

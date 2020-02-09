@@ -13,7 +13,7 @@
 #import "../Message/RunTimeMsgManager.h"
 #import "ActionManager.h"
 #import "IACMCallBack.h"
-#import "../RTC/AudioCallManager.h"
+#import "../RTC/RtcManager.h"
 #import "MonitorAction.h"
 #import "OnPhoneAction.h"
 #import "../Message/HttpUtil.h"
@@ -37,7 +37,6 @@ static NSString *DialRobot = @"/dapi/call/robot";
 
 -(id _Nullable )init: (nonnull ActionManager *) mgr userAcount:(nonnull NSString *)userId{
     if (self = [super init]) {
-        
         self.type = ActionDial;
         self.actionMgr = mgr;
         self.userId = userId;        
@@ -46,9 +45,13 @@ static NSString *DialRobot = @"/dapi/call/robot";
 }
 
 - (void) HandleEvent: (EventData) eventData{
-    if(eventData.type == EventDial)
+    if(eventData.type == EventAudioDial)
     {
-        [self RequestPhoneCallInfo:eventData];    // step 1 向后台申请拨号
+        [self RequestPhoneCallInfo:eventData];    // audio call step 1 向后台申请拨号
+    }
+    else if(eventData.type == EventVideoDial)
+    {
+        [self RequestPhoneCallInfo:eventData];    // video call step 1 向后台申请拨号
     }
     else if(eventData.type == EventBackendRequestDialSucceed)  // step 2 创建消息同步通道
     {
@@ -142,7 +145,12 @@ static NSString *DialRobot = @"/dapi/call/robot";
         {
             [call.callback didPhoneDialResult:AcmPrepareOnphoneStage];
         }
-        [AudioCallManager startAudioCall:call.appId user:call.selfId channel:call.channelId   rtcToken:call.token callInstance:call];
+        if(call.callType == AudioCall){
+            [RtcManager startAudioCall:call.appId user:call.selfId channel:call.channelId   rtcToken:call.token callInstance:call];
+        }
+        else if(call.callType == VideoCall){
+            
+        }
     }
 }
 
@@ -167,6 +175,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
 - (void) JoinSyncChannel: (EventData ) eventData{
     AcmCall *call = eventData.param4;
     
+    /*
     BOOL joinEventChannelRet = [call joinEventSyncChannel:^(AgoraRtmJoinChannelErrorCode errorCode) {
         if(AgoraRtmJoinChannelErrorOk == errorCode){
             EventData nextEvent = {EventJoinEventSyncChannelSucceed,0,0,0,call};
@@ -180,6 +189,66 @@ static NSString *DialRobot = @"/dapi/call/robot";
     
     if(joinEventChannelRet == NO){
         [self quitDialingPhoneCall:call EndCode:AcmDialErrorJoinEventSyncChannel NeedSendNotification:YES];
+    }
+     */
+    if(call.callType == AudioCall){
+        [self JoinAudioChannel:call];
+    }else if(call.callType == VideoCall)
+    {
+        [self setupLocalVideo:call];
+        [self JoinVideoChannel:call];
+    }
+}
+
+- (void) JoinAudioChannel: (AcmCall *) call{
+    BOOL joinEventChannelRet = [call joinEventSyncChannel:^(AgoraRtmJoinChannelErrorCode errorCode) {
+        if(AgoraRtmJoinChannelErrorOk == errorCode){
+            EventData nextEvent = {EventJoinEventSyncChannelSucceed,0,0,0,call};
+            [[ActionManager instance] HandleEvent:nextEvent];
+        }
+        else{
+            NSLog(@"ACM Err: failed to join event channel:%ld", (long)errorCode);
+            [self quitDialingPhoneCall:call EndCode:AcmDialErrorJoinEventSyncChannel NeedSendNotification:YES];
+        }
+    }];
+    
+    if(joinEventChannelRet == NO){
+        [self quitDialingPhoneCall:call EndCode:AcmDialErrorJoinEventSyncChannel NeedSendNotification:YES];
+    }
+}
+
+- (void) JoinVideoChannel: (AcmCall *) call {
+    
+    BOOL joinEventChannelRet = [call joinEventSyncChannel:^(AgoraRtmJoinChannelErrorCode errorCode) {
+        if(AgoraRtmJoinChannelErrorOk == errorCode){
+            EventData nextEvent = {EventJoinEventSyncChannelSucceed,0,0,0,call};
+            [[ActionManager instance] HandleEvent:nextEvent];
+        }
+        else{
+            NSLog(@"ACM Err: failed to join event channel:%ld", (long)errorCode);
+            [self quitDialingPhoneCall:call EndCode:AcmDialErrorJoinEventSyncChannel NeedSendNotification:YES];
+        }
+    }];
+    
+    if(joinEventChannelRet == NO){
+        [self quitDialingPhoneCall:call EndCode:AcmDialErrorJoinEventSyncChannel NeedSendNotification:YES];
+    }
+}
+
+
+
+- (void)setupLocalVideo :(AcmCall *) call{
+    
+    if(call.videoCallParam.localView != nil){
+        AgoraRtcVideoCanvas *videoCanvas = [[AgoraRtcVideoCanvas alloc] init];
+        videoCanvas.uid = 0;
+        // UID = 0 means we let Agora pick a UID for us
+        
+        videoCanvas.view = call.videoCallParam.localView;
+        videoCanvas.renderMode = call.videoCallParam.renderMode;
+        
+        // Bind local video stream to view
+        [RtcManager setupLocalVideo:videoCanvas];
     }
 }
 
@@ -333,7 +402,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
                     
                     NSLog(@"Join to Robot channel:%@", self.channelId);
                     
-                    [AudioCallManager startAudioCall:data[@"appID"] user:self.userId channel:self.channelId   rtcToken:data[@"token"] callInstance:nil];
+                    [RtcManager startAudioCall:data[@"appID"] user:self.userId channel:self.channelId   rtcToken:data[@"token"] callInstance:nil];
                     
                 }
                 else
@@ -433,7 +502,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
         [call updateStage:Finished];
         if(call.channelId != nil)
         {
-            [AudioCallManager endAudioCall];
+            [RtcManager endAudioCall];
             
             
             // 拨号间断退出时，发送p2p 消息取消电话

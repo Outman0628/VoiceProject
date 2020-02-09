@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "ACMAction.h"
 #import "../IRTCCallBack.h"
-#import "../RTC/AudioCallManager.h"
+#import "../RTC/RtcManager.h"
 #import "LoginAction.h"
 #import "ActionManager.h"
 
@@ -63,7 +63,7 @@
     
     if(state == AgoraRtmConnectionStateAborted)
     {
-        [AudioCallManager endAudioCall];
+        [RtcManager endAudioCall];
         LoginAction *nextAction = [[LoginAction alloc]init:[ActionManager instance] apnsToken:[ActionManager instance].apnsToken];
         [[ActionManager instance] actionChange:self destAction:nextAction];
     }

@@ -119,7 +119,7 @@
 -( nonnull AcmCall * )updateDialCall: (nonnull NSDictionary *)callInfo selfUid:(nonnull NSString*)uid ircmCallback:(id <IRTCCallBack> _Nullable)delegate  preInstance:(nonnull AcmCall *)call;
 {
     AcmCall *instance = call;
-    instance.callType = AudioCall;
+    //instance.callType = AudioCall;
     [instance updateStage:Dialing];
     instance.role = Originator;
    

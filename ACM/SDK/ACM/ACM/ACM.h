@@ -97,6 +97,18 @@ FOUNDATION_EXPORT const unsigned char ACMVersionString[];
  */
 + (nullable Call *) ringGroupAudioCall: (nonnull NSArray *)peerList ircmCallback:(id <IRTCCallBack> _Nullable)delegate;
 
+
+/**
+ 拨打视频电话
+ 
+ @param peerList 接听方ID list
+ @param videoParam 视频通话参数
+ @param delegate 通话回调
+ @return 拨打对象
+ 
+ */
++ (nullable Call *) ringVideoCall: (nonnull NSArray *)peerList VideoCallParam:(VideoParam) videoParam ircmCallback:(id <IRTCCallBack> _Nullable)delegate;
+
 /*
  处理APNS 推送消息
  

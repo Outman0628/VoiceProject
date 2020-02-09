@@ -11,7 +11,7 @@
 
 #import <AgoraRtmKit/AgoraRtmKit.h>
 #import "Message/RunTimeMsgManager.h"
-#import "RTC/AudioCallManager.h"
+#import "RTC/RtcManager.h"
 #import "Action/ActionManager.h"
 #import "Action/EventData.h"
 #import "Message/ApnsMessageManager.h"
@@ -119,7 +119,7 @@ static ActionManager *actionMgr = nil;
         NSArray *peerList = [[NSArray alloc] initWithObjects:peerId, nil];
         
         Call *call = [CallManager prepareDialCall:peerList Type:AudioCall ircmCallback:delegate];
-        EventData eventData = {EventDial, 0,0,0,nil,delegate,call};
+        EventData eventData = {EventAudioDial, 0,0,0,nil,delegate,call};
         [actionMgr HandleEvent:eventData];
         return call;
     }
@@ -132,7 +132,21 @@ static ActionManager *actionMgr = nil;
     {
         //EventData eventData = {EventDial, 0,0,0,peerId};
         Call *call = [CallManager prepareDialCall:peerList Type:AudioCall ircmCallback:delegate];
-        EventData eventData = {EventDial, 0,0,0,nil,delegate,call};
+        EventData eventData = {EventAudioDial, 0,0,0,nil,delegate,call};
+        [actionMgr HandleEvent:eventData];
+        return call;
+    }
+    
+    return nil;
+}
+
++ (nullable Call *) ringVideoCall: (nonnull NSArray *)peerList VideoCallParam:(VideoParam) videoParam ircmCallback:(id <IRTCCallBack> _Nullable)delegate{
+    if(actionMgr != nil)
+    {
+        //EventData eventData = {EventDial, 0,0,0,peerId};
+        Call *call = [CallManager prepareDialCall:peerList Type:VideoCall ircmCallback:delegate];
+        call.videoCallParam = videoParam;
+        EventData eventData = {EventVideoDial, 0,0,0,nil,delegate,call};
         [actionMgr HandleEvent:eventData];
         return call;
     }
