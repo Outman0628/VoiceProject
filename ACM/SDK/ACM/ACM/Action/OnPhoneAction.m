@@ -134,9 +134,10 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
         CGSize size  ={[widthNum floatValue],[heightNum floatValue]};
         
         AgoraRtcVideoCanvas *canvas = [call.callback firstRemoteVideoDecodedOfUid:eventData.param4 size:size elapsed:eventData.param2];
+        canvas.uid = eventData.param1;
         
         if(canvas != nil){
-            [RtcManager setupRemoteVideo:canvas];
+            [RtcManager setupRemoteVideo:canvas];            
         }
     }
 }
@@ -282,7 +283,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
         [self JoinAudioChannel:call];
     }else if(call.callType == VideoCall)
     {
-        [self setupLocalVideo:call];
+        //[self setupLocalVideo:call];
         [self JoinVideoChannel:call];
     }
 }
@@ -301,6 +302,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
     }
 }
 
+/*
 - (void)setupLocalVideo :(AcmCall *) call{
     
     if(call.videoCallParam.localView != nil){
@@ -315,6 +317,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
         [RtcManager setupLocalVideo:videoCanvas];
     }
 }
+ */
 
 - (void) JoinVideoChannel: (AcmCall *) call {
     

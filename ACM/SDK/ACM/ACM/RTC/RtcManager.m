@@ -81,6 +81,8 @@ static RtcManager *instance = nil;
     [_rtcKit enableVideo];
     [_rtcKit enableAudio];
     
+    [RtcManager setupLocalVideo:call];
+    
     AgoraVideoEncoderConfiguration *encoderConfiguration =
 
     [[AgoraVideoEncoderConfiguration alloc] initWithSize:call.videoCallParam.size
@@ -103,6 +105,21 @@ static RtcManager *instance = nil;
     
     [_rtcKit setEnableSpeakerphone:YES];
     
+}
+
++ (void)setupLocalVideo :(AcmCall *) call{
+    
+    if(call.videoCallParam.localView != nil){
+        AgoraRtcVideoCanvas *videoCanvas = [[AgoraRtcVideoCanvas alloc] init];
+        videoCanvas.uid = 0;
+        // UID = 0 means we let Agora pick a UID for us
+        
+        videoCanvas.view = call.videoCallParam.localView;
+        videoCanvas.renderMode = call.videoCallParam.renderMode;
+        
+        // Bind local video stream to view
+        [_rtcKit setupLocalVideo:videoCanvas];        
+    }
 }
 
 + (int)muteLocalAudioStream:(BOOL)mute
@@ -140,12 +157,6 @@ static RtcManager *instance = nil;
     }
 }
 
-+ (int)setupLocalVideo:(AgoraRtcVideoCanvas * _Nullable)local{
-    if(_rtcKit != nil && local != nil){
-        return [_rtcKit setupLocalVideo:local];
-    }
-    return -1;
-}
 
 + (int)setupRemoteVideo:(AgoraRtcVideoCanvas * _Nonnull)remote{
     if(remote != nil && _rtcKit != nil){

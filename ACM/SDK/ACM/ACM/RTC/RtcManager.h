@@ -32,8 +32,6 @@
 
 + (void) endAudioCall;
 
-+ (int)setupLocalVideo:(AgoraRtcVideoCanvas * _Nullable)local;
-
 + (int)setupRemoteVideo:(AgoraRtcVideoCanvas * _Nonnull)remote;
 
 @end

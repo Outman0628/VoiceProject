@@ -79,7 +79,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P94-xo-Hyh">
-                                        <rect key="frame" x="102" y="32" width="62" height="30"/>
+                                        <rect key="frame" x="50" y="32" width="62" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="发送消息"/>
                                         <connections>
@@ -87,11 +87,19 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yqI-Je-sWz">
-                                        <rect key="frame" x="237" y="32" width="62" height="30"/>
+                                        <rect key="frame" x="165" y="32" width="92" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="拨打电话"/>
+                                        <state key="normal" title="拨打语音电话"/>
                                         <connections>
                                             <action selector="audioCall:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SYJ-HK-hbr"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8L5-8L-dXj">
+                                        <rect key="frame" x="300" y="32" width="92" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="拨打视频电话"/>
+                                        <connections>
+                                            <action selector="dialVideoCall:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Rj8-EY-wKq"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="32G-Ww-sCH">
@@ -131,11 +139,11 @@
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                             </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4t7-15-lu5" colorLabel="IBBuiltInLabel-Gray">
-                                <rect key="frame" x="0.0" y="255" width="413" height="454"/>
+                                <rect key="frame" x="0.0" y="248" width="413" height="461"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uwC-xl-g7U">
-                                        <rect key="frame" x="114" y="280" width="184" height="51"/>
+                                        <rect key="frame" x="114" y="287" width="183" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="32"/>
                                         <state key="normal" title="切换话语权">
@@ -146,7 +154,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EiK-kK-ATJ">
-                                        <rect key="frame" x="113" y="207" width="184" height="51"/>
+                                        <rect key="frame" x="112" y="203" width="185" height="54"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="32"/>
                                         <state key="normal" title="接听">
@@ -157,7 +165,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wPU-sW-D7w">
-                                        <rect key="frame" x="114" y="280" width="184" height="51"/>
+                                        <rect key="frame" x="114" y="287" width="183" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="32"/>
                                         <state key="normal" title="助手接听">
@@ -168,7 +176,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5K8-hM-XFv">
-                                        <rect key="frame" x="114" y="330" width="184" height="51"/>
+                                        <rect key="frame" x="114" y="339" width="183" height="55"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="32"/>
                                         <state key="normal" title="挂断">
@@ -179,7 +187,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Moy-mX-8hd">
-                                        <rect key="frame" x="113" y="207" width="184" height="51"/>
+                                        <rect key="frame" x="112" y="203" width="185" height="54"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="32"/>
                                         <state key="normal" title="结束">
@@ -190,7 +198,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IZz-7A-lYL">
-                                        <rect key="frame" x="131" y="83" width="148" height="33"/>
+                                        <rect key="frame" x="131" y="86" width="147" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="27"/>
                                         <color key="textColor" red="0.078184891290000003" green="1" blue="0.89387003229999995" alpha="1" colorSpace="calibratedRGB"/>
@@ -238,6 +246,7 @@
                     <connections>
                         <outlet property="answerCallBtn2" destination="EiK-kK-ATJ" id="3If-bo-tdW"/>
                         <outlet property="answerPanel" destination="4t7-15-lu5" id="bkE-jk-Xed"/>
+                        <outlet property="audioCallBtn" destination="8L5-8L-dXj" id="2rW-Im-0j8"/>
                         <outlet property="authorityBtn" destination="uwC-xl-g7U" id="SXy-LN-hbs"/>
                         <outlet property="callPanel" destination="4PM-SR-UDR" id="EG4-e0-4Sl"/>
                         <outlet property="callRobotBtn" destination="32G-Ww-sCH" id="xkz-eI-ahh"/>

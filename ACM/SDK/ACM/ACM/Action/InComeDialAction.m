@@ -287,7 +287,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
 
 - (void) HandleEventRobotAnsweredCall: (EventData) eventData{
     AcmCall *call = eventData.param4;
-    
+    /*
     // step 1 加入事件频道
     BOOL joinEventChannelRet = [call joinEventSyncChannel:^(AgoraRtmJoinChannelErrorCode errorCode) {
         if(AgoraRtmJoinChannelErrorOk == errorCode){
@@ -330,7 +330,23 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     }
     
     
+    */
+    // step 2 广播代接事件
+    [call broadcastRobotAnswerPhoneCall];
     
+    // step 3 跳转到onphone state
+    OnPhoneAction* onPhone = [[OnPhoneAction alloc]init];
+    
+    [[ActionManager instance] actionChange:self destAction:onPhone];
+    
+    EventData nextEventdata = {EventRobotAnsweredCall,0,0,0,call};
+    
+    [[ActionManager instance] HandleEvent:nextEventdata];
+    
+    dispatch_async(dispatch_get_main_queue(),^{
+        
+        [call.callback didPhoneDialResult: AcmDialRobotAnswered];
+    });
     
     
 }

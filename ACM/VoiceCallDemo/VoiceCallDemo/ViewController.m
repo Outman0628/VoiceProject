@@ -13,6 +13,8 @@
 #import <ACM/AnswerAssistant.h>
 #import <ACM/Assistant.h>
 #import <ACM/AssistantItem.h>
+#import "../VideoChat/VideoChatViewController.h"
+#import <UIKit/UIKit.h>
 
 
 #define hostUrl @"https://liu.enjoyst.com"
@@ -26,6 +28,7 @@
 @property Call* outComeCall;
 @property NSInteger callTimerCount;
 @property AVAudioPlayer* player;
+@property VideoChatViewController * videoCallViewCtrl;
 
 //@property (nonatomic, copy) NSString *dialChannelId;
 
@@ -62,6 +65,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *remoteUserIdLabel2;
 
 @property (weak, nonatomic) IBOutlet UIButton *authorityBtn;
+
+@property (weak, nonatomic) IBOutlet UIButton *audioCallBtn;
 
 @end
 
@@ -241,6 +246,46 @@
 
 }
 
+- (IBAction)dialVideoCall:(id)sender {
+    
+
+    
+    if(!self.checkPhoneCallParameters)
+    {
+        return;
+    }
+    
+    NSString * storyboardName = @"Main";
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle: nil];
+    self.videoCallViewCtrl = (VideoChatViewController*)[storyboard instantiateViewControllerWithIdentifier:@"VIDEO_CHAT_VIEW_CONTROLLER"];
+    
+    [self.navigationController pushViewController:self.videoCallViewCtrl animated:YES];
+    
+    self.videoCallViewCtrl.localVideo.hidden = false;
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1000*1000*5), dispatch_get_main_queue(), ^{
+        NSArray *peersList = [self.remoteUserIdTextField.text componentsSeparatedByString:@";"];
+        VideoParam  videoParam;
+        videoParam.bitrate  = AgoraVideoBitrateStandard;
+        videoParam.frameRate = AgoraVideoFrameRateFps15;
+        videoParam.size = AgoraVideoDimension640x360;
+        videoParam.orientationMode = AgoraVideoOutputOrientationModeAdaptative;
+        
+        videoParam.localView = self.videoCallViewCtrl.localVideo;
+        videoParam.renderMode = AgoraVideoRenderModeHidden;
+        
+        
+        
+        self.outComeCall = [ACM ringVideoCall:peersList VideoCallParam:videoParam ircmCallback:self];
+        
+        
+        self.callPanel.hidden = false;
+        self.remoteUserIdLabel.text = self.remoteUserIdTextField.text;
+    });
+
+}
+
+
 - (void) dropTest{
     /*
     [ACM loggedInCheck:self.userIdTextField.text completion:^(BOOL alreadyLoggedin, AgoraRtmQueryPeersOnlineErrorCode errorCode) {
@@ -345,7 +390,30 @@
 - (IBAction)answerCall:(id)sender {
     if(self.inComeCall != nil)
     {
-        [ACM agreeCall:self.inComeCall.channelId ircmCallback:self VideoCallParam:nil];
+        if(self.inComeCall.callType == AudioCall){
+            [ACM agreeCall:self.inComeCall.channelId ircmCallback:self VideoCallParam:nil];
+        }else{
+            
+            NSString * storyboardName = @"Main";
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle: nil];
+            self.videoCallViewCtrl = (VideoChatViewController*)[storyboard instantiateViewControllerWithIdentifier:@"VIDEO_CHAT_VIEW_CONTROLLER"];
+            
+            [self.navigationController pushViewController:self.videoCallViewCtrl animated:YES];
+            
+             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1000*1000*5), dispatch_get_main_queue(), ^{
+            VideoParam  videoParam;
+            videoParam.bitrate  = AgoraVideoBitrateStandard;
+            videoParam.frameRate = AgoraVideoFrameRateFps15;
+            videoParam.size = AgoraVideoDimension640x360;
+            videoParam.orientationMode = AgoraVideoOutputOrientationModeAdaptative;
+            
+            videoParam.localView = self.videoCallViewCtrl.localVideo;
+            videoParam.renderMode = AgoraVideoRenderModeHidden;
+            
+            [ACM agreeCall:self.inComeCall.channelId ircmCallback:self VideoCallParam:&videoParam];
+             });
+
+        }
         self.answerCallBtn2.hidden = true;
         self.endCallBtn2.hidden = false;
         self.answerPanel.hidden = false;
@@ -511,7 +579,11 @@
     self.endCallBtn2.hidden = true;
     self.robotAnswerCallBtn.hidden = false;
     self.answerPanel.hidden = false;
-    self.remoteUserIdLabel2.text = call.callerId;
+    if(call.callType == AudioCall){
+        self.remoteUserIdLabel2.text =  [NSString stringWithFormat:@"音频通话:%@",call.callerId];
+    }else if(call.callType == VideoCall){
+        self.remoteUserIdLabel2.text =  [NSString stringWithFormat:@"视频通话:%@",call.callerId];
+    }
     self.rejectBtn.hidden = false;
     self.authorityBtn.hidden = true;
     
@@ -556,6 +628,24 @@
     {
         NSLog(@"频道在线人员:%@", onlineMemberList);
         
+    }
+}
+
+- (AgoraRtcVideoCanvas *_Nullable) firstRemoteVideoDecodedOfUid:(NSString *_Nonnull)uid size: (CGSize)size elapsed:(NSInteger)elapsed{
+    
+    if(self.videoCallViewCtrl != nil){
+        
+        if (self.videoCallViewCtrl.remoteVideo.hidden) {
+            self.videoCallViewCtrl.remoteVideo.hidden = NO;
+        }
+         
+        AgoraRtcVideoCanvas *videoCanvas = [[AgoraRtcVideoCanvas alloc] init];
+        
+        videoCanvas.view = self.videoCallViewCtrl.remoteVideo;
+        videoCanvas.renderMode = AgoraVideoRenderModeHidden;
+        return videoCanvas;
+    }else{
+        return nil;
     }
 }
 

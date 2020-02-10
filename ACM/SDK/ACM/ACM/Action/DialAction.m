@@ -207,7 +207,6 @@ static NSString *DialRobot = @"/dapi/call/robot";
         [self JoinAudioChannel:call];
     }else if(call.callType == VideoCall)
     {
-        [self setupLocalVideo:call];
         [self JoinVideoChannel:call];
     }
 }
@@ -244,23 +243,6 @@ static NSString *DialRobot = @"/dapi/call/robot";
     
     if(joinEventChannelRet == NO){
         [self quitDialingPhoneCall:call EndCode:AcmDialErrorJoinEventSyncChannel NeedSendNotification:YES];
-    }
-}
-
-
-
-- (void)setupLocalVideo :(AcmCall *) call{
-    
-    if(call.videoCallParam.localView != nil){
-        AgoraRtcVideoCanvas *videoCanvas = [[AgoraRtcVideoCanvas alloc] init];
-        videoCanvas.uid = 0;
-        // UID = 0 means we let Agora pick a UID for us
-        
-        videoCanvas.view = call.videoCallParam.localView;
-        videoCanvas.renderMode = call.videoCallParam.renderMode;
-        
-        // Bind local video stream to view
-        [RtcManager setupLocalVideo:videoCanvas];
     }
 }
 

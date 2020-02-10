@@ -86,11 +86,14 @@ static ActionManager *actionMgr = nil;
         AcmCall *call = [[ActionManager instance].callMgr getCall:channelId];
         if(call != nil){
             
-            if(call.callType == VideoCall && videoParam == nil){
-                 return AcmErrorInvalidParam;
+            if(call.callType == VideoCall){
+                if(videoParam == nil){
+                    return AcmErrorInvalidParam;
+                }
+                call.videoCallParam = (*videoParam);
             }
             
-            call.videoCallParam = (*videoParam);
+            
             call.callback = delegate;
             EventData eventData = {EventAgreeCall, 0,0,0,call};
             [actionMgr HandleEvent:eventData];
