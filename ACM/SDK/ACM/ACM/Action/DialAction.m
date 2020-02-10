@@ -69,10 +69,12 @@ static NSString *DialRobot = @"/dapi/call/robot";
     {
         [self prepareOnPhoneCall:eventData];
     }
+    /*
     else if(eventData.type == EventDidJoinedOfUid)       // step 6 第一个用户进入通话通道
     {
         [self HandleEventDidJoinedOfUid:eventData];
     }
+     */
     else if(eventData.type == EventDialRobotDemo)
     {
         [self RequestRobotCall];
@@ -149,11 +151,20 @@ static NSString *DialRobot = @"/dapi/call/robot";
             [RtcManager startAudioCall:call.appId user:call.selfId channel:call.channelId   rtcToken:call.token callInstance:call];
         }
         else if(call.callType == VideoCall){
-            
+            [RtcManager startVideoCall:call.appId callInstance:call];
         }
+        
+        [call updateStage:OnPhone];
+        // 跳转到OnPhoneAction
+        OnPhoneAction * action = [[OnPhoneAction alloc]init];
+        
+        [self.actionMgr actionChange:self destAction:action];
+        
+        EventData nextEvent = {EventOnPhoneCallFromDial,0,0,0,self.curCall};
+        [self.actionMgr HandleEvent:nextEvent];
     }
 }
-
+/*
 - (void) HandleEventDidJoinedOfUid: (EventData) eventData{
     if(self.curCall != nil && self.curCall.callback != nil)
     {
@@ -171,6 +182,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
     [self.actionMgr HandleEvent:nextEvent];
     
 }
+ */
 
 - (void) JoinSyncChannel: (EventData ) eventData{
     AcmCall *call = eventData.param4;

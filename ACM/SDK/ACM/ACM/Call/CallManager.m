@@ -292,9 +292,9 @@
                     ACMEventType type;
                     
                     if(isApnsCall){
-                        type = EventGotApnsAudioCall;
+                        type = EventGotApnsCall;
                     }else{
-                        type = EventGotRtmAudioCall;
+                        type = EventGotRtmCall;
                     }
                     
                     

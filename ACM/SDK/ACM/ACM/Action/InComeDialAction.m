@@ -35,14 +35,14 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
 
 - (void) HandleEvent: (EventData) eventData
 {
-    if(eventData.type == EventGotRtmAudioCall){       // step 1 RTM 来电消息
+    if(eventData.type == EventGotRtmCall){       // step 1 RTM 来电消息
         [self HandleRtmCallReq:eventData];
     }
-    else if(eventData.type == EventGotApnsAudioCall)   // step 1 APNS 来电消息
+    else if(eventData.type == EventGotApnsCall)   // step 1 APNS 来电消息
     {
         [self HandleApnsCallReq:eventData];
     }
-    else if(eventData.type == EventAgreeAudioCall)    // step 2 同意接听电话
+    else if(eventData.type == EventAgreeCall)    // step 2 同意接听电话
     {
         [self RequestAcceptDial:eventData];
     }
@@ -90,21 +90,19 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
 }
 
 - (void) ReadyForOnPhone: (EventData) eventData{
-     AcmCall *call = eventData.param4;
+    AcmCall *call = eventData.param4;
     
-    
-    if(call != nil){
-        
+    if(call != nil){        
         //[RunTimeMsgManager agreePhoneCall:call.callerId userAccount:call.selfId channelID:call.channelId];
         
         [call broadcastAgreePhoneCall];
         
         EventData nextData = { EventBackendAgreeAudioCall,0,0,0,call };
-         OnPhoneAction* onPhone = [[OnPhoneAction alloc]init];
+        OnPhoneAction* onPhone = [[OnPhoneAction alloc]init];
         
-         [[ActionManager instance] actionChange:self destAction:onPhone];
+        [[ActionManager instance] actionChange:self destAction:onPhone];
         
-         [[ActionManager instance] HandleEvent:nextData];
+        [[ActionManager instance] HandleEvent:nextData];
     }
 }
 
@@ -209,14 +207,12 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
 }
 
 - (void) RequestAcceptDial: (EventData) eventData{
-    AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
+    AcmCall *call = eventData.param4;
     if(call == nil && call.role != Subscriber)
     {
         // todo callback return error
         return;
     }
-    
-    call.callback = eventData.param5;
     
     // 请求后台应答参数
     

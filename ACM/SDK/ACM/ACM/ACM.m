@@ -79,13 +79,29 @@ static ActionManager *actionMgr = nil;
      */
 }
 
-+ (void) agreeCall: ( nullable NSString *)channelId ircmCallback:(id <IRTCCallBack> _Nullable)delegate{
++ (AcmError) agreeCall: ( nullable NSString *)channelId ircmCallback:(id <IRTCCallBack> _Nullable)delegate VideoCallParam:(VideoParam *_Nullable) videoParam{
     //[AudioCallManager startAudioCall:AppId user:UserId channel:channelId rtcCallback:nil];
     if(actionMgr != nil)
     {
-        EventData eventData = {EventAgreeAudioCall, 0,0,0,channelId,delegate};
-        [actionMgr HandleEvent:eventData];
+        AcmCall *call = [[ActionManager instance].callMgr getCall:channelId];
+        if(call != nil){
+            
+            if(call.callType == VideoCall && videoParam == nil){
+                 return AcmErrorInvalidParam;
+            }
+            
+            call.videoCallParam = (*videoParam);
+            call.callback = delegate;
+            EventData eventData = {EventAgreeCall, 0,0,0,call};
+            [actionMgr HandleEvent:eventData];
+            
+            return AcmErrorOk;
+        }
+        
+        return AcmErrorInvalidParam;
     }
+    
+    return AcmErrorNotInited;
 }
 
 + (void) rejectCall: ( nullable NSString * )channel{

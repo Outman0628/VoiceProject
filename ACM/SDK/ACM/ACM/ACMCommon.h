@@ -32,10 +32,10 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     EventGotRtmTextMsg = 5,
     
     // 获取到RTM 电话
-    EventGotRtmAudioCall = 6,
+    EventGotRtmCall = 6,
     
     // 接听电话
-    EventAgreeAudioCall = 7,
+    EventAgreeCall = 7,
     
     // 拒绝电话
     EventRejectAudioCall = 8,
@@ -62,7 +62,7 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     EventRTMCancelCall = 15,
     
     // 获取到Apns 电话推送消息
-    EventGotApnsAudioCall = 16,
+    EventGotApnsCall = 16,
     
     // RTM 拨号消息失败
     EventRtmDialFailed = 17,
@@ -144,6 +144,9 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     
     // 视频拨号
     EventVideoDial = 42,
+    
+    // 视频会议远端用户第一帧视频数据已经到达
+    EventFirstRemoteVideoDecodedOfUid = 43,
 
     
     // 拨号

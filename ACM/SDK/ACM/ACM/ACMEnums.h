@@ -210,12 +210,17 @@ typedef NS_ENUM(NSInteger, AcmError) {
     /**
      未初始化
      */
-    AcmErrorNotInited = 1,
+    AcmErrorNotInited = -1,
     
     /**
      未登录
      */
-    AcmErrorNotLogin = 2,
+    AcmErrorNotLogin = -2,
+    
+    /**
+     参数错误
+     */
+    AcmErrorInvalidParam = -3,
 };
 
 /*

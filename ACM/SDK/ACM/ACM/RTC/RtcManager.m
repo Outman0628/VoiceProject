@@ -65,6 +65,43 @@ static RtcManager *instance = nil;
 }
 
 + (void) startVideoCall: ( nullable NSString *) appId  callInstance:(nonnull AcmCall *) call{
+    NSLog(@"RTC start video call. ");
+    
+    if(_rtcKit == nil)
+    {
+        instance = [RtcManager alloc];
+        instance.channelMemberList = [[NSMutableDictionary alloc]init];
+        _rtcKit = [AgoraRtcEngineKit sharedEngineWithAppId:appId delegate:instance];
+        [instance subScribeAudioStream];
+    }
+    
+    if(_rtcKit == nil)
+        return;
+    
+    [_rtcKit enableVideo];
+    [_rtcKit enableAudio];
+    
+    AgoraVideoEncoderConfiguration *encoderConfiguration =
+
+    [[AgoraVideoEncoderConfiguration alloc] initWithSize:call.videoCallParam.size
+                                               frameRate:call.videoCallParam.frameRate
+                                                 bitrate:call.videoCallParam.bitrate
+                                         orientationMode:call.videoCallParam.orientationMode];
+    
+    [_rtcKit setVideoEncoderConfiguration:encoderConfiguration];
+    
+    
+    [_rtcKit enableExternalAudioSourceWithSampleRate:16000 channelsPerFrame:1];
+    
+    [instance.channelMemberList removeAllObjects];
+    
+    [_rtcKit joinChannelByUserAccount:call.selfId token:call.token channelId:call.channelId joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {
+        NSLog(@"Succeed to join RTC video channel");
+        EventData eventData = {EventSelfInChannelSucceed, 0,0,0,call};
+        [[ActionManager instance]  HandleEvent:eventData];
+    }];
+    
+    [_rtcKit setEnableSpeakerphone:YES];
     
 }
 
@@ -104,8 +141,15 @@ static RtcManager *instance = nil;
 }
 
 + (int)setupLocalVideo:(AgoraRtcVideoCanvas * _Nullable)local{
-    if(_rtcKit != nil){
+    if(_rtcKit != nil && local != nil){
         return [_rtcKit setupLocalVideo:local];
+    }
+    return -1;
+}
+
++ (int)setupRemoteVideo:(AgoraRtcVideoCanvas * _Nonnull)remote{
+    if(remote != nil && _rtcKit != nil){
+        return [_rtcKit setupRemoteVideo:remote];
     }
     return -1;
 }
@@ -211,6 +255,19 @@ static RtcManager *instance = nil;
     if(userAccount != nil){
         EventData eventData = {EventDidJoinedOfUid, (int)uid,(int)elapsed,0,userAccount};
         [[ActionManager instance]  HandleEvent:eventData];
+    }
+}
+
+- (void)rtcEngine:(AgoraRtcEngineKit *)engine firstRemoteVideoDecodedOfUid:(NSUInteger)uid size: (CGSize)size elapsed:(NSInteger)elapsed {
+    NSNumber *num = [NSNumber numberWithInteger:uid];
+    NSString *userAccount = [_channelMemberList objectForKey:num];
+    
+    
+    if(userAccount != nil){
+        EventData eventData = {EventFirstRemoteVideoDecodedOfUid, (int)uid,(int)elapsed,0,userAccount,[NSNumber numberWithFloat:size.width],[NSNumber numberWithFloat:size.height]};
+        [[ActionManager instance]  HandleEvent:eventData];
+    }else{
+        NSLog(@"RTC first remote video user account not cached:%lu", (unsigned long)uid);
     }
 }
 

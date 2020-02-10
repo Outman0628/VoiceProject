@@ -50,6 +50,7 @@
 		63B3573E23BF31AE0034F54B /* CoreML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3573D23BF31AE0034F54B /* CoreML.framework */; };
 		63B3574023BF31C60034F54B /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3573F23BF31C60034F54B /* VideoToolbox.framework */; };
 		63B357A223C48E9B0034F54B /* BasicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B357A023C48E9B0034F54B /* BasicViewController.m */; };
+		63B63EE823F015FD0063EC0A /* VideoChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B63EE623F015FD0063EC0A /* VideoChatViewController.m */; };
 		63C7B61A23EA96D900A374FF /* DAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C7B61923EA96D900A374FF /* DAViewController.m */; };
 		63C7B61D23EA9FBB00A374FF /* DialItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C7B61C23EA9FBB00A374FF /* DialItemCell.m */; };
 		63C7B62023EAB3CF00A374FF /* DAOperateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C7B61F23EAB3CF00A374FF /* DAOperateCell.m */; };
@@ -141,6 +142,8 @@
 		63B357A023C48E9B0034F54B /* BasicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasicViewController.m; sourceTree = "<group>"; };
 		63B357A123C48E9B0034F54B /* BasicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicViewController.h; sourceTree = "<group>"; };
 		63B357AF23C5A8430034F54B /* VoiceCallDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VoiceCallDemo.entitlements; sourceTree = "<group>"; };
+		63B63EE423F015FD0063EC0A /* VideoChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoChatViewController.h; sourceTree = "<group>"; };
+		63B63EE623F015FD0063EC0A /* VideoChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoChatViewController.m; sourceTree = "<group>"; };
 		63C7B61823EA96BF00A374FF /* DAViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DAViewController.h; sourceTree = "<group>"; };
 		63C7B61923EA96D900A374FF /* DAViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DAViewController.m; sourceTree = "<group>"; };
 		63C7B61B23EA9FAB00A374FF /* DialItemCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DialItemCell.h; sourceTree = "<group>"; };
@@ -265,6 +268,7 @@
 		63B356CF23BE67A80034F54B = {
 			isa = PBXGroup;
 			children = (
+				63B63EE223F015FD0063EC0A /* VideoChat */,
 				63C7B61723EA960600A374FF /* DialAssistant */,
 				63155E9723D80D92000762DA /* TTS */,
 				630F77E023D5C4E80071DF9F /* AnswerAssistant */,
@@ -351,6 +355,15 @@
 				63B3571723BE68450034F54B /* AgoraRtmKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		63B63EE223F015FD0063EC0A /* VideoChat */ = {
+			isa = PBXGroup;
+			children = (
+				63B63EE423F015FD0063EC0A /* VideoChatViewController.h */,
+				63B63EE623F015FD0063EC0A /* VideoChatViewController.m */,
+			);
+			path = VideoChat;
 			sourceTree = "<group>";
 		};
 		63C7B61723EA960600A374FF /* DialAssistant */ = {
@@ -526,6 +539,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				63B356E023BE67A80034F54B /* ViewController.m in Sources */,
+				63B63EE823F015FD0063EC0A /* VideoChatViewController.m in Sources */,
 				63C7B62D23EAD05400A374FF /* DAItemContentCell.m in Sources */,
 				63155EB923D80D92000762DA /* TTSConfigViewController.m in Sources */,
 				63155EBB23D80D92000762DA /* NavigationTableViewCell.m in Sources */,

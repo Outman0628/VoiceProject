@@ -346,7 +346,7 @@
     if(count > 1 && self.stage == Validating){
         [self updateStage:Dialing];
         [[ActionManager instance].callMgr AddValidatedIncomeCall:self];
-        EventData eventData = {EventGotRtmAudioCall, 0,0,0,self};
+        EventData eventData = {EventGotRtmCall, 0,0,0,self};
         [[ActionManager instance] HandleEvent:eventData];
     }
 }

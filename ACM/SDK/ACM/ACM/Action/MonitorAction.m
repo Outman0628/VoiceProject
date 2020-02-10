@@ -39,7 +39,7 @@
 {
     //EventData eventData = {EventLogin, 0,0,0,userId,completionBlock,nil};
     
-    if(eventData.type == EventGotRtmAudioCall){
+    if(eventData.type == EventGotRtmCall){
         [self HandleRtmCallReq:eventData];
     }
     /*
@@ -62,7 +62,7 @@
     {
         [self dialRobotPhoneCall:eventData];
     }
-    else if(eventData.type == EventGotApnsAudioCall)
+    else if(eventData.type == EventGotApnsCall)
     {
         [self HandleApnsCallReq:eventData];
     }

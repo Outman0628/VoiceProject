@@ -66,7 +66,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
 {
     if(eventData.type == EventBackendAgreeAudioCall)
     {
-        [self JoinAudioCall:eventData];
+        [self JoinToChannelCall:eventData];
     }
     else if(eventData.type == EventLeaveCall)
     {
@@ -114,9 +114,30 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
     {
         [self HandleEventDidJoinedOfUid:eventData];
     }
+    else if(eventData.type == EventFirstRemoteVideoDecodedOfUid){
+        [self HandleFirstRemoteVideoDecoded:eventData];
+    }
     else
     {
         [super HandleEvent:eventData];
+    }
+}
+
+- (void) HandleFirstRemoteVideoDecoded: (EventData) eventData{
+    //firstRemoteVideoDecodedOfUid
+    AcmCall *call = [[ActionManager instance].callMgr getActiveCall];
+    if(call != nil  && call.stage == OnPhone && call.callback != nil)
+    {
+        NSNumber *widthNum = eventData.param5;
+        NSNumber *heightNum = eventData.param6;
+        
+        CGSize size  ={[widthNum floatValue],[heightNum floatValue]};
+        
+        AgoraRtcVideoCanvas *canvas = [call.callback firstRemoteVideoDecodedOfUid:eventData.param4 size:size elapsed:eventData.param2];
+        
+        if(canvas != nil){
+            [RtcManager setupRemoteVideo:canvas];
+        }
     }
 }
 
@@ -239,16 +260,68 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
      
 }
 
-- (void) JoinAudioCall: (EventData) eventData{
+- (void) JoinToChannelCall: (EventData) eventData{
+
     /*
-    [AudioCallManager startAudioCall:eventData.param4 user:eventData.param5 channel:eventData.param6 rtcToken:nil rtcCallback:eventData.param7];
-     */
     AcmCall *call = eventData.param4;
     self.curCall = call;
     if(call != nil)
     {
         
         [RtcManager startAudioCall:call.appId user:call.selfId channel:call.channelId rtcToken:call.token callInstance:call];
+        
+        [RtcManager muteLocalAudioStream:false];
+        
+        [call updateStage:OnPhone];
+        
+    }
+     */
+     AcmCall *call = eventData.param4;
+    
+    if(call.callType == AudioCall){
+        [self JoinAudioChannel:call];
+    }else if(call.callType == VideoCall)
+    {
+        [self setupLocalVideo:call];
+        [self JoinVideoChannel:call];
+    }
+}
+
+- (void) JoinAudioChannel: (AcmCall *) call{
+    self.curCall = call;
+    if(call != nil)
+    {
+        
+        [RtcManager startAudioCall:call.appId user:call.selfId channel:call.channelId rtcToken:call.token callInstance:call];
+        
+        [RtcManager muteLocalAudioStream:false];
+        
+        [call updateStage:OnPhone];
+        
+    }
+}
+
+- (void)setupLocalVideo :(AcmCall *) call{
+    
+    if(call.videoCallParam.localView != nil){
+        AgoraRtcVideoCanvas *videoCanvas = [[AgoraRtcVideoCanvas alloc] init];
+        videoCanvas.uid = 0;
+        // UID = 0 means we let Agora pick a UID for us
+        
+        videoCanvas.view = call.videoCallParam.localView;
+        videoCanvas.renderMode = call.videoCallParam.renderMode;
+        
+        // Bind local video stream to view
+        [RtcManager setupLocalVideo:videoCanvas];
+    }
+}
+
+- (void) JoinVideoChannel: (AcmCall *) call {
+    
+    if(call != nil)
+    {
+        
+        [RtcManager startVideoCall:call.appId callInstance:call];
         
         [RtcManager muteLocalAudioStream:false];
         

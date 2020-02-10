@@ -60,6 +60,15 @@
  */
 - (void)onlineMemberUpdated:(NSArray *_Nonnull) onlineMemberList;
 
+/*
+ *  已完成远端视频首帧解码回调
+ @param uid: 用户ID
+        size: 视频流尺寸（宽度和高度）
+        从本地用户调用 ringVideoCall 到发生此事件过去的时间（ms）
+ @return 应用层返回远端视频流显示视图
+ */
+- (AgoraRtcVideoCanvas *_Nullable) firstRemoteVideoDecodedOfUid:(NSString *_Nonnull)uid size: (CGSize)size elapsed:(NSInteger)elapsed;
+
 @end
 
 

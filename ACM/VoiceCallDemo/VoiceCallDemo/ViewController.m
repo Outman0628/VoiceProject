@@ -15,7 +15,7 @@
 #import <ACM/AssistantItem.h>
 
 
-
+#define hostUrl @"https://liu.enjoyst.com"
 
 @interface ViewController ()  <IACMCallBack, IRTCCallBack>
 @property NSDictionary *apnsMsg;
@@ -89,7 +89,7 @@
    */
     
     #if (TARGET_IPHONE_SIMULATOR)
-    [ACM initManager:@"bc6642a5ce2c423c8419c20e2e9e239f" backendHost:@"http://voice.enjoyst.com" apnsToken:@"simulatorToken" acmCallback:self ];
+    [ACM initManager:@"bc6642a5ce2c423c8419c20e2e9e239f" backendHost:hostUrl apnsToken:@"simulatorToken" acmCallback:self ];
     [ACM updateDialingTimer:_callTimerCount];
     [self autoLogin];
     #endif
@@ -102,7 +102,7 @@
 - (void) handleApnsToken: (nullable NSString *)token{
     if(token != nil)
     {
-        [ACM initManager:@"bc6642a5ce2c423c8419c20e2e9e239f" backendHost:@"http://voice.enjoyst.com" apnsToken:token acmCallback:self ];
+        [ACM initManager:@"bc6642a5ce2c423c8419c20e2e9e239f" backendHost:hostUrl apnsToken:token acmCallback:self ];
         [ACM updateDialingTimer:_callTimerCount];
         [self autoLogin];
     }
@@ -345,7 +345,7 @@
 - (IBAction)answerCall:(id)sender {
     if(self.inComeCall != nil)
     {
-        [ACM agreeCall:self.inComeCall.channelId ircmCallback:self];
+        [ACM agreeCall:self.inComeCall.channelId ircmCallback:self VideoCallParam:nil];
         self.answerCallBtn2.hidden = true;
         self.endCallBtn2.hidden = false;
         self.answerPanel.hidden = false;

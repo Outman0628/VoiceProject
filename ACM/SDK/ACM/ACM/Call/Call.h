@@ -60,7 +60,7 @@ typedef struct{
     // 视频源相关参数
     CGSize size;            // 视频分辨率
     AgoraVideoFrameRate frameRate;   // 帧率
-    NSInteger bitrage;                // 视频码率  相见 AgoraConstants.h
+    NSInteger bitrate;                // 视频码率  相见 AgoraConstants.h
     AgoraVideoOutputOrientationMode orientationMode; //视频方向
 } VideoParam;
 

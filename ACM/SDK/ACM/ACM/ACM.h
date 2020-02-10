@@ -58,8 +58,9 @@ FOUNDATION_EXPORT const unsigned char ACMVersionString[];
  
  @param channelId 通话请求频道
  @param delegate 通话回调
+ @param videoParam 视频电话参数
  */
-+ (void) agreeCall: ( nullable NSString *)channelId ircmCallback:(id <IRTCCallBack> _Nullable)delegate;
++ (AcmError) agreeCall: ( nullable NSString *)channelId ircmCallback:(id <IRTCCallBack> _Nullable)delegate VideoCallParam:(VideoParam *_Nullable) videoParam;
 
 /**
  拒接电话
