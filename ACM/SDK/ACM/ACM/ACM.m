@@ -24,7 +24,7 @@ static ActionManager *actionMgr = nil;
 
 
 
-+ (void) initManager: ( nullable NSString *) appId backendHost:(nullable NSString *)host apnsToken:(nullable NSString *)token acmCallback:(id <IACMCallBack> _Nullable)delegate{
++ (void) initManager: (nullable NSString *)host apnsToken:(nullable NSString *)token acmCallback:(id <IACMCallBack> _Nullable)delegate completion:(IACMInitBlock _Nullable)completionBlock{
      NSLog(@"init manager4");
     /*
     AppId = appId;
@@ -32,7 +32,7 @@ static ActionManager *actionMgr = nil;
      */
     if(actionMgr == nil)
     {
-        EventData eventData = {EventInitSDK, 0,0,0,appId,delegate,host,token};
+        EventData eventData = {EventInitSDK, 0,0,0,delegate,host,token,completionBlock};
         actionMgr = [[ActionManager alloc]init];
         [actionMgr HandleEvent:eventData];
     }

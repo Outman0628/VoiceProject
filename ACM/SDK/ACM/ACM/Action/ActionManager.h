@@ -20,6 +20,7 @@
 @property NSString* _Nullable appId;
 @property NSString* _Nullable host;
 @property NSInteger dialingTimetout;  // 拨号超时，默认30秒
+@property NSInteger onPhoneHeartInterval;  // 通话心跳
 @property CallManager* _Nonnull  callMgr;
 @property id<IACMCallBack> _Nullable  icmCallBack;
 @property AsrManager * _Nullable asrMgr;

@@ -94,7 +94,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
     {
         [self handleAsrRealTimeResult:eventData];
     }
-    else if(eventData.type == EventRemoeAsrResult)
+    else if(eventData.type == EventRemoteAsrResult)
     {
         [self handleRemoteAsrResult:eventData];
     }
@@ -192,8 +192,14 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
         BOOL isFinished = [msgDic[@"isFinished"] isEqualToString:@"true"] ? TRUE: FALSE;
         NSNumber *astTimestamp = msgDic[@"timeStamp"];
         NSNumber *msgTimestamp = msgDic[@"msgTimeStamp"];
+        NSString *uid = msgDic[@"proxUid"];
         
-        [_curCall.callback onRemoteText:msgDic[@"asrData"] remoteAccount:msgDic[@"accountSender"] timeStamp:astTimestamp.doubleValue msgStamp:msgTimestamp.doubleValue isFinished:isFinished];
+        if(uid == nil){
+            uid = msgDic[@"accountSender"];
+        }
+        
+        
+        [_curCall.callback onRemoteText:msgDic[@"asrData"] remoteAccount:uid timeStamp:astTimestamp.doubleValue msgStamp:msgTimestamp.doubleValue isFinished:isFinished];
     }
 }
 

@@ -19,7 +19,7 @@
 
 + (BOOL) init: ( nullable NSString *) appId  acmCallback:(id <IACMCallBack> _Nullable)delegate actionMgr:(nonnull ActionManager *)mgr;
 
-+ (void) loginACM: ( nullable NSString *) userId completion:(IACMLoginBlock _Nullable)completionBlock;
++ (void) loginACM: ( nullable NSString *) userId  AppId:( nullable NSString *) appId  Token:(nullable NSString *) token  completion:(IACMLoginBlock _Nullable)completionBlock;
 
 + (void) loggedInCheck: ( nullable NSString *) userId completion:(LoginCheckBlock _Nullable)completionBlock;
 

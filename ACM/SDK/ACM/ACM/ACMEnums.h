@@ -82,6 +82,43 @@ typedef NS_ENUM(NSInteger, AcmLoginErrorCode) {
 };
 
 /*
+ 初始化SDK 返回值类型
+ */
+
+typedef NS_ENUM(NSInteger, AcmInitErrorCode) {
+    
+    /**
+     无错误
+     */
+    AcmInitOk = 0,
+    
+    /**
+     参数错误
+     */
+    AcmInitParamError = -1,
+    
+    /**
+     网络错误
+     */
+    AcmInitNetworkError = -2,
+    
+    /**
+     服务器错误
+     */
+    AcmInitBackendError = -3,
+    
+    /**
+     服务器返回系统参数错误
+     */
+    AcmInitBackendResponseError = -4,
+    
+    /**
+     初始化通话监听服务错误
+     */
+    AcmInitRTMError = -5,
+};
+
+/*
  拨号错误类型
  */
 

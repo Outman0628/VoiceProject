@@ -61,6 +61,11 @@
  */
 
 /**
+ 初始化回调函数， 返回值参见 AcmInitErrorCode.
+ */
+typedef void (^IACMInitBlock)(AcmInitErrorCode errorCode);
+
+/**
  登录回调函， 返回值参见 AgoraRtmLoginErrorCode.
  */
 typedef void (^IACMLoginBlock)(AcmLoginErrorCode errorCode);

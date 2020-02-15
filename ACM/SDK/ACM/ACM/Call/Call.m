@@ -10,10 +10,12 @@
 #import "AcmCall.h"
 #import "../Action/ActionManager.h"
 #import "AcmCall.h"
+#import "../Message/HttpUtil.h"
 
 
 @interface Call()
 @property NSTimer *dialTimer;      // 拨号，拨号应答超时器
+@property NSTimer *heartTimer;      // 心跳计时
 // 在线人员列表
 @property NSMutableArray *  _Nonnull onlineMemberList;
 @end
@@ -76,11 +78,34 @@
         }
     }
     
+    if(_stage == OnPhone){
+        [self startHeartTimer];
+    }
+    
     if(_stage == Finished)
     {
         AcmCall *sonCall = (AcmCall *)self;
         [sonCall CallEnd];
+        
+        if(_heartTimer != nil){
+            [_heartTimer invalidate];
+        }
     }
+}
+
+- (void) startHeartTimer{
+    if(_heartTimer == nil){
+        _heartTimer = [NSTimer scheduledTimerWithTimeInterval:[ActionManager instance].onPhoneHeartInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
+            [self sendHeartBreak];
+        }];
+    }
+}
+
+- (void) sendHeartBreak{
+    NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, CallHeartApi];
+    NSString *param = [NSString stringWithFormat:@"uid=%@&channel=%@", _selfId, _channelId]; //带一个参数key传给服务器
+    
+    [HttpUtil HttpPost:stringUrl Param:param Callback:nil];
 }
 
 -(void)endObserverMode

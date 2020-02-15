@@ -285,7 +285,13 @@ enum DialItemDetailCount{
 }
 
 -(BOOL) generateDate{
-     _dialAss.dialDateTime = _dateCell.datePicker.date;
+     NSDate *date = _dateCell.datePicker.date;
+    
+    NSTimeZone *zone = [NSTimeZone systemTimeZone];
+    //得到源日期与世界标准时间的偏移量
+    NSInteger interval = [zone secondsFromGMTForDate: date];
+    //返回以当前NSDate对象为基准，偏移多少秒后得到的新NSDate对象
+    _dialAss.dialDateTime = [date dateByAddingTimeInterval: interval];
     
     return YES;
 }

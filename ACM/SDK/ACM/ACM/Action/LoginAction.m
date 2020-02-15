@@ -13,7 +13,7 @@
 #import "IACMCallBack.h"
 #import "../Message/HttpUtil.h"
 
-static NSString *BackLoginApi = @"/dapi/account/update";
+
 
 @interface LoginAction()
 
@@ -44,9 +44,14 @@ static NSString *BackLoginApi = @"/dapi/account/update";
     
     if(eventData.type == EventLogin)
     {
+        self.userId = eventData.param4;
+        [self getRtmConfig:eventData];
+    }
+    else if(eventData.type == EventGotRtmConfig)
+    {
         [self RTMLogin:eventData];
     }
-    if(eventData.type == EventRTMLoginResult)
+    else if(eventData.type == EventRTMLoginResult)
     {
         [self onRTMLoginResult:eventData];
     }
@@ -60,73 +65,11 @@ static NSString *BackLoginApi = @"/dapi/account/update";
 // RTM Login
 - (void) RTMLogin: (EventData) eventData
 {
-    self.userId = eventData.param4;
-    [RunTimeMsgManager loginACM:eventData.param4 completion:eventData.param5];
+    //+ (void) loginACM: ( nullable NSString *) userId  AppId:( nullable NSString *) appId  Token:(nullable NSString *) token  completion:(IACMLoginBlock _Nullable)completionBlock;
+    [RunTimeMsgManager loginACM:self.userId  AppId:eventData.param4  Token:eventData.param5 completion:eventData.param6 ];
 }
 
 - (void) BackendLogin{
-    
-    /*
-    NSString *stringUrl = [NSString stringWithFormat:@"%@%@",self.actionMgr.host, BackLoginApi];
-    
-    NSURL *url = [NSURL URLWithString:stringUrl];
-    
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    
-    request.timeoutInterval = 5.0;
-    
-    request.HTTPMethod = @"POST";
-    
-    NSString *bodyString = [NSString stringWithFormat:@"uid=%@&device=%@&apns_token=%@", self.userId,@"ios",self.apnsToken]; //带一个参数key传给服务器
-    
-    request.HTTPBody = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
-    
-    NSURLSession *session = [NSURLSession sharedSession];
-    
-    [[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        
-        if([(NSHTTPURLResponse *)response statusCode] == 200){
-            NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            NSData *jsonData = [str dataUsingEncoding:NSUTF8StringEncoding];
-            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
-            
-            BOOL ret = dic[@"success"];
-            AcmLoginErrorCode errCode;
-            
-            if(ret == YES)
-            {
-                
-                [self.actionMgr setUserId:self.userId];
-                [self.actionMgr actionDone:self];
-                
-                errCode = AcmRtmLoginErrorOk;
-            }
-            else
-            {
-                self.userId = nil;
-                [RunTimeMsgManager logoutACM];
-                errCode = AcmLoginBackendErrorUnknow;
-         
-            }
-            
-            if(self.completionBlock != nil)
-            {
-                
-                dispatch_async(dispatch_get_main_queue(),^{
-                    self.completionBlock(errCode);
-                });
-            }
-            
-        }
-        else{
-            self.userId = nil;
-            [RunTimeMsgManager logoutACM];
-            dispatch_async(dispatch_get_main_queue(),^{
-                self.completionBlock(AcmLoginBackendErrorUnknow);
-            });
-        }
-    }] resume];
-    */
     
    NSString *stringUrl = [NSString stringWithFormat:@"%@%@",self.actionMgr.host, BackLoginApi];
     
@@ -173,6 +116,73 @@ static NSString *BackLoginApi = @"/dapi/account/update";
             dispatch_async(dispatch_get_main_queue(),^{
                 self.completionBlock(AcmLoginBackendErrorUnknow);
             });
+        }
+    }];
+}
+
+
+- (void) getRtmConfig: (EventData) eventData{
+    NSString *stringUrl = [NSString stringWithFormat:@"%@%@",self.actionMgr.host, RTMConfigApi];
+    
+    NSString *bodyString = [NSString stringWithFormat:@"uid=%@", self.userId];
+    
+    [HttpUtil HttpPost:stringUrl Param:bodyString Callback:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+        if([(NSHTTPURLResponse *)response statusCode] == 200){
+            NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSData *jsonData = [str dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+            
+            BOOL ret = dic[@"success"];
+            AcmLoginErrorCode errCode = AcmRtmLoginErrorOk;
+            
+            if(ret == YES)
+            {
+                
+                NSDictionary *data = dic[@"data"];
+                
+                if(data != nil){
+                    NSString *rtmAppId = data[@"appID"];
+                    NSString *rtmToken = data[@"token"];
+                    
+                    if(rtmAppId != nil && rtmAppId.length > 0 && rtmToken != nil && rtmToken.length > 0){
+                       
+                        
+                        
+                        dispatch_async(dispatch_get_main_queue(),^{
+                             EventData nextEventData = {EventGotRtmConfig,0,0,0,rtmAppId,rtmToken,eventData.param5};
+                            [[ActionManager instance] HandleEvent:nextEventData];
+                        });
+                    }else{
+                        errCode = AcmLoginBackendErrorUnknow;
+                    }
+                
+                }else{
+                    errCode = AcmLoginBackendErrorUnknow;
+                }
+            }
+            else
+            {
+                errCode = AcmLoginBackendErrorUnknow;
+                
+            }
+            
+            if(errCode != AcmRtmLoginErrorOk && self.completionBlock != nil)
+            {
+                
+                dispatch_async(dispatch_get_main_queue(),^{
+                    self.completionBlock(errCode);
+                });
+            }
+            
+        }
+        else{
+            self.userId = nil;
+            if(self.completionBlock != nil){
+                dispatch_async(dispatch_get_main_queue(),^{
+                    self.completionBlock(AcmLoginBackendErrorUnknow);
+                });
+            }
         }
     }];
 }

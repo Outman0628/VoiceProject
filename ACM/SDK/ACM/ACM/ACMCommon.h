@@ -101,7 +101,7 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     EventASRRealTimeResult = 28,
     
     // ASR 远端数据
-    EventRemoeAsrResult = 29,
+    EventRemoteAsrResult = 29,
     
     // 获取话语权
     EventGetAuthority = 30,
@@ -147,6 +147,9 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     
     // 视频会议远端用户第一帧视频数据已经到达
     EventFirstRemoteVideoDecodedOfUid = 43,
+    
+    // 获取到RTM 后台配置信息
+    EventGotRtmConfig = 44,
 
     
     // 拨号

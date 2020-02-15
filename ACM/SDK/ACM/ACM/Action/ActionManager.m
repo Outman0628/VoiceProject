@@ -44,6 +44,7 @@ static ActionManager* actionMgrInstance = nil;
         self.asrMgr = [[AsrManager alloc]init];
         self.dialingTimetout = 30;
         self.isConnected = NO;
+        self.onPhoneHeartInterval = 31;
     }
     return self;
 }
@@ -51,10 +52,9 @@ static ActionManager* actionMgrInstance = nil;
 - (void) HandleEvent: (EventData) eventData{
     if(eventData.type == EventInitSDK && _activeAction == nil)
     {
-        self.appId = eventData.param4;
-        self.icmCallBack = eventData.param5;
-        self.host = eventData.param6;
-        self.apnsToken = eventData.param7;
+        self.icmCallBack = eventData.param4;
+        self.host = eventData.param5;
+        self.apnsToken = eventData.param6;
         
         self.activeAction = [[SDKInitAction alloc]init:self];
         

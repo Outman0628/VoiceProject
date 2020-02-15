@@ -48,20 +48,27 @@ static ActionManager *actionMgr = nil;
 }
 
 // 登录RTM
-+ (void) loginACM: ( nullable NSString *) userId completion:(IACMLoginBlock _Nullable)completionBlock{
++ (void) loginACM: ( nullable NSString *) userId  AppId:( nullable NSString *) appId  Token:(nullable NSString *) token  completion:(IACMLoginBlock _Nullable)completionBlock{
+    
+    _kit = nil;
+    
+    if(_kit == nil)
+    {
+        instance = [RunTimeMsgManager alloc];
+        _kit = [[AgoraRtmKit alloc] initWithAppId:appId delegate:instance];
+    }
     
     if(_kit == nil && completionBlock != nil)
     {
         NSLog(@"Err ACM not inited!");
-        completionBlock(AcmRtmLoginErrorUnknown);
+        completionBlock(AcmRtmLoginErrorLoginNotInitialized);
         return;
     }
     
-    [_kit loginByToken:nil user:userId completion:^(AgoraRtmLoginErrorCode errorCode) {
+    [_kit loginByToken:token user:userId completion:^(AgoraRtmLoginErrorCode errorCode) {
         
         EventData eventData = {EventRTMLoginResult, errorCode,0,0,completionBlock};
         [actionMgr HandleEvent:eventData];
-        
         
         
     }];
@@ -539,7 +546,7 @@ static ActionManager *actionMgr = nil;
     
     else if([title isEqualToString:@"ASRSync"])
     {
-        EventData eventData = {  EventRemoeAsrResult, 0,0,0,dic};
+        EventData eventData = {  EventRemoteAsrResult, 0,0,0,dic};
         [actionMgr HandleEvent:eventData];
     }
     else if([title isEqualToString:@"agreeCall"])

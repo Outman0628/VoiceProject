@@ -15,9 +15,10 @@
 #import "MonitorAction.h"
 #import "../RTC/RtcManager.h"
 #import "../Message/HttpUtil.h"
+#import "../Call/CallEventEnum.h"
 
-static NSString *RobotAnserApi = @"/dapi/invite/robot";
-static NSString *AnswerApi = @"/dapi/call/recieve";
+// static NSString *RobotAnserApi = @"/dapi/invite/robot";
+//static NSString *AnswerApi = @"/dapi/call/recieve";
 
 // 电话响铃Action
 @interface InComeDialAction ()
@@ -141,7 +142,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
 - (void) handleRtcError: (EventData) eventData{
     AcmCall *call = [[ActionManager instance].callMgr getActiveCall];
     
-    [self quitIncomeDialingPhoneCall:call ];
+    [self quitIncomeDialingPhoneCall:call EventCode:CallEventCallFailed_EndCall ];
     
     if(call != nil && call.callback != nil)
     {
@@ -168,7 +169,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
         }
     }
     
-    [self quitIncomeDialingPhoneCall:call];
+    [self quitIncomeDialingPhoneCall:call EventCode:CallEventCallerCancel_EndCall];
 }
 
 - (void) handleDialingTimeout: (EventData) eventData{
@@ -214,8 +215,64 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
         return;
     }
     
+    
     // 请求后台应答参数
     
+    NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, CallerEnterApi];
+    NSString *param =  [NSString stringWithFormat:@"uid=%@&channel=%@",call.selfId,call.channelId];
+    
+    [HttpUtil HttpPost:stringUrl Param:param Callback:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if([(NSHTTPURLResponse *)response statusCode] == 200){
+            NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSData *jsonData = [str dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+            
+            BOOL ret = dic[@"success"];
+            
+            NSLog(@"Response:%@", dic);
+            
+            if(ret == YES)
+            {
+                NSDictionary *data = dic[@"data"];
+                if(data != nil)
+                {
+                    call.appId = data[@"appID"];
+                    call.channelId = data[@"channel"];
+                    call.token = data[@"token"];
+                }
+                
+                EventData eventData = {EventBackendRequestAcceptDialSucceed,0,0,0,call};
+                dispatch_async(dispatch_get_main_queue(),^{
+                    [[ActionManager instance] HandleEvent:eventData];
+                });
+            }
+            else
+            {
+                // 通知错误发生
+                [call updateStage:Finished];
+                
+                dispatch_async(dispatch_get_main_queue(),^{
+                    [call.callback didPhoneDialResult: AcmDialErrorWrongApplyAnswerCallResponse];
+                });
+                
+                // 跳转到Monitor 状态
+                [self JumpBackToMonitorAction];
+                
+            }
+        }else{
+            // 通知错误发生
+            [call updateStage:Finished];
+            
+            dispatch_async(dispatch_get_main_queue(),^{
+                [call.callback didPhoneDialResult: AcmDialErrorApplyAnswerCall];
+            });
+            
+            // 跳转到Monitor 状态
+            [self JumpBackToMonitorAction];
+        }
+    }];
+    
+    /*
     NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, AnswerApi];
     
     NSURL *url = [NSURL URLWithString:stringUrl];
@@ -283,58 +340,16 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
             [self JumpBackToMonitorAction];
         }
     }] resume];
+     */
 }
 
 - (void) HandleEventRobotAnsweredCall: (EventData) eventData{
     AcmCall *call = eventData.param4;
-    /*
-    // step 1 加入事件频道
-    BOOL joinEventChannelRet = [call joinEventSyncChannel:^(AgoraRtmJoinChannelErrorCode errorCode) {
-        if(AgoraRtmJoinChannelErrorOk == errorCode){
-            
-            // step 2 广播代接事件
-            [call broadcastRobotAnswerPhoneCall];
-            
-            // step 3 跳转到onphone state
-            OnPhoneAction* onPhone = [[OnPhoneAction alloc]init];
 
-            [[ActionManager instance] actionChange:self destAction:onPhone];
-            
-            EventData nextEventdata = {EventRobotAnsweredCall,0,0,0,call};
-            
-            [[ActionManager instance] HandleEvent:nextEventdata];
-            
-            dispatch_async(dispatch_get_main_queue(),^{
-                
-                [call.callback didPhoneDialResult: AcmDialRobotAnswered];
-            });
-        }
-        else{
-            NSLog(@"ACM Err: failed to join event channel:%ld", (long)errorCode);
-            [self quitIncomeDialingPhoneCall:call];
-            if(call != nil && call.callback != nil)
-            {
-                
-                [call.callback didPhoneDialResult:AcmDialErrorJoinEventSyncChannel];
-            }
-        }
-    }];
-    
-    if(joinEventChannelRet == NO){
-        [self quitIncomeDialingPhoneCall:call];
-        if(call != nil && call.callback != nil)
-        {
-            
-            [call.callback didPhoneDialResult:AcmDialErrorJoinEventSyncChannel];
-        }
-    }
-    
-    
-    */
-    // step 2 广播代接事件
+    // step 1 广播代接事件
     [call broadcastRobotAnswerPhoneCall];
     
-    // step 3 跳转到onphone state
+    // step 2 跳转到onphone state
     OnPhoneAction* onPhone = [[OnPhoneAction alloc]init];
     
     [[ActionManager instance] actionChange:self destAction:onPhone];
@@ -363,6 +378,59 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     
     // 请求后台机器人应答
     
+    NSString *stringUrl =  [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, RobotAnserApi];
+    NSString *param = [NSString stringWithFormat:@"uid=%@&channel=%@",call.selfId,call.channelId];
+    
+    [HttpUtil HttpPost:stringUrl Param:param Callback:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if([(NSHTTPURLResponse *)response statusCode] == 200){
+            NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSData *jsonData = [str dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+            
+            BOOL ret = dic[@"success"];
+            
+            NSLog(@"Response:%@", dic);
+            
+            if(ret == YES)
+            {
+                NSDictionary *data = dic[@"data"];
+                if(data != nil)
+                {
+                    call.appId = data[@"appID"];
+                    call.channelId = data[@"channel"];
+                    call.token = data[@"token"];
+                }
+                
+                EventData nextEventdata = {EventRobotAnsweredCall,0,0,0,call};
+                [[ActionManager instance] HandleEvent:nextEventdata];
+            }
+            else
+            {
+                // 通知错误发生
+                [call updateStage:Finished];
+                
+                dispatch_async(dispatch_get_main_queue(),^{
+                    [call.callback didPhoneDialResult: AcmDialErrorWrongApplyAnswerCallResponse];
+                });
+                
+                // 跳转到Monitor 状态
+                [self JumpBackToMonitorAction];
+                
+            }
+        }else{
+            // 通知错误发生
+            [call updateStage:Finished];
+            
+            dispatch_async(dispatch_get_main_queue(),^{
+                [call.callback didPhoneDialResult: AcmDialErrorApplyAnswerCall];
+            });
+            
+            // 跳转到Monitor 状态
+            [self JumpBackToMonitorAction];
+        }
+    }];
+    
+    /*
     NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, RobotAnserApi];
     
     NSURL *url = [NSURL URLWithString:stringUrl];
@@ -428,61 +496,15 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
         [self JumpBackToMonitorAction];
     }        
     }] resume];
+     */
 }
 
 - (void) HandleRejectCall: (EventData) eventData{
     
-    /*
-    AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
-    if(call != nil){
-        [RunTimeMsgManager rejectPhoneCall:call.callerId userAccount:call.selfId channelID:call.channelId];
-    }
-    
-    [self quitIncomeDialingPhoneCall:call];
-    
-    if(call != nil && call.callback != nil)
-    {
-        
-        [call.callback didPhoneDialResult:AcmSelfCancelDial];
-    }
-     */
-    
-    
-    /*
-    AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
-    
-    // step 1 进入事件频道
-    BOOL joinEventChannelRet = [call joinEventSyncChannel:^(AgoraRtmJoinChannelErrorCode errorCode) {
-        if(AgoraRtmJoinChannelErrorOk == errorCode){
-            // step 2 广播拒接消息
-            [call broadcastRejectDial];
-        }
-        else{
-            NSLog(@"ACM Err: failed to join event channel:%ld", (long)errorCode);
-            
-        }
-        [self quitIncomeDialingPhoneCall:call];
-        if(call != nil && call.callback != nil)
-        {
-            
-            [call.callback didPhoneDialResult:AcmSelfCancelDial];
-        }
-    }];
-    
-    if(joinEventChannelRet == NO){
-        [self quitIncomeDialingPhoneCall:call];
-        if(call != nil && call.callback != nil)
-        {
-            
-            [call.callback didPhoneDialResult:AcmDialErrorJoinEventSyncChannel];
-        }
-    }
-    */
-    
     AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];    
     [call broadcastRejectDial];
     
-    [self quitIncomeDialingPhoneCall:call];
+    [self quitIncomeDialingPhoneCall:call EventCode:CallEventSelfReject_EndCall];
     if(call != nil && call.callback != nil)
     {
         
@@ -500,7 +522,7 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
     
 }
 
-- (void) quitIncomeDialingPhoneCall: (AcmCall *) call {
+- (void) quitIncomeDialingPhoneCall: (AcmCall *) call EventCode:(CallEventCode) eventCode{
     
     if(call != nil && call.stage == Dialing){
         [call updateStage:Finished];
@@ -508,8 +530,8 @@ static NSString *AnswerApi = @"/dapi/call/recieve";
         {
             [RtcManager endAudioCall];
             
-            NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, EndCallApi];
-            NSString *param = [NSString stringWithFormat:@"uid=%@&channel=%@", call.selfId, call.channelId]; //带一个参数key传给服务器
+            NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, CallEventAPI];
+            NSString *param = [NSString stringWithFormat:@"uid=%@&channel=%@&code=%ld", call.selfId, call.channelId,(long)eventCode]; //带一个参数key传给服务器
             
             [HttpUtil HttpPost:stringUrl Param:param Callback:nil];
         }

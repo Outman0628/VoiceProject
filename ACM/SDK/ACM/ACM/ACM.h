@@ -23,12 +23,12 @@ FOUNDATION_EXPORT const unsigned char ACMVersionString[];
 /**
  初始化通话监听服务
  
- @param appId 声网项目APP ID
  @param host  音视频通话后台服务地址
  @param token 苹果消息推送token
  @param delegate 通过后监听回调.
+ @param completionBlock 初始化结果回调.
  */
-+ (void) initManager: ( nullable NSString *) appId backendHost:(nullable NSString *)host apnsToken:(nullable NSString *)token acmCallback:(id <IACMCallBack> _Nullable)delegate;
++ (void) initManager: (nullable NSString *)host apnsToken:(nullable NSString *)token acmCallback:(id <IACMCallBack> _Nullable)delegate  completion:(IACMInitBlock _Nullable)completionBlock;
 
 /**
  在通过监听服务中登录注册本机用户。

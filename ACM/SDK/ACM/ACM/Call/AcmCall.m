@@ -269,7 +269,7 @@
  * 事件频道事件消息
  */
 - (void)channel:(AgoraRtmChannel * _Nonnull)channel messageReceived:(AgoraRtmMessage * _Nonnull)message fromMember:(AgoraRtmMember * _Nonnull)member{
-    NSLog(@"event channel Message received from %@: %@", message.text, member.userId);
+    NSLog(@"event channel Message received msg: %@ from: %@", message.text, member.userId);
     NSData *jsonData = [message.text dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
     NSString *title = dic[@"title"];
@@ -283,7 +283,7 @@
     else
      */
      if([title isEqualToString:@"ASRSync"]){
-        EventData eventData = {  EventRemoeAsrResult, 0,0,0,dic,self};
+        EventData eventData = {  EventRemoteAsrResult, 0,0,0,dic,self};
         [[ActionManager instance] HandleEvent:eventData];
     }
      else if([title isEqualToString:@"rejectDial"]){

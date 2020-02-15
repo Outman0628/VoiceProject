@@ -94,9 +94,16 @@
    */
     
     #if (TARGET_IPHONE_SIMULATOR)
-    [ACM initManager:@"bc6642a5ce2c423c8419c20e2e9e239f" backendHost:hostUrl apnsToken:@"simulatorToken" acmCallback:self ];
-    [ACM updateDialingTimer:_callTimerCount];
-    [self autoLogin];
+    [ACM initManager:hostUrl apnsToken:@"simulatorToken" acmCallback:self completion:^(AcmInitErrorCode errorCode) {
+        if(errorCode == AcmInitOk){
+            [ACM updateDialingTimer:self.callTimerCount];
+            [self autoLogin];
+        }else
+        {
+            [self showAlert:@"初始化SDK 错误"];
+        }
+    } ];
+    
     #endif
     
     [self initControls];
@@ -107,9 +114,15 @@
 - (void) handleApnsToken: (nullable NSString *)token{
     if(token != nil)
     {
-        [ACM initManager:@"bc6642a5ce2c423c8419c20e2e9e239f" backendHost:hostUrl apnsToken:token acmCallback:self ];
-        [ACM updateDialingTimer:_callTimerCount];
-        [self autoLogin];
+        [ACM initManager:hostUrl apnsToken:token acmCallback:self completion:^(AcmInitErrorCode errorCode) {
+            if(errorCode == AcmInitOk){
+                [ACM updateDialingTimer:self.callTimerCount];
+                [self autoLogin];
+            }else{
+                [self showAlert:@"初始化SDK 错误"];
+            }
+        } ];
+        
     }
     else
     {
@@ -580,9 +593,9 @@
     self.robotAnswerCallBtn.hidden = false;
     self.answerPanel.hidden = false;
     if(call.callType == AudioCall){
-        self.remoteUserIdLabel2.text =  [NSString stringWithFormat:@"音频通话:%@",call.callerId];
+        self.remoteUserIdLabel2.text =  [NSString stringWithFormat:@"音:%@",call.callerId];
     }else if(call.callType == VideoCall){
-        self.remoteUserIdLabel2.text =  [NSString stringWithFormat:@"视频通话:%@",call.callerId];
+        self.remoteUserIdLabel2.text =  [NSString stringWithFormat:@"视:%@",call.callerId];
     }
     self.rejectBtn.hidden = false;
     self.authorityBtn.hidden = true;

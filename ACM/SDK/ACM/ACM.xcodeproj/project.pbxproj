@@ -106,6 +106,7 @@
 		63B357CA23C8B4AA0034F54B /* InComeDialAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B357C923C8B4AA0034F54B /* InComeDialAction.m */; };
 		63B357CC23C8BC970034F54B /* OnPhoneAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B357CB23C8BC970034F54B /* OnPhoneAction.h */; };
 		63B357CE23C8BCAC0034F54B /* OnPhoneAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B357CD23C8BCAC0034F54B /* OnPhoneAction.m */; };
+		63C8F0FA23F69F790028D7C7 /* CallEventEnum.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C8F0F923F69F790028D7C7 /* CallEventEnum.h */; };
 		63FE533623E2DF3B009D4F1E /* AcmCall.h in Headers */ = {isa = PBXBuildFile; fileRef = 63FE533523E2DF3B009D4F1E /* AcmCall.h */; };
 		63FE533823E2E094009D4F1E /* AcmCall.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FE533723E2E094009D4F1E /* AcmCall.m */; };
 /* End PBXBuildFile section */
@@ -224,6 +225,7 @@
 		63B357C923C8B4AA0034F54B /* InComeDialAction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InComeDialAction.m; sourceTree = "<group>"; };
 		63B357CB23C8BC970034F54B /* OnPhoneAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OnPhoneAction.h; sourceTree = "<group>"; };
 		63B357CD23C8BCAC0034F54B /* OnPhoneAction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OnPhoneAction.m; sourceTree = "<group>"; };
+		63C8F0F923F69F790028D7C7 /* CallEventEnum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CallEventEnum.h; sourceTree = "<group>"; };
 		63FE533523E2DF3B009D4F1E /* AcmCall.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AcmCall.h; sourceTree = "<group>"; };
 		63FE533723E2E094009D4F1E /* AcmCall.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AcmCall.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -486,6 +488,7 @@
 				63B357C123C6D89C0034F54B /* CallManager.m */,
 				63FE533523E2DF3B009D4F1E /* AcmCall.h */,
 				63FE533723E2E094009D4F1E /* AcmCall.m */,
+				63C8F0F923F69F790028D7C7 /* CallEventEnum.h */,
 			);
 			path = Call;
 			sourceTree = "<group>";
@@ -527,6 +530,7 @@
 				63B3573023BF24AD0034F54B /* IRTCCallBack.h in Headers */,
 				6349E8DF23D15685009EEE99 /* BDSSpeechSynthesizerDelegate.h in Headers */,
 				63B357B723C6D2CF0034F54B /* ApnsMessageManager.h in Headers */,
+				63C8F0FA23F69F790028D7C7 /* CallEventEnum.h in Headers */,
 				63B3579523C4692F0034F54B /* ActionManager.h in Headers */,
 				6349E8E223D15685009EEE99 /* BDSMixedModeSynthesizer.h in Headers */,
 				6349E8E423D15685009EEE99 /* BDSSpeechSynthesizerParams.h in Headers */,
