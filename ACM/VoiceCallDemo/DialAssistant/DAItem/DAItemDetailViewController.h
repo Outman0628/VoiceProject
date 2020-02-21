@@ -10,12 +10,16 @@
 #define DAItemDetailViewController_h
 
 #import <UIKit/UIKit.h>
+#ifdef AssistantDef
 #import <ACM/DialAssistant.h>
+#endif
 #import "BasicViewController.h"
 
 @interface DAItemDetailViewController : UITableViewController  <ShowAlertProtocol>
 //@interface DAItemDetailViewController : BasicViewController
+#ifdef AssistantDef
 @property  DialAssistant* dialAss;
+#endif
 @end
 
 #endif /* DAItemDetailViewController_h */

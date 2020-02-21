@@ -8,13 +8,19 @@
 
 #import <Foundation/Foundation.h>
 #import "AAViewController.h"
+#ifdef AssistantDef
 #import <ACM/Assistant.h>
 #import <ACM/AnswerAssistant.h>
 #import <ACM/AssistantItem.h>
 #import <ACM/AssistantCallback.h>
+#endif
 #import "TTSConfigViewController.h"
 
+#ifdef AssistantDef
 @interface AAViewController () <AssistantCallBack>
+#else
+@interface AAViewController ()
+#endif
 
 @property (weak, nonatomic) IBOutlet UIView *rootView;
 
@@ -33,13 +39,15 @@
 @property (weak, nonatomic) IBOutlet UIButton *settingButton;
 
 @property (weak, nonatomic) IBOutlet UISwitch *assSwitch;
+#ifdef AssistantDef
 
 @property AnswerAssistant *answerAss;
-
+#endif
 @end
 
 @implementation AAViewController
 
+#ifdef AssistantDef
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -341,5 +349,5 @@
     
     return TRUE;
 }
-
+#endif
 @end

@@ -9,9 +9,10 @@
 #include <math.h>
 #import "TTSConfigViewController.h"
 #import "SelectionTableViewController.h"
-
+#ifdef AssistantDef
 #import <ACM/Assistant.h>
 #import <ACM/AnswerAssistant.h>
+#endif
 
 enum SettingsSections{
     SettingSection_SynthesisGeneral = 0,
@@ -156,7 +157,7 @@ __strong static NSString* currentOfflineChineseModelName;
 }
 
 #pragma mark - Table view data source
-
+#ifdef AssistantDef
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
    return SettingSectionCount;
@@ -258,13 +259,13 @@ __strong static NSString* currentOfflineChineseModelName;
 }
 
 -(NSString*)onlineSpeakerDescriptionFromID:(NSInteger)speakerID{
+
     NSArray *speakers = [Assistant getCandidates];
     
     if(speakerID >= 0 && speakerID < speakers.count)
     {
         return speakers[speakerID];
     }
-    
     return @"";
 }
 
@@ -517,4 +518,5 @@ __strong static NSString* currentOfflineChineseModelName;
     }
     [self.tableView reloadData];
 }
+#endif
 @end

@@ -11,7 +11,9 @@
 #import "TableViewCells/SliderTableViewCell.h"
 #import "TableViewCells/InputTableViewCell.h"
 #import "TableViewCells/SwitchTableViewCell.h"
-#import <ACM/AnswerAssistant.h>
+
+//#import <ACM/AnswerAssistant.h>
+#import <ACM/VoiceConfig.h>
 
 @protocol SettingsViewControllerDelegate <NSObject>
 

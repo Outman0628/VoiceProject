@@ -30,11 +30,11 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>音视频电话</string>
+	<string>音视频电话1</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>音视频电话</string>
+	<string>音视频电话1</string>
 	<key>Privacy - Camera Usage Description	</key>
-	<string>音视频电话</string>
+	<string>音视频电话1</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

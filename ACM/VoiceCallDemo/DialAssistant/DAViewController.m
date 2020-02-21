@@ -11,8 +11,9 @@
 #import "DialItemCell.h"
 #import "DAOperateCell.h"
 #import "DAItem/DAItemDetailViewController.h"
+#ifdef AssistantDef
 #import <ACM/Assistant.h>
-
+#endif
 enum DialSettingSectionCount{
     SettingOperation = 0,
     SettingItem,
@@ -27,6 +28,7 @@ enum DialSettingSectionCount{
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+#ifdef AssistantDef
     [Assistant getDialAsistant:^(NSArray * _Nullable dialAssistantList, AssistantCode code) {
         if(code != AssistantOK){
             [self showAlert: [NSString stringWithFormat:@"获取拨打任务失败:%ld", (long)code]];
@@ -36,6 +38,7 @@ enum DialSettingSectionCount{
             [self.tableView reloadData];
         }
     }];
+#endif
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -54,6 +57,7 @@ enum DialSettingSectionCount{
 }
 
 #pragma mark - Table view data source
+#ifdef AssistantDef
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
     return SettingSectionCount;
@@ -194,5 +198,5 @@ enum DialSettingSectionCount{
         }
     }];
 }
-
+#endif
 @end

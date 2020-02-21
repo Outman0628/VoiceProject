@@ -14,9 +14,9 @@
 #import "ASRInputStream.h"
 #import "../Action/ActionManager.h"
 
-NSString* APP_ID = @"18259540";
-NSString* API_KEY = @"gDYzkmc12uPVjUK6YLyPGLSC";
-NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
+NSString* ASR_APP_ID = @"18259540";
+NSString* ASR_API_KEY = @"gDYzkmc12uPVjUK6YLyPGLSC";
+NSString* ASR_SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 
 @interface AsrManager() <BDSClientASRDelegate>
 @property (strong, nonatomic) BDSEventManager *asrEventManager;
@@ -52,8 +52,8 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
     //设置DEBUG_LOG的级别
     [self.asrEventManager setParameter:@(EVRDebugLogLevelFatal) forKey:BDS_ASR_DEBUG_LOG_LEVEL];
     //配置API_KEY 和 SECRET_KEY 和 APP_ID
-    [self.asrEventManager setParameter:@[API_KEY, SECRET_KEY] forKey:BDS_ASR_API_SECRET_KEYS];
-    [self.asrEventManager setParameter:APP_ID forKey:BDS_ASR_OFFLINE_APP_CODE];
+    [self.asrEventManager setParameter:@[ASR_API_KEY, ASR_SECRET_KEY] forKey:BDS_ASR_API_SECRET_KEYS];
+    [self.asrEventManager setParameter:ASR_APP_ID forKey:BDS_ASR_OFFLINE_APP_CODE];
     [self.asrEventManager setParameter:@"1537" forKey:BDS_ASR_PRODUCT_ID];
     
     //配置端点检测（二选一）

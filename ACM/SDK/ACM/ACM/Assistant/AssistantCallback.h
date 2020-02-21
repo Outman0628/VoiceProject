@@ -9,7 +9,7 @@
 #ifndef AssistantCallback_h
 #define AssistantCallback_h
 
-#import "AssistantEnum.h"
+#import <ACM/AssistantEnum.h>
 
 /**
  语音助手设置Callback

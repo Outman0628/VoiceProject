@@ -8,9 +8,10 @@
 
 #ifndef Assistant_h
 #define Assistant_h
-#import "AssistantEnum.h"
+//#import "AssistantEnum.h"
+#import <ACM/AssistantEnum.h>
 #import "AssistantCallback.h"
-#import "VoiceConfig.h"
+#import <ACM/VoiceConfig.h>
 
 @class AnswerAssistant;
 @class DialAssistant;

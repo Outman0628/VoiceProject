@@ -8,7 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "DAItemContentCell.h"
+#ifdef AssistantDef
 #import <ACM/AssistantItem.h>
+#endif
 
 @interface DAItemContentCell() <UITextViewDelegate>
 
@@ -34,7 +36,7 @@
     [_intervalTextField resignFirstResponder];
 }
 
-
+#ifdef AssistantDef
 - (IBAction)intervalChanged:(id)sender {
     @try{
     AssistanItem *retItem = (AssistanItem *)_assItem;
@@ -56,6 +58,6 @@
         [_delegate delContent:_assItem];
     }
 }
-
+#endif
 
 @end

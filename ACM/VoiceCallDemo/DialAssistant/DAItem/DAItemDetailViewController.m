@@ -12,9 +12,11 @@
 #import "DAItemDatetimeCell.h"
 #import "DAItemContentCell.h"
 #import "DASubscribersCell.h"
+#ifdef AssistantDef
 #import <ACM/DialAssistant.h>
 #import <ACM/AssistantItem.h>
 #import <ACM/Assistant.h>
+#endif
 #import "TTSConfigViewController.h"
 
 
@@ -26,8 +28,11 @@ enum DialItemDetailCount{
     ItemSettingSectionCount,
 };
 
+#ifdef AssistantDef
 @interface DAItemDetailViewController() <DAItemOperationDelegate, AssistantCallBack, DAItemConentOperate>
-
+#else
+@interface DAItemDetailViewController() <DAItemOperationDelegate, DAItemConentOperate>
+#endif
 
 @property DASubscribersCell *subscriberCell;
 @property DAItemDatetimeCell *dateCell;
@@ -71,6 +76,7 @@ enum DialItemDetailCount{
 
 
 #pragma mark - Table view data source
+#ifdef AssistantDef
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
     return ItemSettingSectionCount;
@@ -311,9 +317,10 @@ enum DialItemDetailCount{
     
     return TRUE;
 }
-
+#endif
 
 ///////////////////////// from DAItemOperationDelegate
+#ifdef AssistantDef
 
 -(void) auditAss{
    
@@ -423,5 +430,5 @@ enum DialItemDetailCount{
         }
     }];
 }
-
+#endif
 @end

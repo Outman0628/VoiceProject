@@ -10,11 +10,18 @@
 #import <AgoraRtmKit/AgoraRtmKit.h>
 #import <ACM/ACM.h>
 #import "AppDelegate.h"
-#import <ACM/AnswerAssistant.h>
+
+#ifdef AssistantDef
 #import <ACM/Assistant.h>
 #import <ACM/AssistantItem.h>
+#import <ACM/AnswerAssistant.h>
+#endif
 #import "../VideoChat/VideoChatViewController.h"
 #import <UIKit/UIKit.h>
+
+
+
+
 
 
 #define hostUrl @"https://liu.enjoyst.com"
@@ -29,6 +36,7 @@
 @property NSInteger callTimerCount;
 @property AVAudioPlayer* player;
 @property VideoChatViewController * videoCallViewCtrl;
+@property BOOL initedState;
 
 //@property (nonatomic, copy) NSString *dialChannelId;
 
@@ -74,6 +82,7 @@
 
 
 - (void)viewDidLoad {
+    _initedState = false;
     [super viewDidLoad];
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     appDelegate.viewController = self;
@@ -98,6 +107,7 @@
         if(errorCode == AcmInitOk){
             [ACM updateDialingTimer:self.callTimerCount];
             [self autoLogin];
+            _initedState = true;
         }else
         {
             [self showAlert:@"初始化SDK 错误"];
@@ -117,7 +127,9 @@
         [ACM initManager:hostUrl apnsToken:token acmCallback:self completion:^(AcmInitErrorCode errorCode) {
             if(errorCode == AcmInitOk){
                 [ACM updateDialingTimer:self.callTimerCount];
+                self.initedState = true;
                 [self autoLogin];
+                
             }else{
                 [self showAlert:@"初始化SDK 错误"];
             }
@@ -249,14 +261,25 @@
 
 
 - (IBAction)userRegist:(id)sender {
-    if(self.userIdTextField.text.length == 0)
-    {
-        [self showAlert: @"请输入注册id"];
-        return;
+    if(self.initedState == true){
+        if(self.userIdTextField.text.length == 0)
+        {
+            [self showAlert: @"请输入注册id"];
+            return;
+        }
+        
+        [self Login:self.userIdTextField.text];
+    }else{
+        [ACM initManager:hostUrl apnsToken:nil acmCallback:self completion:^(AcmInitErrorCode errorCode) {
+            if(errorCode == AcmInitOk){
+                [ACM updateDialingTimer:self.callTimerCount];
+                self.initedState = true;
+                [self autoLogin];
+            }else{
+                [self showAlert:@"初始化SDK 错误"];
+            }
+        } ];
     }
-    
-    [self Login:self.userIdTextField.text];
-
 }
 
 - (IBAction)dialVideoCall:(id)sender {
@@ -486,7 +509,7 @@
 }
 
 - (void)auditAssistant{
-    
+    /*
     AnswerAssistant *ass = [[AnswerAssistant alloc]init];
     ass.enable = YES;
    // ass.content = @"你好中国";
@@ -502,18 +525,7 @@
     [ass.contents addObject:item1];
     [ass.contents addObject:item2];
     
-   // [Assistant auditionAnswerAssistant:ass];
-    
-    /*
-     [Assistant auditionAnswerAssistant:ass completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
-        [self showAlert:[NSString stringWithFormat:@"试听结果 %ld",(long)code]];
-    }];
-     */
-    /*
-    [Assistant updateAnswerAssistantParam:ass completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
-        [self showAlert:[NSString stringWithFormat:@"语音助手配置完成 %ld",(long)code]];
-    }];
-     */
+*/
 }
 
 - (void)playAssistantFileTest{
