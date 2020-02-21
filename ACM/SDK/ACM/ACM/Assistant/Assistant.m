@@ -20,24 +20,7 @@
 #import "../Action/ActionManager.h"
 #import "DialAssistant.h"
 
-@interface VoiceConfig ()
 
-@end
-
-@implementation VoiceConfig
-
--(id _Nullable )init
-{
-    if (self = [super init]) {
-        self.speechPich = 5;
-        self.speechSpeed = 5;
-        self.speechVolume = 5;
-        self.curSpeakerIndex = 0;
-    }
-    return self;
-}
-
-@end
 
 
 

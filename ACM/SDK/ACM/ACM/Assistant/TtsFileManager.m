@@ -13,18 +13,16 @@
 #import "TtsFileTasks.h"
 #import <CommonCrypto/CommonDigest.h>
 
+//#define EnableFileCache
+
 @interface TtsFileManager()
+#ifdef EnableFileCache
 @property NSMutableArray *cachFiles;
-@property NSMutableArray *ttsConvertTasks;
 @property NSInteger maxCachedFilesCount;
+#endif
+@property NSMutableArray *ttsConvertTasks;
 @end
 
-/*
- @property NSInteger speechVolume;           // 音量  (0-15)
- @property NSInteger speechSpeed;            // 语速  (0-9)
- @property NSInteger speechPich;             // 音调  (0-9)
- @property NSInteger curSpeakerIndex;        // 当前播报人员(speakerCadidates 中的index)
- */
 
 @implementation TtsFileManager
 
@@ -79,8 +77,10 @@
 
 -(id _Nullable )init{
     if (self = [super init]) {
+#ifdef EnableFileCache
         _maxCachedFilesCount = 30;
         _cachFiles = [NSMutableArray array];
+#endif
         _ttsConvertTasks = [NSMutableArray array];
     }
     return self;
@@ -89,8 +89,10 @@
 -(void)prepareVoiceFiles:(nonnull NSArray *) contents ttsManager:(nonnull TtsManager *)ttsMgr Config:(VoiceConfig *_Nullable)config completionBlock: (AssistantBlock _Nullable )completionHandler{
     
     TtsFileTasks *task = [[TtsFileTasks alloc] init];
-    task.callBack = ^(AssistantCode code, NSError * _Nullable subCode) {        
+    task.callBack = ^(AssistantCode code, NSError * _Nullable subCode) {
+        #ifdef EnableFileCache
         [self updateCacheFiles:contents Config:config];
+        #endif
         if(completionHandler != nil){
             completionHandler(code,subCode);
         }
@@ -108,8 +110,11 @@
             //NSString *fName = [NSString stringWithFormat:@"ttsvoice_%lu.mp3",(unsigned long)[item.content hash]];
             
             NSString *fName = [TtsFileManager generateFileName:item.content fullName:&filePath Config:config];
-            
+#ifdef EnableFileCache
             if(![self isFileCached:fName])
+#else
+            if(![self isFileExist:fName])
+#endif
             {
                
                 NSError* err = nil;
@@ -140,6 +145,7 @@
     }
 }
 
+#ifdef EnableFileCache
 -(void) updateCacheFiles:(nonnull NSArray *) contents Config:(VoiceConfig *_Nullable)config{
     if( contents != nil && contents.count > 0 )
     {
@@ -167,10 +173,11 @@
     }
 }
 
+
 -(BOOL) isFileCached:(nonnull NSString *)fName{
     for (int i=0; i<[_cachFiles count]; i++) {
         NSString *fileName = _cachFiles[i];
-        if([fileName isEqualToString: fName]){
+        if([fileName isEqualToString: fName]  && [self isFileExist:fName]){
             return YES;
         }
     }
@@ -180,6 +187,7 @@
     
     return NO;
 }
+#endif
 
 -(void) removeFile:(nonnull NSString *)fileName{
     NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject;
@@ -191,6 +199,18 @@
         NSError *err;
         [fileManager removeItemAtPath:filePath error:&err];
     }
+}
+
+- (BOOL) isFileExist:(nonnull NSString *)fileName{
+    NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject;
+    NSString *filePath = [documentPath stringByAppendingPathComponent:fileName];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if([fileManager fileExistsAtPath:filePath])
+    {
+        return YES;
+    }
+    return  NO;
 }
 
 @end

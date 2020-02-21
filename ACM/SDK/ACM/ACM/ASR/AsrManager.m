@@ -22,6 +22,8 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 @property (strong, nonatomic) BDSEventManager *asrEventManager;
 @property NSTimeInterval timestamp;
 @property BOOL onAsr;
+@property BOOL onFileAsr;
+@property AudioFileToTextBlock fileAsrCallback;
 @end
 
 @implementation AsrManager
@@ -40,6 +42,8 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
     self.asrEventManager = [BDSEventManager createEventManagerWithName:BDS_ASR_NAME];
     NSLog(@"ASR SDK version: %@", [self.asrEventManager libver]);
     self.onAsr = false;
+    self.onFileAsr = false;
+    self.fileAsrCallback = nil;
     [self.asrEventManager setDelegate:self];
     [self configVoiceRecognitionClient];
 }
@@ -74,11 +78,22 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 
 - (BOOL)startAsr
 {
-    if(self.onAsr || self.asrEventManager == nil){
+    if(self.onFileAsr){
+        self.onFileAsr = false;
+        [self.asrEventManager sendCommand:BDS_ASR_CMD_CANCEL];
+        if(self.fileAsrCallback != nil){
+            dispatch_async(dispatch_get_main_queue(),^{
+                self.fileAsrCallback(AudioToFileCodeInterrupt,nil);
+            });
+        }
+    }
+    
+    if(self.onAsr || self.asrEventManager == nil ){
         return false;
         
     }
-
+    [self.asrEventManager setParameter:@(YES) forKey:BDS_ASR_ENABLE_EARLY_RETURN];
+    [self.asrEventManager setParameter:@(YES) forKey:BDS_ASR_ENABLE_LOCAL_VAD];
     self.onAsr = true;
     
     [self repeatAsr];
@@ -100,6 +115,30 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
         [self.asrEventManager setParameter:@"" forKey:BDS_ASR_AUDIO_FILE_PATH];
         [self.asrEventManager setDelegate:self];
         [self.asrEventManager sendCommand:BDS_ASR_CMD_START];
+    }
+}
+
+-(void)audioFileToText:(nonnull NSString*) filePath  CallBack:(AudioFileToTextBlock _Nonnull ) block{
+    if(self.onAsr || self.onFileAsr){
+        NSLog(@"Ass is busy!");
+        if(block != nil){
+            block(AudioToFileCodeBusy,nil);
+        }
+        return;
+    }
+    self.onFileAsr = true;
+    self.fileAsrCallback = block;
+    [self.asrEventManager setParameter:@(NO) forKey:BDS_ASR_ENABLE_EARLY_RETURN];
+    [self.asrEventManager setParameter:@(NO) forKey:BDS_ASR_ENABLE_LOCAL_VAD];
+    [self.asrEventManager setParameter:nil forKey:BDS_ASR_AUDIO_INPUT_STREAM];
+    [self.asrEventManager setParameter:filePath forKey:BDS_ASR_AUDIO_FILE_PATH];
+    [self.asrEventManager setDelegate:self];
+    [self.asrEventManager sendCommand:BDS_ASR_CMD_START];
+}
+
+-(void)stopAudioFileToTextTask{
+    if(self.onFileAsr){
+        [self.asrEventManager sendCommand:BDS_ASR_CMD_CANCEL];
     }
 }
 
@@ -133,6 +172,12 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
         }
         case EVoiceRecognitionClientWorkStatusFlushData: {
             //[self printLogTextView:[NSString stringWithFormat:@"CALLBACK: partial result - %@.\n\n", [self getDescriptionForDic:aObj]]];
+            
+            if(self.onFileAsr)
+            {
+                break;
+            }
+            
             @try
             {
                 NSDictionary *retDic = aObj;
@@ -163,23 +208,48 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
         case EVoiceRecognitionClientWorkStatusFinish: {
             @try
             {
-                NSDictionary *retDic = aObj;
-                if(retDic != nil && retDic[@"results_recognition"])
-                {
-                    NSArray *array = retDic[@"results_recognition"];
+                if(self.onFileAsr){
                     NSString *result = nil;
-                    if(array && array.count > 0)
+                    NSDictionary *retDic = aObj;
+                    if(retDic != nil && retDic[@"results_recognition"])
                     {
-                        result = array[0];
+                        NSArray *array = retDic[@"results_recognition"];
+                        
+                        if(array && array.count > 0)
+                        {
+                            result = array[0];
+                        }
                     }
-                    // NSString *result =  [self getDescriptionForDic:retDic[@"results_recognition"]];
-                    if(result != nil && result.length > 0)
-                    {
-                        EventData asrData = {EventASRFinalResult,0,0,self.timestamp,result};
+                    
+                    if(self.fileAsrCallback != nil){
                         dispatch_async(dispatch_get_main_queue(),^{
-                            [[ActionManager instance] HandleEvent:asrData];
+                            self.fileAsrCallback(AudioToFileCodeOK,result);
                         });
                     }
+                    
+                    self.onFileAsr = NO;
+                    
+                }else{
+                    NSDictionary *retDic = aObj;
+                    if(retDic != nil && retDic[@"results_recognition"])
+                    {
+                        NSArray *array = retDic[@"results_recognition"];
+                        NSString *result = nil;
+                        if(array && array.count > 0)
+                        {
+                            result = array[0];
+                        }
+                        // NSString *result =  [self getDescriptionForDic:retDic[@"results_recognition"]];
+                        
+                        if(result != nil && result.length > 0)
+                        {
+                            EventData asrData = {EventASRFinalResult,0,0,self.timestamp,result};
+                            dispatch_async(dispatch_get_main_queue(),^{
+                                [[ActionManager instance] HandleEvent:asrData];
+                            });
+                        }
+                    }
+                    
                 }
             }
             @catch(NSException *exception)
@@ -197,6 +267,17 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
             [self printLogTextView:@"CALLBACK: user press cancel.\n"];
             [self onEnd];
              */
+            
+            if( self.onFileAsr ){
+                if(self.fileAsrCallback != nil){
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        self.fileAsrCallback(AudioToFileCodeCancel,nil);
+                    });
+                }
+                
+                self.onFileAsr = false;
+            }
+            
             [self repeatAsr];
             break;
         }
@@ -206,6 +287,15 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
             [self onEnd];
              */
             //NSLog(@"ASR error:%@", [NSString stringWithFormat:@"CALLBACK: encount error - %@.\n", (NSError *)aObj]);
+            if( self.onFileAsr ){
+                if(self.fileAsrCallback != nil){
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        self.fileAsrCallback(AudioToFileCodeError,nil);
+                    });
+                }
+                
+                self.onFileAsr = false;
+            }
             [self repeatAsr];
             break;
         }

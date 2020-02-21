@@ -14,6 +14,7 @@
 #import "../RTC/RtcManager.h"
 #import "../Message/RunTimeMsgManager.h"
 #import "../Message/HttpUtil.h"
+#import "../Call/CallEventEnum.h"
 
 static NSString *AuthorityApi = @"/dapi/quit/robot";
 
@@ -487,8 +488,16 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
         {
             [RtcManager endAudioCall];
             
+            /*
             NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, EndCallApi];
             NSString *param = [NSString stringWithFormat:@"uid=%@&channel=%@", call.selfId, call.channelId]; //带一个参数key传给服务器
+            
+            [HttpUtil HttpPost:stringUrl Param:param Callback:nil];
+             */
+            
+            // 通知后台开始通话
+            NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, CallEventAPI];
+            NSString *param = [NSString stringWithFormat:@"uid=%@&channel=%@&code=%ld", call.selfId, call.channelId,(long)CallEventEndCall];
             
             [HttpUtil HttpPost:stringUrl Param:param Callback:nil];
         }

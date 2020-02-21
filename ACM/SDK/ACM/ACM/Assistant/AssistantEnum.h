@@ -9,6 +9,7 @@
 #ifndef AssistantEnum_h
 #define AssistantEnum_h
 
+
 /*
  通话结束类型
  */
@@ -73,6 +74,28 @@ typedef NS_ENUM(NSInteger, AssistantCode) {
      服务器返回拨打助手错误配置数据
      */
     AssistantErrorIncorrectDialAssistantContent = -11,
+
+    
+    /**
+     音文转换失败
+     */
+    AssistantErrorAudioToTextFailed = -13,
+};
+
+typedef NS_ENUM(NSInteger, AudioToFileCode) {
+    // 转换完成
+    AudioToFileCodeOK = 0,
+    // 取消转换
+    AudioToFileCodeCancel = 1,
+    // 转换错误
+    AudioToFileCodeError = -1,
+    // 转换中断
+    AudioToFileCodeInterrupt = -2,
+    // Busy
+    AudioToFileCodeBusy= -3,
+    
+    // 文件不存在
+    AssistantErrorFileNotExist = -4,
 };
 
 #endif /* AssistantEnum_h */

@@ -11,7 +11,7 @@
 		630F77D923D545A90071DF9F /* AuditTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 630F77D823D545A90071DF9F /* AuditTask.m */; };
 		630F77DD23D570C80071DF9F /* UpDateConfigTask.h in Headers */ = {isa = PBXBuildFile; fileRef = 630F77DC23D570C80071DF9F /* UpDateConfigTask.h */; };
 		630F77DF23D570D40071DF9F /* UpDateConfigTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 630F77DE23D570D40071DF9F /* UpDateConfigTask.m */; };
-		63155E9623D7E36F000762DA /* AssistantCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 63155E9523D7E36F000762DA /* AssistantCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		63155E9623D7E36F000762DA /* AssistantCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 63155E9523D7E36F000762DA /* AssistantCallback.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6338001723E13EEE00679F83 /* HttpUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 6338001623E13EEE00679F83 /* HttpUtil.h */; };
 		6338001923E13F1A00679F83 /* HttpUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 6338001823E13F1A00679F83 /* HttpUtil.m */; };
 		6349E8DE23D15685009EEE99 /* BDSSynthesizerStatusNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E8D423D15685009EEE99 /* BDSSynthesizerStatusNotifications.h */; };
@@ -30,14 +30,14 @@
 		6349E8F323D1BFC1009EEE99 /* TtsFileManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E8F223D1BFC1009EEE99 /* TtsFileManager.h */; };
 		6349E8F523D1BFDE009EEE99 /* TtsFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6349E8F423D1BFDE009EEE99 /* TtsFileManager.m */; };
 		6349E8F723D1CAB9009EEE99 /* AssistantEnum.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E8F623D1CAB9009EEE99 /* AssistantEnum.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6349E8FD23D1FBC4009EEE99 /* AssistantItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E8FC23D1FBC4009EEE99 /* AssistantItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6349E8FD23D1FBC4009EEE99 /* AssistantItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E8FC23D1FBC4009EEE99 /* AssistantItem.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6349E8FF23D313AB009EEE99 /* AssistantItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6349E8FE23D313AB009EEE99 /* AssistantItem.m */; };
 		6349E90123D341A8009EEE99 /* TtsFileTasks.h in Headers */ = {isa = PBXBuildFile; fileRef = 6349E90023D341A8009EEE99 /* TtsFileTasks.h */; };
 		6349E90323D342E0009EEE99 /* TtsFileTasks.m in Sources */ = {isa = PBXBuildFile; fileRef = 6349E90223D342E0009EEE99 /* TtsFileTasks.m */; };
-		6390308D23EBC13C00D10CAE /* DialAssistant.h in Headers */ = {isa = PBXBuildFile; fileRef = 6390308C23EBC13C00D10CAE /* DialAssistant.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6390308D23EBC13C00D10CAE /* DialAssistant.h in Headers */ = {isa = PBXBuildFile; fileRef = 6390308C23EBC13C00D10CAE /* DialAssistant.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6390308F23EBC14800D10CAE /* DialAssistant.m in Sources */ = {isa = PBXBuildFile; fileRef = 6390308E23EBC14800D10CAE /* DialAssistant.m */; };
-		63A24F4823CB5A9200D2ADC4 /* Assistant.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F4723CB5A9200D2ADC4 /* Assistant.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		63A24F4A23CB5ACC00D2ADC4 /* AnswerAssistant.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F4923CB5ACC00D2ADC4 /* AnswerAssistant.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		63A24F4823CB5A9200D2ADC4 /* Assistant.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F4723CB5A9200D2ADC4 /* Assistant.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		63A24F4A23CB5ACC00D2ADC4 /* AnswerAssistant.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F4923CB5ACC00D2ADC4 /* AnswerAssistant.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		63A24F4C23CB5C6300D2ADC4 /* AnswerAssistant.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A24F4B23CB5C6300D2ADC4 /* AnswerAssistant.m */; };
 		63A24F5023CC7B3300D2ADC4 /* AudioInputStream.mm in Sources */ = {isa = PBXBuildFile; fileRef = 63A24F4E23CC7B3300D2ADC4 /* AudioInputStream.mm */; };
 		63A24F5123CC7B3300D2ADC4 /* AudioInputStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F4F23CC7B3300D2ADC4 /* AudioInputStream.h */; };
@@ -67,6 +67,10 @@
 		63A24F9023CD914900D2ADC4 /* BDRecognizerViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F8423CD914900D2ADC4 /* BDRecognizerViewDelegate.h */; };
 		63A24F9223CD91CC00D2ADC4 /* AsrManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F9123CD91CC00D2ADC4 /* AsrManager.h */; };
 		63A24F9423CD920500D2ADC4 /* AsrManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A24F9323CD920500D2ADC4 /* AsrManager.m */; };
+		63B0C3D623FD1AB6002C53F0 /* AcmAssistant.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B0C3D523FD1AB6002C53F0 /* AcmAssistant.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		63B0C3D823FD1AC5002C53F0 /* AcmAssistant.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B0C3D723FD1AC5002C53F0 /* AcmAssistant.m */; };
+		63B0C3DA23FD277C002C53F0 /* VoiceConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B0C3D923FD277C002C53F0 /* VoiceConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		63B0C3DC23FD2957002C53F0 /* VoiceConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B0C3DB23FD2957002C53F0 /* VoiceConfig.m */; };
 		63B3565B23BDE3900034F54B /* ACM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B3565123BDE3900034F54B /* ACM.framework */; };
 		63B3566023BDE3900034F54B /* ACMTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B3565F23BDE3900034F54B /* ACMTests.m */; };
 		63B3566223BDE3900034F54B /* ACM.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B3565423BDE3900034F54B /* ACM.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -182,6 +186,10 @@
 		63A24F8423CD914900D2ADC4 /* BDRecognizerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDRecognizerViewDelegate.h; sourceTree = "<group>"; };
 		63A24F9123CD91CC00D2ADC4 /* AsrManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AsrManager.h; sourceTree = "<group>"; };
 		63A24F9323CD920500D2ADC4 /* AsrManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AsrManager.m; sourceTree = "<group>"; };
+		63B0C3D523FD1AB6002C53F0 /* AcmAssistant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AcmAssistant.h; sourceTree = "<group>"; };
+		63B0C3D723FD1AC5002C53F0 /* AcmAssistant.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AcmAssistant.m; sourceTree = "<group>"; };
+		63B0C3D923FD277C002C53F0 /* VoiceConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoiceConfig.h; sourceTree = "<group>"; };
+		63B0C3DB23FD2957002C53F0 /* VoiceConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoiceConfig.m; sourceTree = "<group>"; };
 		63B3565123BDE3900034F54B /* ACM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ACM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		63B3565423BDE3900034F54B /* ACM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ACM.h; sourceTree = "<group>"; };
 		63B3565523BDE3900034F54B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -309,6 +317,10 @@
 				63155E9523D7E36F000762DA /* AssistantCallback.h */,
 				6390308C23EBC13C00D10CAE /* DialAssistant.h */,
 				6390308E23EBC14800D10CAE /* DialAssistant.m */,
+				63B0C3D523FD1AB6002C53F0 /* AcmAssistant.h */,
+				63B0C3D723FD1AC5002C53F0 /* AcmAssistant.m */,
+				63B0C3D923FD277C002C53F0 /* VoiceConfig.h */,
+				63B0C3DB23FD2957002C53F0 /* VoiceConfig.m */,
 			);
 			path = Assistant;
 			sourceTree = "<group>";
@@ -503,14 +515,18 @@
 				6349E8DE23D15685009EEE99 /* BDSSynthesizerStatusNotifications.h in Headers */,
 				63B357BC23C6D8630034F54B /* Call.h in Headers */,
 				63A24F8E23CD914900D2ADC4 /* BDRecognizerViewController.h in Headers */,
-				6390308D23EBC13C00D10CAE /* DialAssistant.h in Headers */,
 				63A24F9023CD914900D2ADC4 /* BDRecognizerViewDelegate.h in Headers */,
 				63A24F9223CD91CC00D2ADC4 /* AsrManager.h in Headers */,
 				6349E90123D341A8009EEE99 /* TtsFileTasks.h in Headers */,
 				63B3579123C45F290034F54B /* ACMAction.h in Headers */,
 				6349E8F723D1CAB9009EEE99 /* AssistantEnum.h in Headers */,
+				6390308D23EBC13C00D10CAE /* DialAssistant.h in Headers */,
+				63B0C3DA23FD277C002C53F0 /* VoiceConfig.h in Headers */,
 				6349E8FD23D1FBC4009EEE99 /* AssistantItem.h in Headers */,
+				63B0C3D623FD1AB6002C53F0 /* AcmAssistant.h in Headers */,
 				63155E9623D7E36F000762DA /* AssistantCallback.h in Headers */,
+				63A24F4A23CB5ACC00D2ADC4 /* AnswerAssistant.h in Headers */,
+				63A24F4823CB5A9200D2ADC4 /* Assistant.h in Headers */,
 				63A24F5723CC7D8A00D2ADC4 /* ACMAudioInputStream.h in Headers */,
 				63A24F5323CC7B6A00D2ADC4 /* AudioDataQueue.hpp in Headers */,
 				63A24F6B23CCD99E00D2ADC4 /* ExternalAudio.h in Headers */,
@@ -522,11 +538,9 @@
 				630F77DD23D570C80071DF9F /* UpDateConfigTask.h in Headers */,
 				6349E8E623D15685009EEE99 /* BDSTTSEventManager.h in Headers */,
 				63B357C823C8B49D0034F54B /* InComeDialAction.h in Headers */,
-				63A24F4823CB5A9200D2ADC4 /* Assistant.h in Headers */,
 				63A24F7123CD607000D2ADC4 /* AudioStreamMgr.h in Headers */,
 				6349E8E723D15685009EEE99 /* BDSSpeechSynthesizerErrors.h in Headers */,
 				63FE533623E2DF3B009D4F1E /* AcmCall.h in Headers */,
-				63A24F4A23CB5ACC00D2ADC4 /* AnswerAssistant.h in Headers */,
 				63B3573023BF24AD0034F54B /* IRTCCallBack.h in Headers */,
 				6349E8DF23D15685009EEE99 /* BDSSpeechSynthesizerDelegate.h in Headers */,
 				63B357B723C6D2CF0034F54B /* ApnsMessageManager.h in Headers */,
@@ -682,6 +696,7 @@
 				63B356BE23BE55290034F54B /* RunTimeMsgManager.m in Sources */,
 				63FE533823E2E094009D4F1E /* AcmCall.m in Sources */,
 				63A24F5023CC7B3300D2ADC4 /* AudioInputStream.mm in Sources */,
+				63B0C3D823FD1AC5002C53F0 /* AcmAssistant.m in Sources */,
 				6349E8ED23D18490009EEE99 /* Assistant.m in Sources */,
 				63A24F5923CC7D9900D2ADC4 /* ACMAudioInputStream.m in Sources */,
 				6349E8FF23D313AB009EEE99 /* AssistantItem.m in Sources */,
@@ -694,6 +709,7 @@
 				630F77D923D545A90071DF9F /* AuditTask.m in Sources */,
 				6349E8EB23D157B4009EEE99 /* TtsManager.m in Sources */,
 				63B3572E23BF24920034F54B /* RtcManager.m in Sources */,
+				63B0C3DC23FD2957002C53F0 /* VoiceConfig.m in Sources */,
 				63B357C223C6D89C0034F54B /* CallManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

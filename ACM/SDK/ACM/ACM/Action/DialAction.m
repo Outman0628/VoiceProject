@@ -171,9 +171,13 @@ static NSString *DialRobot = @"/dapi/call/robot";
 
 - (void) NoticeBackendEnterCall: (AcmCall *) call{
     // 通知后台拨号方已进入通话
-    
+    /*
     NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, CallerEnterApi];
     NSString *param =  [NSString stringWithFormat:@"uid=%@&channel=%@",call.selfId,call.channelId];
+    */
+    
+    NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, CallEventAPI];
+    NSString *param = [NSString stringWithFormat:@"uid=%@&channel=%@&code=%ld", call.selfId, call.channelId,(long)CallEventStartCall]; 
     
     [HttpUtil HttpPost:stringUrl Param:param Callback:nil];
 }

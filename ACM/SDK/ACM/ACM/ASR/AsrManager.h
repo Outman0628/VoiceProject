@@ -8,6 +8,9 @@
 
 #ifndef AsrManager_h
 #define AsrManager_h
+#include "AssistantEnum.h"
+
+typedef void (^AudioFileToTextBlock)(AudioToFileCode code,  NSString * _Nullable text);
 
 @interface AsrManager : NSObject
 // 初始化Asr 对象
@@ -17,6 +20,10 @@
 - (void)stopAsr;
 
 -(void)repeatAsr;
+
+-(void)audioFileToText:(nonnull NSString*) filePath  CallBack:(AudioFileToTextBlock _Nonnull ) block;
+
+-(void)stopAudioFileToTextTask;
 
 @end
 

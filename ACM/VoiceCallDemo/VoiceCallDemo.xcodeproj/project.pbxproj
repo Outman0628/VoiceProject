@@ -29,6 +29,10 @@
 		63A24F9E23CDB12600D2ADC4 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A24F9D23CDB12600D2ADC4 /* GLKit.framework */; };
 		63A24FA023CDB18800D2ADC4 /* libBaiduSpeechSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A24F9F23CDB18800D2ADC4 /* libBaiduSpeechSDK.a */; };
 		63A24FA223CDB64500D2ADC4 /* bds_easr_basic_model.dat in Resources */ = {isa = PBXBuildFile; fileRef = 63A24FA123CDB64500D2ADC4 /* bds_easr_basic_model.dat */; };
+		63B0C3E023FE1A29002C53F0 /* AssistantViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B0C3DF23FE1A29002C53F0 /* AssistantViewController.m */; };
+		63B0C3E323FE848D002C53F0 /* 16k_test.pcm in Resources */ = {isa = PBXBuildFile; fileRef = 63B0C3E223FE848D002C53F0 /* 16k_test.pcm */; };
+		63B0C3E923FEDEED002C53F0 /* 16k_test2.pcm in Resources */ = {isa = PBXBuildFile; fileRef = 63B0C3E823FEDEED002C53F0 /* 16k_test2.pcm */; };
+		63B0C3EF23FF8B77002C53F0 /* 16k_test60s.pcm in Resources */ = {isa = PBXBuildFile; fileRef = 63B0C3EE23FF8B77002C53F0 /* 16k_test60s.pcm */; };
 		63B356DD23BE67A80034F54B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B356DC23BE67A80034F54B /* AppDelegate.m */; };
 		63B356E023BE67A80034F54B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B356DF23BE67A80034F54B /* ViewController.m */; };
 		63B356E323BE67A80034F54B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63B356E123BE67A80034F54B /* Main.storyboard */; };
@@ -111,6 +115,11 @@
 		63A24F9D23CDB12600D2ADC4 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		63A24F9F23CDB18800D2ADC4 /* libBaiduSpeechSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBaiduSpeechSDK.a; path = libs/libBaiduSpeechSDK.a; sourceTree = "<group>"; };
 		63A24FA123CDB64500D2ADC4 /* bds_easr_basic_model.dat */ = {isa = PBXFileReference; lastKnownFileType = file; name = bds_easr_basic_model.dat; path = libs/bds_easr_basic_model.dat; sourceTree = "<group>"; };
+		63B0C3DE23FE1A18002C53F0 /* AssistantViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AssistantViewController.h; sourceTree = "<group>"; };
+		63B0C3DF23FE1A29002C53F0 /* AssistantViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AssistantViewController.m; sourceTree = "<group>"; };
+		63B0C3E223FE848D002C53F0 /* 16k_test.pcm */ = {isa = PBXFileReference; lastKnownFileType = file; path = 16k_test.pcm; sourceTree = "<group>"; };
+		63B0C3E823FEDEED002C53F0 /* 16k_test2.pcm */ = {isa = PBXFileReference; lastKnownFileType = file; path = 16k_test2.pcm; sourceTree = "<group>"; };
+		63B0C3EE23FF8B77002C53F0 /* 16k_test60s.pcm */ = {isa = PBXFileReference; lastKnownFileType = file; path = 16k_test60s.pcm; sourceTree = "<group>"; };
 		63B356D823BE67A80034F54B /* VoiceCallDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VoiceCallDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63B356DB23BE67A80034F54B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		63B356DC23BE67A80034F54B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -265,9 +274,31 @@
 			path = TableViewCells;
 			sourceTree = "<group>";
 		};
+		63B0C3DD23FE19DE002C53F0 /* AssistantView */ = {
+			isa = PBXGroup;
+			children = (
+				63B0C3DE23FE1A18002C53F0 /* AssistantViewController.h */,
+				63B0C3DF23FE1A29002C53F0 /* AssistantViewController.m */,
+			);
+			path = AssistantView;
+			sourceTree = "<group>";
+		};
+		63B0C3E123FE848D002C53F0 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				63B0C3EE23FF8B77002C53F0 /* 16k_test60s.pcm */,
+				63B0C3E823FEDEED002C53F0 /* 16k_test2.pcm */,
+				63B0C3E223FE848D002C53F0 /* 16k_test.pcm */,
+			);
+			name = Resources;
+			path = VoiceCallDemo/Resources;
+			sourceTree = "<group>";
+		};
 		63B356CF23BE67A80034F54B = {
 			isa = PBXGroup;
 			children = (
+				63B0C3E123FE848D002C53F0 /* Resources */,
+				63B0C3DD23FE19DE002C53F0 /* AssistantView */,
 				63B63EE223F015FD0063EC0A /* VideoChat */,
 				63C7B61723EA960600A374FF /* DialAssistant */,
 				63155E9723D80D92000762DA /* TTS */,
@@ -509,10 +540,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				63155EBF23D80D92000762DA /* TTSMain.storyboard in Resources */,
+				63B0C3EF23FF8B77002C53F0 /* 16k_test60s.pcm in Resources */,
+				63B0C3E323FE848D002C53F0 /* 16k_test.pcm in Resources */,
 				63B356E823BE67A90034F54B /* LaunchScreen.storyboard in Resources */,
 				63B356E523BE67A90034F54B /* Assets.xcassets in Resources */,
 				63155EC023D80D92000762DA /* tts_text.txt in Resources */,
 				63B356E323BE67A80034F54B /* Main.storyboard in Resources */,
+				63B0C3E923FEDEED002C53F0 /* 16k_test2.pcm in Resources */,
 				63A24FA223CDB64500D2ADC4 /* bds_easr_basic_model.dat in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -541,6 +575,7 @@
 				63B356E023BE67A80034F54B /* ViewController.m in Sources */,
 				63B63EE823F015FD0063EC0A /* VideoChatViewController.m in Sources */,
 				63C7B62D23EAD05400A374FF /* DAItemContentCell.m in Sources */,
+				63B0C3E023FE1A29002C53F0 /* AssistantViewController.m in Sources */,
 				63155EB923D80D92000762DA /* TTSConfigViewController.m in Sources */,
 				63155EBB23D80D92000762DA /* NavigationTableViewCell.m in Sources */,
 				63155EBD23D80D92000762DA /* SliderTableViewCell.m in Sources */,

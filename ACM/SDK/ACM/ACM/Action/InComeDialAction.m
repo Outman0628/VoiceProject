@@ -98,12 +98,19 @@
         
         [call broadcastAgreePhoneCall];
         
+        // 通知后台开始通话
+        NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, CallEventAPI];
+        NSString *param = [NSString stringWithFormat:@"uid=%@&channel=%@&code=%ld", call.selfId, call.channelId,(long)CallEventStartCall];
+        
+        [HttpUtil HttpPost:stringUrl Param:param Callback:nil];
+        
         EventData nextData = { EventBackendAgreeAudioCall,0,0,0,call };
         OnPhoneAction* onPhone = [[OnPhoneAction alloc]init];
         
         [[ActionManager instance] actionChange:self destAction:onPhone];
         
         [[ActionManager instance] HandleEvent:nextData];
+        
     }
 }
 
@@ -218,7 +225,7 @@
     
     // 请求后台应答参数
     
-    NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, CallerEnterApi];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, GetRtcTokenApi];
     NSString *param =  [NSString stringWithFormat:@"uid=%@&channel=%@",call.selfId,call.channelId];
     
     [HttpUtil HttpPost:stringUrl Param:param Callback:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {

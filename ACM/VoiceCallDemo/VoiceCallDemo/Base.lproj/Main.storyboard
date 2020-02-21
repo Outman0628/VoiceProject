@@ -227,20 +227,24 @@
                     </view>
                     <navigationItem key="navigationItem" id="s92-zq-VZ7">
                         <leftBarButtonItems>
-                            <barButtonItem title="回复助手" id="6xB-k0-kcq">
+                            <barButtonItem title="语音助手" id="oX0-9T-XFW">
                                 <connections>
-                                    <segue destination="hs2-HK-ZVy" kind="show" id="wU7-Cs-q3p"/>
+                                    <segue destination="AXd-oe-ca4" kind="show" id="YhZ-nv-8eS"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="拨打助手" id="Plz-5w-5TM">
+                            <barButtonItem title="Item" id="zds-Ab-auj"/>
+                        </leftBarButtonItems>
+                        <rightBarButtonItems>
+                            <barButtonItem enabled="NO" title="拨打助手" id="Plz-5w-5TM">
                                 <connections>
                                     <segue destination="poC-GZ-cjs" kind="show" id="r1n-4l-dZ8"/>
                                 </connections>
                             </barButtonItem>
-                        </leftBarButtonItems>
-                        <rightBarButtonItems>
-                            <barButtonItem title="Item" id="zds-Ab-auj"/>
-                            <barButtonItem title="Item" id="oX0-9T-XFW"/>
+                            <barButtonItem enabled="NO" title="回复助手" id="6xB-k0-kcq">
+                                <connections>
+                                    <segue destination="hs2-HK-ZVy" kind="show" id="wU7-Cs-q3p"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
@@ -1246,7 +1250,100 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8K9-72-fyx" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="132" y="777"/>
+            <point key="canvasLocation" x="961" y="1683"/>
+        </scene>
+        <!--Assistant View Controller-->
+        <scene sceneID="0pW-Ic-iM0">
+            <objects>
+                <viewController id="AXd-oe-ca4" customClass="AssistantViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ylk-Bq-wL3">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="输入文音转换文字" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="XyC-Dz-WAH">
+                                <rect key="frame" x="20" y="70" width="374" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                        <real key="value" value="0.5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </textView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="音文转换结果" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="zL5-Jm-dVw">
+                                <rect key="frame" x="20" y="464" width="374" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                        <real key="value" value="0.5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </textView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="McA-6g-pHW">
+                                <rect key="frame" x="30" y="214" width="108" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="转换为语音文件"/>
+                                <connections>
+                                    <action selector="textConvertToAudio:" destination="AXd-oe-ca4" eventType="touchUpInside" id="ZEX-li-5QP"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DkJ-5g-tc2">
+                                <rect key="frame" x="30" y="301" width="92" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="创建拨打任务"/>
+                                <connections>
+                                    <action selector="createDialPlan:" destination="AXd-oe-ca4" eventType="touchUpInside" id="nwR-wf-TTY"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HCR-7G-Wmx">
+                                <rect key="frame" x="30" y="364" width="92" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="短语音转文字"/>
+                                <connections>
+                                    <action selector="audioFileToText:" destination="AXd-oe-ca4" eventType="touchUpInside" id="grA-yS-6Fi"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jU6-Ig-skQ">
+                                <rect key="frame" x="161" y="301" width="92" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="删除拨打任务"/>
+                                <connections>
+                                    <action selector="cancelDialPlan:" destination="AXd-oe-ca4" eventType="touchUpInside" id="IK3-El-s4t"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pWA-yc-CXB">
+                                <rect key="frame" x="176" y="364" width="62" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="取消转换"/>
+                                <connections>
+                                    <action selector="cancelAudioFileToText:" destination="AXd-oe-ca4" eventType="touchUpInside" id="idW-gN-anZ"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="2rK-RG-qUv"/>
+                    </view>
+                    <toolbarItems/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="addDialPlan" destination="DkJ-5g-tc2" id="pXu-cP-8c0"/>
+                        <outlet property="audioToTextResultView" destination="zL5-Jm-dVw" id="9ZP-1y-5UJ"/>
+                        <outlet property="cancelAudioToTextBtn" destination="pWA-yc-CXB" id="nZz-Hs-PaO"/>
+                        <outlet property="cancelDialPlan" destination="jU6-Ig-skQ" id="B9I-RX-Cp2"/>
+                        <outlet property="rootView" destination="Ylk-Bq-wL3" id="82R-pc-4bK"/>
+                        <outlet property="startAudioToTextBtn" destination="HCR-7G-Wmx" id="DvY-7o-eOh"/>
+                        <outlet property="textToAudioBtn" destination="McA-6g-pHW" id="Ra5-Yo-vnA"/>
+                        <outlet property="textView" destination="XyC-Dz-WAH" id="kyx-Ed-iab"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WYX-bO-5VI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="131.8840579710145" y="794.83695652173924"/>
         </scene>
     </scenes>
     <resources>

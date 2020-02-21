@@ -11,14 +11,15 @@
 
 typedef void (^HttpResponseCallback)(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error);
 
-#define EndCallApi  @"/dapi/call/end"
+//#define EndCallApi  @"/dapi/call/end"
 #define AnswerAssistantSettingApi @"/dapi/account/get-reject-tone"
 #define DialAssistantSettingApi @"/dapi/calltask/list"
 #define ActiveCallApi @"/dapi/call/msg"
 #define UpdateDialTaskApi @"/dapi/calltask/update"
 #define BackLoginApi @"/dapi/account/update"
 #define RTMConfigApi @"/dapi/agora/rtm-option"
-#define CallerEnterApi  @"/dapi/call/enter"
+//#define CallerEnterApi  @"/dapi/call/enter"
+#define GetRtcTokenApi @"/dapi/call/token"
 #define RobotAnserApi  @"/dapi/invite/robot"
 #define CallHeartApi   @"/dapi/call/heartbeat"
 #define SystemConfigApi @"/dapi/system/config"
