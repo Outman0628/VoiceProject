@@ -50,7 +50,7 @@ NSString* ASR_SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 
 - (void)configVoiceRecognitionClient {
     //设置DEBUG_LOG的级别
-    [self.asrEventManager setParameter:@(EVRDebugLogLevelFatal) forKey:BDS_ASR_DEBUG_LOG_LEVEL];
+    //[self.asrEventManager setParameter:@(EVRDebugLogLevelFatal) forKey:BDS_ASR_DEBUG_LOG_LEVEL];
     //配置API_KEY 和 SECRET_KEY 和 APP_ID
     [self.asrEventManager setParameter:@[ASR_API_KEY, ASR_SECRET_KEY] forKey:BDS_ASR_API_SECRET_KEYS];
     [self.asrEventManager setParameter:ASR_APP_ID forKey:BDS_ASR_OFFLINE_APP_CODE];
@@ -78,6 +78,7 @@ NSString* ASR_SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 
 - (BOOL)startAsr
 {
+    
     if(self.onFileAsr){
         self.onFileAsr = false;
         [self.asrEventManager sendCommand:BDS_ASR_CMD_CANCEL];
@@ -119,6 +120,7 @@ NSString* ASR_SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 }
 
 -(void)audioFileToText:(nonnull NSString*) filePath  CallBack:(AudioFileToTextBlock _Nonnull ) block{
+    NSLog(@"---> audioFileToText");
     if(self.onAsr || self.onFileAsr){
         NSLog(@"Ass is busy!");
         if(block != nil){
@@ -143,6 +145,7 @@ NSString* ASR_SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 }
 
 - (void)VoiceRecognitionClientWorkStatus:(int)workStatus obj:(id)aObj{
+    //NSLog(@"---> VoiceRecognitionClientWorkStatus:%d", workStatus);
     switch (workStatus) {
         case EVoiceRecognitionClientWorkStatusNewRecordData: {
             //[self.fileHandler writeData:(NSData *)aObj];
@@ -286,7 +289,7 @@ NSString* ASR_SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
             [self printLogTextView:[NSString stringWithFormat:@"CALLBACK: encount error - %@.\n", (NSError *)aObj]];
             [self onEnd];
              */
-            //NSLog(@"ASR error:%@", [NSString stringWithFormat:@"CALLBACK: encount error - %@.\n", (NSError *)aObj]);
+            NSLog(@"ASR error:%@", [NSString stringWithFormat:@"CALLBACK: encount error - %@.\n", (NSError *)aObj]);
             if( self.onFileAsr ){
                 if(self.fileAsrCallback != nil){
                     dispatch_async(dispatch_get_main_queue(),^{

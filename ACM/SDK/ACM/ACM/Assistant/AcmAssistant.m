@@ -18,6 +18,7 @@
 @interface AcmAssistant()
 @property TtsManager *ttsMgr;
 @property TtsFileManager *ttsFileMgr;
+@property NSString *outputFilePath;
 @property NSMutableArray *speakerCadidates;        // 播报候选人员
 @property BOOL isWorking;                          // 是否有转换工作
 @end
@@ -45,12 +46,12 @@ static AcmAssistant *instance = nil;
 }
 
 
-+(void)textToAudioFile:(nonnull NSString*) text  VoiceConfig:(nonnull VoiceConfig*) config CallBack:(AcmAssistantTextToAudioBlock _Nonnull ) block{
++(void)textToAudioFile:(nonnull NSString*) text FilePath:( NSString*_Nullable) filePath VoiceConfig:(nonnull VoiceConfig*) config CallBack:(AcmAssistantTextToAudioBlock _Nonnull ) block{
     [AcmAssistant createInstanceIfNeeded];
     
     if(instance != nil)
     {
-        [instance ttsTextToAudioFile:text VoiceConfig:config CallBack:block];
+        [instance ttsTextToAudioFile:text FilePath:filePath VoiceConfig:config CallBack:block];
     }
     else{
         if(block != nil){
@@ -76,7 +77,7 @@ static AcmAssistant *instance = nil;
 
 
 + (void) audioFileToText: (nonnull NSString *)filePath  CallBack:(AcmAssistantAudioToTextBlock _Nonnull ) block{
-    
+    NSLog(@"audio file to text");
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if([fileManager fileExistsAtPath:filePath])
     {
@@ -89,6 +90,7 @@ static AcmAssistant *instance = nil;
         }];
     }
     else{
+        NSLog(@"file not exist!");
         if(block != nil){
             block(AssistantErrorFileNotExist,nil);
         }
@@ -128,7 +130,7 @@ static AcmAssistant *instance = nil;
 }
 
 // 文本转文字
--(void)ttsTextToAudioFile:(nonnull NSString*) text  VoiceConfig:(nonnull VoiceConfig*) config CallBack:(AcmAssistantTextToAudioBlock _Nonnull ) block{
+-(void)ttsTextToAudioFile:(nonnull NSString*) text FilePath:( NSString*_Nullable) filePath  VoiceConfig:(nonnull VoiceConfig*) config CallBack:(AcmAssistantTextToAudioBlock _Nonnull ) block{
     
     if(self.isWorking)
     {
@@ -138,6 +140,17 @@ static AcmAssistant *instance = nil;
         
         return;
     }
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if([fileManager fileExistsAtPath:filePath])
+    {
+        if(block != nil){
+            block(AssistantFileAlreadyExist,nil);
+        }
+        return;
+    }
+    
+    self.outputFilePath = filePath;
     
     if([self checkTextToAudioParam:text VoiceConfig:config])
     {
@@ -155,8 +168,15 @@ static AcmAssistant *instance = nil;
             if(code == AssistantOK){
                 NSString *filePath = nil;
                 [TtsFileManager generateFileName:text fullName:&filePath Config:config];
+                NSString *wavFilePath = [self pcmToWav:filePath];
+                
                 if(block != nil){
-                    block(AssistantOK, filePath);
+                    if(wavFilePath == nil){
+                        block(AssistantErrorTransToWavFileFailed, nil);
+                    }else{
+                        block(AssistantOK, wavFilePath);
+                        
+                    }
                 }
             }
             else
@@ -175,6 +195,66 @@ static AcmAssistant *instance = nil;
             block(AssistantErrorParam,nil);
         }
     }
+}
+
+- (NSString *) pcmToWav:(NSString *)filePath
+{
+    NSString *wavFilePath = nil;
+    
+    if(self.outputFilePath == nil || _outputFilePath.length == 0){
+        wavFilePath = [NSString stringWithFormat:@"%@.wav",filePath];
+    }
+    else{
+        wavFilePath = self.outputFilePath;
+    }
+    
+    
+    NSLog(@"PCM file path : %@",filePath); //pcm文件的路径
+    
+    FILE *fout;
+    
+    short NumChannels = 1;       //录音通道数
+    short BitsPerSample = 16;    //线性采样位数
+    int SamplingRate = 16000;     //录音采样率(Hz)
+    int numOfSamples = (int)[[NSData dataWithContentsOfFile:filePath] length];
+    
+    int ByteRate = NumChannels*BitsPerSample*SamplingRate/8;
+    short BlockAlign = NumChannels*BitsPerSample/8;
+    int DataSize = NumChannels*numOfSamples*BitsPerSample/8;
+    int chunkSize = 16;
+    int totalSize = 46 + DataSize;
+    short audioFormat = 1;
+    
+    if((fout = fopen([wavFilePath cStringUsingEncoding:1], "w")) == NULL)
+    {
+        printf("Error opening out file ");
+        return nil;
+    }
+    
+    fwrite("RIFF", sizeof(char), 4,fout);
+    fwrite(&totalSize, sizeof(int), 1, fout);
+    fwrite("WAVE", sizeof(char), 4, fout);
+    fwrite("fmt ", sizeof(char), 4, fout);
+    fwrite(&chunkSize, sizeof(int),1,fout);
+    fwrite(&audioFormat, sizeof(short), 1, fout);
+    fwrite(&NumChannels, sizeof(short),1,fout);
+    fwrite(&SamplingRate, sizeof(int), 1, fout);
+    fwrite(&ByteRate, sizeof(int), 1, fout);
+    fwrite(&BlockAlign, sizeof(short), 1, fout);
+    fwrite(&BitsPerSample, sizeof(short), 1, fout);
+    fwrite("data", sizeof(char), 4, fout);
+    fwrite(&DataSize, sizeof(int), 1, fout);
+    
+    fclose(fout);
+    
+    NSMutableData *pamdata = [NSMutableData dataWithContentsOfFile:filePath];
+    NSFileHandle *handle;
+    handle = [NSFileHandle fileHandleForUpdatingAtPath:wavFilePath];
+    [handle seekToEndOfFile];
+    [handle writeData:pamdata];
+    [handle closeFile];
+    
+    return wavFilePath;
 }
 
 -(BOOL)checkTextToAudioParam:(nonnull NSString*) text  VoiceConfig:(nonnull VoiceConfig*) config

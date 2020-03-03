@@ -129,7 +129,7 @@
 
 - (void) broadcastLeaveCall{
     // 不用发送broadcast 退出后，事件频道会收到 memberLeft 事件
-    /*
+    
     if(_eventSyncChannel == nil)
         return;
     
@@ -157,7 +157,7 @@
         }
         
     }];
-     */
+    
 }
 
 - (void) broadcastRejectDial{
@@ -303,17 +303,14 @@
          EventData eventData = {EventRTMRobotAnswer, 0,0,0,self.channelId};
          [[ActionManager instance] HandleEvent:eventData];
      }
-    /*
+    
      else if( [title isEqualToString:@"leave"] )
      {
          EventData eventData = {EventRtmLeaveCall, 0,0,0,dic[@"accountSender"],self};
          [[ActionManager instance] HandleEvent:eventData];
      }
     
-    
-
-     */
-     }
+}
 
 
 /**

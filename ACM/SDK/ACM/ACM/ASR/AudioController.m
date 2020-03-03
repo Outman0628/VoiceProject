@@ -276,11 +276,8 @@ static OSStatus renderCallBack(void *inRefCon,
 
 - (void)startWork {
 
-    
-
         _error = AudioOutputUnitStart(_remoteIOUnit);
         [self error:_error position:@"AudioOutputUnitStart"];
-
 
 }
 
@@ -295,8 +292,8 @@ static OSStatus renderCallBack(void *inRefCon,
 }
 
 - (void)stopWork {
-
-    AudioOutputUnitStop(_remoteIOUnit);
+    _error = AudioOutputUnitStop(_remoteIOUnit);
+    [self error:_error position:@"AudioOutputUnitStop"];
 }
 
 @end

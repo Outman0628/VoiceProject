@@ -251,5 +251,20 @@ static ActionManager *actionMgr = nil;
     }
 }
 
++ (int)setEnableSpeakerphone:(BOOL)enableSpeaker{
+    if(actionMgr != nil)
+    {
+        int value = 0;
+        if(enableSpeaker){
+            value = 1;
+        }
+        EventData eventData = {EnableSpeakerphone,value};
+        [actionMgr HandleEvent:eventData];
+        return 0;
+    }else{
+        return -1;
+    }
+}
+
 
 @end

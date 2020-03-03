@@ -34,4 +34,7 @@
 
 + (int)setupRemoteVideo:(AgoraRtcVideoCanvas * _Nonnull)remote;
 
+// 设置外放
++ (int)setEnableSpeakerphone:(BOOL)enableSpeaker;
+
 @end

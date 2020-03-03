@@ -84,6 +84,9 @@
     {
         [self handleRtcError:eventData];
     }
+    else if(eventData.type == EventRtmLeaveCall){
+        [self HandleLeaveCall:eventData];
+    }
     else
     {
         [super HandleEvent:eventData];
@@ -386,7 +389,21 @@
     // 请求后台机器人应答
     
     NSString *stringUrl =  [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, RobotAnserApi];
+    
+    /*
     NSString *param = [NSString stringWithFormat:@"uid=%@&channel=%@",call.selfId,call.channelId];
+     
+     */
+    
+    NSDictionary * phoneCallParam =
+    @{@"uid": call.selfId,
+      @"channel":call.channelId,
+      };
+    
+    
+    NSError *error;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:phoneCallParam options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *param = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
     
     [HttpUtil HttpPost:stringUrl Param:param Callback:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if([(NSHTTPURLResponse *)response statusCode] == 200){
@@ -518,6 +535,19 @@
         [call.callback didPhoneDialResult:AcmSelfCancelDial];
     }
     
+}
+
+- (void) HandleLeaveCall: (EventData) eventData{
+    AcmCall *call = eventData.param5;
+    [call broadcastLeaveCall];
+    
+    id<IACMCallBack> callBack =  [ActionManager instance].icmCallBack;
+    if(callBack != nil)
+    {
+        dispatch_async(dispatch_get_main_queue(),^{
+            [callBack onCallEnd:call endCode:AcmMsgDialEndByCaller];
+        });
+    }
 }
 
 // 跳转回Monitor Action

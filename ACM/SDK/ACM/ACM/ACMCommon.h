@@ -151,6 +151,8 @@ typedef NS_ENUM(NSInteger, ACMEventType) {
     // 获取到RTM 后台配置信息
     EventGotRtmConfig = 44,
 
+    // 设置外放
+    EnableSpeakerphone = 45,
     
     // 拨号
     EventDialRobotDemo = 10000,

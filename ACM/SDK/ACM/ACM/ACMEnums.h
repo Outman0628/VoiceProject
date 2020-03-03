@@ -158,6 +158,11 @@ typedef NS_ENUM(NSInteger, AcmDialCode) {
      */
     AcmSelfCancelDial= 7,
     
+    /**
+     通话结束
+     */
+    AcmCallEnd = 8,
+    
  
     
     /**

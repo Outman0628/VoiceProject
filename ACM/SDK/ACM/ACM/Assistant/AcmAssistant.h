@@ -48,9 +48,10 @@ typedef void (^AcmAssistantDialPlanBlock)(AssistantCode code);
  * 文字转换为音频文件，注意文件生成后需要调用方自行管理文件，SDK不会删除文件。
  @param text 转换文本
  @param config 语音配置选项
+ @param filePath 全名称
  @callback  block  转换结果回调callback, 详情参考 AcmAssistantTextToAudioBlock 定义
  */
-+(void)textToAudioFile:(nonnull NSString*) text  VoiceConfig:(nonnull VoiceConfig*) config CallBack:(AcmAssistantTextToAudioBlock _Nonnull ) block;
++(void)textToAudioFile:(nonnull NSString*) text FilePath:( NSString*_Nullable) filePath VoiceConfig:(nonnull VoiceConfig*) config CallBack:(AcmAssistantTextToAudioBlock _Nonnull ) block;
 
 /*
  * 添加机器人拨打计划

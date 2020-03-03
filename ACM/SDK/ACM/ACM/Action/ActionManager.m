@@ -42,9 +42,10 @@ static ActionManager* actionMgrInstance = nil;
         actionMgrInstance = self;
         self.callMgr = [[CallManager alloc]init];
         self.asrMgr = [[AsrManager alloc]init];
-        self.dialingTimetout = 30;
+        self.dialingTimetout = 60;
         self.isConnected = NO;
         self.onPhoneHeartInterval = 31;
+        self.isSpeakerphoneEnabled = NO;
     }
     return self;
 }
@@ -95,12 +96,21 @@ static ActionManager* actionMgrInstance = nil;
     {
         [self handleLoggedinCheck:eventData];
     }
+    else if(eventData.type == EnableSpeakerphone){
+        [self handleEventEnableSpeakerphone:eventData];
+    }
     else
     {
         [self.activeAction HandleEvent:eventData];
     }
     
     
+}
+
+- (void)handleEventEnableSpeakerphone: (EventData)eventData{
+    BOOL value = (eventData.param1 == 1);
+    self.isSpeakerphoneEnabled = value;
+    [RtcManager setEnableSpeakerphone:value];
 }
 
 - (void)handleLoggedinCheck: (EventData)eventData{

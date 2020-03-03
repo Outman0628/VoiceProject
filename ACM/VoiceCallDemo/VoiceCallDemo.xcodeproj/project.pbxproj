@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		630ED8C923ED0720004257BF /* DASubscribersCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630ED8C823ED0720004257BF /* DASubscribersCell.m */; };
 		630F77E923D5C98E0071DF9F /* AAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630F77E823D5C98E0071DF9F /* AAViewController.m */; };
+		63112E482404CF1F0025962D /* test3.pcm in Resources */ = {isa = PBXBuildFile; fileRef = 63112E472404CF1F0025962D /* test3.pcm */; };
+		63112E4A24051A0E0025962D /* test4.wav in Resources */ = {isa = PBXBuildFile; fileRef = 63112E4924051A0E0025962D /* test4.wav */; };
+		63112E4C240524850025962D /* 10s.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 63112E4B240524850025962D /* 10s.mp3 */; };
 		63155EB623D80D92000762DA /* SelectionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63155E9923D80D92000762DA /* SelectionTableViewController.m */; };
 		63155EB823D80D92000762DA /* EttsModelTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63155E9C23D80D92000762DA /* EttsModelTableViewCell.m */; };
 		63155EB923D80D92000762DA /* TTSConfigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63155E9F23D80D92000762DA /* TTSConfigViewController.m */; };
@@ -86,6 +89,9 @@
 		630ED8C823ED0720004257BF /* DASubscribersCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DASubscribersCell.m; sourceTree = "<group>"; };
 		630F77E723D5C9730071DF9F /* AAViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AAViewController.h; sourceTree = "<group>"; };
 		630F77E823D5C98E0071DF9F /* AAViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AAViewController.m; sourceTree = "<group>"; };
+		63112E472404CF1F0025962D /* test3.pcm */ = {isa = PBXFileReference; lastKnownFileType = file; path = test3.pcm; sourceTree = "<group>"; };
+		63112E4924051A0E0025962D /* test4.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = test4.wav; sourceTree = "<group>"; };
+		63112E4B240524850025962D /* 10s.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 10s.mp3; sourceTree = "<group>"; };
 		63155E9923D80D92000762DA /* SelectionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectionTableViewController.m; sourceTree = "<group>"; };
 		63155E9C23D80D92000762DA /* EttsModelTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EttsModelTableViewCell.m; sourceTree = "<group>"; };
 		63155E9E23D80D92000762DA /* EttsModelTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EttsModelTableViewCell.h; sourceTree = "<group>"; };
@@ -287,6 +293,9 @@
 		63B0C3E123FE848D002C53F0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				63112E4B240524850025962D /* 10s.mp3 */,
+				63112E4924051A0E0025962D /* test4.wav */,
+				63112E472404CF1F0025962D /* test3.pcm */,
 				63B0C3EE23FF8B77002C53F0 /* 16k_test60s.pcm */,
 				63B0C3E823FEDEED002C53F0 /* 16k_test2.pcm */,
 				63B0C3E223FE848D002C53F0 /* 16k_test.pcm */,
@@ -547,8 +556,11 @@
 				63B356E823BE67A90034F54B /* LaunchScreen.storyboard in Resources */,
 				63B356E523BE67A90034F54B /* Assets.xcassets in Resources */,
 				63155EC023D80D92000762DA /* tts_text.txt in Resources */,
+				63112E482404CF1F0025962D /* test3.pcm in Resources */,
 				63B356E323BE67A80034F54B /* Main.storyboard in Resources */,
 				63B0C3E923FEDEED002C53F0 /* 16k_test2.pcm in Resources */,
+				63112E4C240524850025962D /* 10s.mp3 in Resources */,
+				63112E4A24051A0E0025962D /* test4.wav in Resources */,
 				63A24FA223CDB64500D2ADC4 /* bds_easr_basic_model.dat in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

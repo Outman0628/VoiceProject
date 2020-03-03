@@ -75,11 +75,20 @@ typedef NS_ENUM(NSInteger, AssistantCode) {
      */
     AssistantErrorIncorrectDialAssistantContent = -11,
 
+    /**
+     文件已经存在
+     */
+    AssistantFileAlreadyExist = -12,
     
     /**
      音文转换失败
      */
     AssistantErrorAudioToTextFailed = -13,
+    
+    /**
+     转换为wav 文件失败
+     */
+    AssistantErrorTransToWavFileFailed = -14,
 };
 
 typedef NS_ENUM(NSInteger, AudioToFileCode) {

@@ -87,7 +87,7 @@
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     appDelegate.viewController = self;
     self.inited = false;
-    _callTimerCount = 600;
+    _callTimerCount = 60;
    /*
     NSString *token=[[NSUserDefaults standardUserDefaults] valueForKey:@"APNSToken"];
     if(token != nil)
@@ -526,6 +526,16 @@
     [ass.contents addObject:item2];
     
 */
+}
+
+- (IBAction)enableSpeakphoneClicked:(id)sender {
+    [ACM setEnableSpeakerphone:YES];
+    [self showAlert:@"设置外放"];
+}
+
+- (IBAction)disableSpeakphoneClicked:(id)sender {
+    [ACM setEnableSpeakerphone:NO];
+    [self showAlert:@"取消外放"];
 }
 
 - (void)playAssistantFileTest{

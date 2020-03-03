@@ -24,8 +24,9 @@
 @property CallManager* _Nonnull  callMgr;
 @property id<IACMCallBack> _Nullable  icmCallBack;
 @property AsrManager * _Nullable asrMgr;
-@property NSString *apnsToken;
+@property NSString * _Nullable apnsToken;
 @property BOOL  isConnected;
+@property BOOL  isSpeakerphoneEnabled;     // 外放设置
 
 +(ActionManager *_Nullable)instance;
 

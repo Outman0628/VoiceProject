@@ -13,7 +13,7 @@
 #import "TtsFileTasks.h"
 #import <CommonCrypto/CommonDigest.h>
 
-//#define EnableFileCache
+#define EnableFileCache
 
 @interface TtsFileManager()
 #ifdef EnableFileCache
@@ -37,7 +37,7 @@
     NSString *sha1 = [TtsFileManager sha1:fileNameHashString];
     NSString *md5 = [TtsFileManager md5:fileNameHashString];
     
-    NSString *fileName = [NSString stringWithFormat:@"ttsvoice_%@%@.mp3",sha1,md5];
+    NSString *fileName = [NSString stringWithFormat:@"ttsvoice_%@%@.pcm",sha1,md5];
     NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject;
     NSString *path = [documentPath stringByAppendingPathComponent:fileName];
     *filePath = path;

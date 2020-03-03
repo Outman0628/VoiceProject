@@ -35,7 +35,8 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 - (void)initMgr{
     _isSpeek = NO;
     [self configureSDK];
-    [[BDSSpeechSynthesizer sharedInstance] setSynthParam:@(BDS_SYNTHESIZER_AUDIO_ENCODE_MP3_8K) forKey:BDS_SYNTHESIZER_PARAM_AUDIO_ENCODING];
+    //[[BDSSpeechSynthesizer sharedInstance] setSynthParam:@(BDS_SYNTHESIZER_AUDIO_ENCODE_MP3_8K) forKey:BDS_SYNTHESIZER_PARAM_AUDIO_ENCODING];
+    [[BDSSpeechSynthesizer sharedInstance] setSynthParam:@(ETTS_AUDIO_TYPE_PCM_16K) forKey:BDS_SYNTHESIZER_PARAM_ETTS_AUDIO_FORMAT];
     
     self.synthesisTexts = [[NSMutableArray alloc] init];
 }

@@ -158,4 +158,12 @@ FOUNDATION_EXPORT const unsigned char ACMVersionString[];
  @param dialingTimer 超时时间 (秒)
  */
 + (void) updateDialingTimer: ( NSInteger )dialingTimer;
+
+/**
+ 设置外放
+ 
+ @return 0 成功, < 0 失败
+ */
++ (int)setEnableSpeakerphone:(BOOL)enableSpeaker;
+
 @end

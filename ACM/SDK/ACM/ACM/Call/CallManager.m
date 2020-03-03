@@ -15,6 +15,7 @@
 @property NSMutableArray * _Nullable validateCallList;  // 校验电话
 @end
 
+
 @implementation CallManager
 
 /*
@@ -167,6 +168,47 @@
 /*
  从后台服务器获取用户最近时间内的有效通话
  */
+/*
+-(void)getBackendRecentActiveCall:(NSString *_Nonnull)uid Block:(void(^_Nullable)(NSArray *_Nullable activeCallList))block{
+    
+    if(uid == nil){
+        if(block != nil){
+            block(nil);
+        }
+        
+        return;
+    }
+    
+    
+    
+        NSMutableArray *activeCalls = [NSMutableArray array];
+        AcmCall *instance = [[AcmCall alloc]init];
+
+        
+        
+        instance.callType = AudioCall;
+        
+        instance.callerId = @"98087081204514816";
+        
+        
+        instance.role = Subscriber;
+        instance.channelId = @"ch_9S6125zD30";
+        NSMutableArray *list = [NSMutableArray array];
+        [list addObject:@"511"];
+        instance.subscriberList = list;
+        instance.selfId = [ActionManager instance].userId;
+        
+        [activeCalls addObject:instance];
+    
+    
+    if(block != nil){
+        dispatch_async(dispatch_get_main_queue(),^{
+            block(activeCalls);
+        });
+    }
+}
+*/
+
 -(void)getBackendRecentActiveCall:(NSString *_Nonnull)uid Block:(void(^_Nullable)(NSArray *_Nullable activeCallList))block{
     
     if(uid == nil){
@@ -264,6 +306,7 @@
         }
     }];
 }
+ 
 
 -(void) ValidateIncomeCall: (NSString *_Nonnull)channelId IsApnsCall:(BOOL) isApnsCall{
     

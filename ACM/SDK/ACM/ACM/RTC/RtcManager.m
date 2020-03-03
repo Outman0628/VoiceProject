@@ -13,6 +13,7 @@
 
 static AgoraRtcEngineKit *_rtcKit = nil;
 static RtcManager *instance = nil;
+static BOOL localMuteState = NO;
 
 @interface RtcManager ()  <AgoraRtcEngineDelegate, AudioStreamPushDelegate>
 @property NSMutableDictionary *channelMemberList;
@@ -57,11 +58,20 @@ static RtcManager *instance = nil;
     
     [_rtcKit joinChannelByUserAccount:userID token:token channelId:channelId joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {
         NSLog(@"Succeed to join RTC channel");
+        
+        int retValue = [_rtcKit setEnableSpeakerphone:[ActionManager instance].isSpeakerphoneEnabled];
+        NSLog(@"setEnableSpeakerphone %d",retValue);
+        
+        if(!localMuteState){
+            [AudioStreamMgr startWork];
+            [[ActionManager instance].asrMgr startAsr];
+        }
+        
         EventData eventData = {EventSelfInChannelSucceed, 0,0,0,call};
         [[ActionManager instance]  HandleEvent:eventData];
     }];
     
-    [_rtcKit setEnableSpeakerphone:YES];
+
 }
 
 + (void) startVideoCall: ( nullable NSString *) appId  callInstance:(nonnull AcmCall *) call{
@@ -99,6 +109,15 @@ static RtcManager *instance = nil;
     
     [_rtcKit joinChannelByUserAccount:call.selfId token:call.token channelId:call.channelId joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {
         NSLog(@"Succeed to join RTC video channel");
+        
+        int retValue = [_rtcKit setEnableSpeakerphone:[ActionManager instance].isSpeakerphoneEnabled];
+        NSLog(@"setEnableSpeakerphone %d",retValue);
+        
+        if(!localMuteState){
+            [AudioStreamMgr startWork];
+            [[ActionManager instance].asrMgr startAsr];
+        }
+        
         EventData eventData = {EventSelfInChannelSucceed, 0,0,0,call};
         [[ActionManager instance]  HandleEvent:eventData];
     }];
@@ -124,10 +143,21 @@ static RtcManager *instance = nil;
 
 + (int)muteLocalAudioStream:(BOOL)mute
 {
+    localMuteState = mute;
+    if(mute)
+    {
+        [AudioStreamMgr stopWork];
+         [[ActionManager instance].asrMgr stopAsr];
+    }
+    else{
+        [AudioStreamMgr startWork];
+        [[ActionManager instance].asrMgr startAsr];
+    }
     if(_rtcKit != nil)
     {
         return [_rtcKit muteLocalAudioStream:mute];
     }
+    
     
     return -1;
 }
@@ -163,6 +193,14 @@ static RtcManager *instance = nil;
         return [_rtcKit setupRemoteVideo:remote];
     }
     return -1;
+}
+
++ (int)setEnableSpeakerphone:(BOOL)enableSpeaker{
+    if(_rtcKit != nil){
+        return [_rtcKit setEnableSpeakerphone:enableSpeaker];
+    }else{
+        return -1;
+    }
 }
 
 
@@ -213,12 +251,17 @@ static RtcManager *instance = nil;
     //NSLog(@"RTC didJoinChannel:channel%@, userID:%@, elapsed:%ld", channel,uid,(long)elapsed);
     //EventData eventData = {EventDidRTCJoinChannel, uid,elapsed,0,channel};
     //[[ActionManager instance]  HandleEvent:eventData];
+    
+
+}
+
+- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didAudioRouteChanged:(AgoraAudioOutputRouting)routing{
+    NSLog(@"RTC didAudioRouteChanged:%ld",(long)routing);
 }
 
 - (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didJoinedOfUid:(NSUInteger)uid elapsed:(NSInteger)elapsed
 {
-    [AudioStreamMgr startWork];
-    [[ActionManager instance].asrMgr startAsr];
+    NSLog(@"RTC didJoinedOfUid: userID:%lu, elapsed:%ld", (unsigned long)uid,(long)elapsed);
     NSNumber *num = [NSNumber numberWithInteger:uid];
     NSString *userAccount = [_channelMemberList objectForKey:num];
     

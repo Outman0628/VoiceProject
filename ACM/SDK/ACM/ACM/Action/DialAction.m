@@ -142,7 +142,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
 - (void) prepareOnPhoneCall: (EventData) eventData{
     AcmCall *call = [[ActionManager instance].callMgr getCall:eventData.param4];
     if(call != nil && call.role == Originator && call.stage == Dialing)
-    {       
+    {
         [call updateStage:PrepareOnphone];
         if(call.callback)
         {
@@ -158,6 +158,11 @@ static NSString *DialRobot = @"/dapi/call/robot";
         [call updateStage:OnPhone];
         
         [self NoticeBackendEnterCall:call];
+        
+        if(call.callback)
+        {
+            [call.callback didPhoneDialResult:AcmDialSucced];
+        }
         
         // 跳转到OnPhoneAction
         OnPhoneAction * action = [[OnPhoneAction alloc]init];
