@@ -73,9 +73,17 @@
     
    NSString *stringUrl = [NSString stringWithFormat:@"%@%@",self.actionMgr.host, BackLoginApi];
     
-   NSString *bodyString = [NSString stringWithFormat:@"uid=%@&device=%@&apns_token=%@", self.userId,@"ios",self.apnsToken];
+    NSDictionary * loginData =
+    @{@"uid":self.userId,
+      @"device": @"ios",
+      @"apns_token":self.apnsToken == nil ? [NSNull null] : self.apnsToken,
+      };
     
-    [HttpUtil HttpPost:stringUrl Param:bodyString Callback:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    NSError *error;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:loginData options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *param = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    
+    [HttpUtil HttpPost:stringUrl Param:param Callback:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
         if([(NSHTTPURLResponse *)response statusCode] == 200){
             NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];

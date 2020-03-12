@@ -104,7 +104,11 @@ NSString* ASR_SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 
 - (void)stopAsr
 {
-    self.onAsr = false;
+    if(self.onAsr){
+        NSLog(@"Stop Asr");
+        [self.asrEventManager sendCommand:BDS_ASR_CMD_CANCEL];
+        self.onAsr = false;
+    }
 }
 
 - (void)repeatAsr{
@@ -193,6 +197,8 @@ NSString* ASR_SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
                         result = array[0];
                     }
                    // NSString *result =  [self getDescriptionForDic:retDic[@"results_recognition"]];
+                    
+                    
                     if(result != nil && result.length > 0)
                     {
                         EventData asrData = {EventASRRealTimeResult,0,0,self.timestamp,result};
@@ -246,7 +252,10 @@ NSString* ASR_SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
                         
                         if(result != nil && result.length > 0)
                         {
-                            EventData asrData = {EventASRFinalResult,0,0,self.timestamp,result};
+                            NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+                            NSTimeInterval endTimestamp =[dat timeIntervalSince1970];
+                            
+                            EventData asrData = {EventASRFinalResult,0,0,self.timestamp,result,0,0,0,0,endTimestamp};
                             dispatch_async(dispatch_get_main_queue(),^{
                                 [[ActionManager instance] HandleEvent:asrData];
                             });

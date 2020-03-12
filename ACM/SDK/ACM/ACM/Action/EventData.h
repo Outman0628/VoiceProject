@@ -22,6 +22,7 @@ typedef struct _EventData {
     id  param6;
     id  param7;
     id  param8;
+    double param9;
 } EventData;
 
 #endif /* EventData_h */

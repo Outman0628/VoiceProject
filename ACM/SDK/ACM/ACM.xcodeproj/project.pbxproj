@@ -36,6 +36,9 @@
 		6349E90323D342E0009EEE99 /* TtsFileTasks.m in Sources */ = {isa = PBXBuildFile; fileRef = 6349E90223D342E0009EEE99 /* TtsFileTasks.m */; };
 		6390308D23EBC13C00D10CAE /* DialAssistant.h in Headers */ = {isa = PBXBuildFile; fileRef = 6390308C23EBC13C00D10CAE /* DialAssistant.h */; };
 		6390308F23EBC14800D10CAE /* DialAssistant.m in Sources */ = {isa = PBXBuildFile; fileRef = 6390308E23EBC14800D10CAE /* DialAssistant.m */; };
+		63A040A524176F110062E622 /* LogManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A040A424176F110062E622 /* LogManager.h */; };
+		63A040A724176F220062E622 /* LogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A040A624176F220062E622 /* LogManager.m */; };
+		63A040A92417750F0062E622 /* AcmLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A040A82417750F0062E622 /* AcmLog.h */; };
 		63A24F4823CB5A9200D2ADC4 /* Assistant.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F4723CB5A9200D2ADC4 /* Assistant.h */; };
 		63A24F4A23CB5ACC00D2ADC4 /* AnswerAssistant.h in Headers */ = {isa = PBXBuildFile; fileRef = 63A24F4923CB5ACC00D2ADC4 /* AnswerAssistant.h */; };
 		63A24F4C23CB5C6300D2ADC4 /* AnswerAssistant.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A24F4B23CB5C6300D2ADC4 /* AnswerAssistant.m */; };
@@ -155,6 +158,9 @@
 		6349E90223D342E0009EEE99 /* TtsFileTasks.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TtsFileTasks.m; sourceTree = "<group>"; };
 		6390308C23EBC13C00D10CAE /* DialAssistant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DialAssistant.h; sourceTree = "<group>"; };
 		6390308E23EBC14800D10CAE /* DialAssistant.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DialAssistant.m; sourceTree = "<group>"; };
+		63A040A424176F110062E622 /* LogManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogManager.h; sourceTree = "<group>"; };
+		63A040A624176F220062E622 /* LogManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LogManager.m; sourceTree = "<group>"; };
+		63A040A82417750F0062E622 /* AcmLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AcmLog.h; sourceTree = "<group>"; };
 		63A24F4723CB5A9200D2ADC4 /* Assistant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Assistant.h; sourceTree = "<group>"; };
 		63A24F4923CB5ACC00D2ADC4 /* AnswerAssistant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnswerAssistant.h; sourceTree = "<group>"; };
 		63A24F4B23CB5C6300D2ADC4 /* AnswerAssistant.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnswerAssistant.m; sourceTree = "<group>"; };
@@ -296,6 +302,16 @@
 			path = TTS;
 			sourceTree = "<group>";
 		};
+		63A040A324176ED80062E622 /* Log */ = {
+			isa = PBXGroup;
+			children = (
+				63A040A424176F110062E622 /* LogManager.h */,
+				63A040A624176F220062E622 /* LogManager.m */,
+				63A040A82417750F0062E622 /* AcmLog.h */,
+			);
+			path = Log;
+			sourceTree = "<group>";
+		};
 		63A24F4623CB5A3100D2ADC4 /* Assistant */ = {
 			isa = PBXGroup;
 			children = (
@@ -406,6 +422,7 @@
 		63B3565323BDE3900034F54B /* ACM */ = {
 			isa = PBXGroup;
 			children = (
+				63A040A324176ED80062E622 /* Log */,
 				6349E8D123D15629009EEE99 /* TTS */,
 				63A24F4D23CC7A9A00D2ADC4 /* ASR */,
 				63A24F4623CB5A3100D2ADC4 /* Assistant */,
@@ -521,10 +538,12 @@
 				63B3579123C45F290034F54B /* ACMAction.h in Headers */,
 				6349E8F723D1CAB9009EEE99 /* AssistantEnum.h in Headers */,
 				63B0C3DA23FD277C002C53F0 /* VoiceConfig.h in Headers */,
+				63A040A92417750F0062E622 /* AcmLog.h in Headers */,
 				63A24F4823CB5A9200D2ADC4 /* Assistant.h in Headers */,
 				63B0C3D623FD1AB6002C53F0 /* AcmAssistant.h in Headers */,
 				63A24F4A23CB5ACC00D2ADC4 /* AnswerAssistant.h in Headers */,
 				63155E9623D7E36F000762DA /* AssistantCallback.h in Headers */,
+				63A040A524176F110062E622 /* LogManager.h in Headers */,
 				6349E8FD23D1FBC4009EEE99 /* AssistantItem.h in Headers */,
 				6390308D23EBC13C00D10CAE /* DialAssistant.h in Headers */,
 				63A24F5723CC7D8A00D2ADC4 /* ACMAudioInputStream.h in Headers */,
@@ -700,6 +719,7 @@
 				6349E8ED23D18490009EEE99 /* Assistant.m in Sources */,
 				63A24F5923CC7D9900D2ADC4 /* ACMAudioInputStream.m in Sources */,
 				6349E8FF23D313AB009EEE99 /* AssistantItem.m in Sources */,
+				63A040A724176F220062E622 /* LogManager.m in Sources */,
 				63B3579323C468730034F54B /* ACMAction.m in Sources */,
 				630F77DF23D570D40071DF9F /* UpDateConfigTask.m in Sources */,
 				63B356AC23BE38970034F54B /* ACM.m in Sources */,

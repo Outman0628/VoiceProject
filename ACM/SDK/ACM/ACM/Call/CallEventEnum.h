@@ -22,6 +22,9 @@ typedef NS_ENUM(NSInteger, CallEventCode) {
     // 结束通话
     CallEventEndCall = 2,
     
+    // 字幕信息
+    SubTitleEvent = 3,
+    
     // 通话方取消通话（通话方通话结束事件）
     CallEventSelfCancel_EndCall = 1000,
     

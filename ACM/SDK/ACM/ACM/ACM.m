@@ -16,8 +16,8 @@
 #import "Action/EventData.h"
 #import "Message/ApnsMessageManager.h"
 
-//static NSString *AppId = nil;
-//static NSString *UserId = nil;
+#import "Log/AcmLog.h"
+
 static ActionManager *actionMgr = nil;
 
 @implementation  ACM
@@ -27,9 +27,9 @@ static ActionManager *actionMgr = nil;
 + (void) initManager: (nullable NSString *)host apnsToken:(nullable NSString *)token acmCallback:(id <IACMCallBack> _Nullable)delegate completion:(IACMInitBlock _Nullable)completionBlock{
      NSLog(@"init manager4");
     /*
-    AppId = appId;
-    [RunTimeMsgManager init:appId acmCallback:delegate];
-     */
+    NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+    InfoLog(@"Acm",@"inforlogtest %@", dat);
+    */
     if(actionMgr == nil)
     {
         EventData eventData = {EventInitSDK, 0,0,0,delegate,host,token,completionBlock};

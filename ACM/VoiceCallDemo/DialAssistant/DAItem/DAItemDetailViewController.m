@@ -405,7 +405,6 @@ enum DialItemDetailCount{
     
     [self presentViewController:alert animated:true completion:nil];
 }
-
 - (void)showAlertWidthCancel:(NSString * _Nonnull)message handle:(void (^_Nullable)(UIAlertAction * _Nullable))handle {
     [self.view endEditing:true];
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:message preferredStyle:UIAlertControllerStyleAlert];

@@ -188,11 +188,11 @@
         
         instance.callType = AudioCall;
         
-        instance.callerId = @"98087081204514816";
+        instance.callerId = @"511";
         
         
         instance.role = Subscriber;
-        instance.channelId = @"ch_9S6125zD30";
+        instance.channelId = @"ch_s1718671p7";
         NSMutableArray *list = [NSMutableArray array];
         [list addObject:@"511"];
         instance.subscriberList = list;

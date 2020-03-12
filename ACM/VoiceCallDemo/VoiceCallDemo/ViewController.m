@@ -37,6 +37,7 @@
 @property AVAudioPlayer* player;
 @property VideoChatViewController * videoCallViewCtrl;
 @property BOOL initedState;
+@property AVPlayer *avplayer;
 
 //@property (nonatomic, copy) NSString *dialChannelId;
 
@@ -171,7 +172,7 @@
     if(uid != nil && uid.length > 0)
     {
         self.userIdTextField.text = uid;
-        [self userRegist:nil];
+       // [self userRegist:nil];
     }
 }
 
@@ -377,15 +378,18 @@
 }
 - (IBAction)callRobot:(id)sender {
     
+    /*
     [ACM ringRobotAudioCall];
     
     self.callPanel.hidden = false;
     self.remoteUserIdLabel.text = @"语音助手";
+    */
     
+    [self PlayFile];
 }
 
 - (IBAction)audioCall:(id)sender {
-    [self playAssistantFileTest];
+    
     
     if(!self.checkPhoneCallParameters)
     {
@@ -540,7 +544,7 @@
 
 - (void)playAssistantFileTest{
     NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject;
-    NSString *filePath = [documentPath stringByAppendingPathComponent:@"tts.mp3"];
+    NSString *filePath = @"https://liu.enjoyst.com/media/recording/ch_9d08bm96wU/0_20200305101514192.aac";//[documentPath stringByAppendingPathComponent:@"tts.mp3"];
     NSURL *urlFile = [NSURL fileURLWithPath:filePath];
     NSError *error = nil;
     self.player = [[AVAudioPlayer alloc]initWithContentsOfURL:urlFile error:&error];
@@ -549,6 +553,16 @@
     }
     [self.player play];
 
+}
+-(void) PlayFile{
+    
+
+    NSString *filePath = @"https://liu.enjoyst.com/media/recording/ch_9d08bm96wU/0_20200305101514192.aac";//[documentPath stringByAppendingPathComponent:@"tts.mp3"];
+    NSURL *urlFile = [NSURL URLWithString:filePath];
+    self.player = [[AVPlayer alloc] initWithURL:urlFile];
+    
+    [self.player play];
+   
 }
 
 

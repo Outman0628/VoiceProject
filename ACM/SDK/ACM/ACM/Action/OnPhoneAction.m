@@ -222,7 +222,57 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
         //[RunTimeMsgManager syncAsrData:remoteUid userAccount:_curCall.selfId channelID:_curCall.channelId asrData:eventData.param4 timeStamp:eventData.param3 isFinished:NO];
         
        [_curCall broadcastAsrData:eventData.param4 timeStamp:eventData.param3 isFinished:NO];
+       
     }
+}
+
+- (void) reportAsrResult: (EventData) eventData Call:(AcmCall *)call{
+    NSDate *startTime=[NSDate dateWithTimeIntervalSince1970:eventData.param3];
+    NSDate *stopTime=[NSDate dateWithTimeIntervalSince1970:eventData.param9];
+    
+    /*
+    NSTimeZone *zone = [NSTimeZone systemTimeZone];
+    //得到源日期与世界标准时间的偏移量
+    NSInteger interval = [zone secondsFromGMTForDate: startTime];
+    //返回以当前NSDate对象为基准，偏移多少秒后得到的新NSDate对象
+    startTime = [startTime dateByAddingTimeInterval: interval];
+    stopTime = [stopTime dateByAddingTimeInterval: interval];
+    */
+    
+    NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, CallEventAPI];
+    
+    NSDateFormatter*dateFormatter=[[NSDateFormatter alloc]init];
+    
+    //设置时区
+    /*
+    NSTimeZone *timeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT+0000"];
+    [dateFormatter setTimeZone:timeZone];
+    */
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+
+    NSDictionary * desp =@{@"content":eventData.param4,
+                           @"start": [dateFormatter stringFromDate:startTime],
+                           @"end": [dateFormatter stringFromDate:stopTime],
+                           };
+    
+    NSError *error;
+    NSData *despData = [NSJSONSerialization dataWithJSONObject:desp options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *despStr = [[NSString alloc]initWithData:despData encoding:NSUTF8StringEncoding];
+    
+    NSDictionary * reportData =
+    @{@"uid":call.selfId,
+      @"channel": call.channelId,
+      @"code":[NSString stringWithFormat:@"%ld",(long)SubTitleEvent],
+      @"desp":despStr
+      };
+    
+   
+    NSData *data = [NSJSONSerialization dataWithJSONObject:reportData options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *param = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    
+    [HttpUtil HttpPost:stringUrl Param:param Callback:nil];
+    
 }
 
 - (void) handleAsrFinalResult: (EventData) eventData{
@@ -243,6 +293,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
         //[RunTimeMsgManager syncAsrData:remoteUid userAccount:_curCall.selfId channelID:_curCall.channelId asrData:eventData.param4 timeStamp:eventData.param3 isFinished:YES];
         
         [_curCall broadcastAsrData:eventData.param4 timeStamp:eventData.param3 isFinished:YES];
+        [self reportAsrResult:eventData Call:_curCall];
     }
     
 }
@@ -410,6 +461,8 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
 
 - (void) requestAuthority: (nonnull AcmCall *)call completion:(IRTCAGetAuthorityBlock _Nullable)completionBlock
 {
+    
+    
     NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, AuthorityApi];
     
     NSURL *url = [NSURL URLWithString:stringUrl];
@@ -420,7 +473,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
     
     request.HTTPMethod = @"POST";
     
-    NSString *bodyString = [NSString stringWithFormat:@"channel=%@", call.channelId]; //带一个参数key传给服务器
+    NSString *bodyString = [NSString stringWithFormat:@"channel=%@&uid=%@", call.channelId, call.selfId]; //带一个参数key传给服务器
     
     request.HTTPBody = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
     
