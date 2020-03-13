@@ -23,7 +23,9 @@ typedef void (^HttpResponseCallback)(NSData * _Nullable data, NSURLResponse * _N
 #define RobotAnserApi  @"/dapi/invite/robot"
 #define CallHeartApi   @"/dapi/call/heartbeat"
 #define SystemConfigApi @"/dapi/system/config"
-#define CallEventAPI        @"/dapi/call/event"
+#define CallEventAPI    @"/dapi/call/event"
+#define AuthorityApi    @"/dapi/quit/robot"
+#define DialApi  @"/dapi/call/user"
 
 @interface HttpUtil : NSObject
 

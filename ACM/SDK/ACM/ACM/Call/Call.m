@@ -12,6 +12,8 @@
 #import "AcmCall.h"
 #import "../Message/HttpUtil.h"
 
+#import "../Log/AcmLog.h"
+#define CallTag  @"Call"
 
 @interface Call()
 @property NSTimer *dialTimer;      // 拨号，拨号应答超时器
@@ -65,9 +67,9 @@
     {
         if(_dialTimer == nil)
         {
-            NSLog(@"Dialing time out value:%ld",(long)[ActionManager instance].dialingTimetout);
+            InfoLog(CallTag,@"Dialing time out value:%ld",(long)[ActionManager instance].dialingTimetout);
             _dialTimer = [NSTimer scheduledTimerWithTimeInterval:[ActionManager instance].dialingTimetout repeats:NO block:^(NSTimer * _Nonnull timer) {
-                NSLog(@"Dialing time out event triggered");
+                InfoLog(CallTag,@"Dialing time out event triggered");
                 [self dialringTimeout];
             }];
         }

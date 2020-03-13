@@ -20,6 +20,12 @@
  */
 + (instancetype) sharedInstance;
 
+/**
+ 日志相关接口
+ @param logLevel 日志等级，参见AcmLogLevel
+ */
++ (void) setAcmLogConfig:(NSInteger) logLevel;
+
 #pragma mark - Method
 
 /**

@@ -19,9 +19,11 @@
 #import "../Message/HttpUtil.h"
 #import "../Call/CallEventEnum.h"
 
-static NSString *DialApi = @"/dapi/call/user";
+
 static NSString *DialRobot = @"/dapi/call/robot";
 
+#import "../Log/AcmLog.h"
+#define DialTag  @"Dial"
 
 
 @interface DialAction()
@@ -46,6 +48,9 @@ static NSString *DialRobot = @"/dapi/call/robot";
 }
 
 - (void) HandleEvent: (EventData) eventData{
+    
+    DebugLog(DialTag,@"HandleEvent:%ld",(long)eventData.type);
+    
     if(eventData.type == EventAudioDial)
     {
         [self RequestPhoneCallInfo:eventData];    // audio call step 1 向后台申请拨号
@@ -241,7 +246,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
             [[ActionManager instance] HandleEvent:nextEvent];
         }
         else{
-            NSLog(@"ACM Err: failed to join event channel:%ld", (long)errorCode);
+            ErrLog(DialTag,@"Err: failed to join audio call event channel:%ld", (long)errorCode);
             [self quitDialingPhoneCall:call EndCode:AcmDialErrorJoinEventSyncChannel EventCode:CallEventCallFailed_EndCall NeedSendNotification:YES];
         }
     }];
@@ -259,7 +264,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
             [[ActionManager instance] HandleEvent:nextEvent];
         }
         else{
-            NSLog(@"ACM Err: failed to join event channel:%ld", (long)errorCode);
+            ErrLog(DialTag,@"Err: failed to join video call event channel:%ld", (long)errorCode);
             [self quitDialingPhoneCall:call EndCode:AcmDialErrorJoinEventSyncChannel EventCode:CallEventCallFailed_EndCall NeedSendNotification:YES];
         }
     }];
@@ -281,7 +286,11 @@ static NSString *DialRobot = @"/dapi/call/robot";
     dispatch_async(dispatch_get_main_queue(),^{
     [call.callback didPhoneDialResult:AcmDialRequestSendSucceed];
 });
-     
+    
+    // 拨号事件上传
+    NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, CallEventAPI];
+    NSString *param = [NSString stringWithFormat:@"uid=%@&channel=%@&code=%ld", call.selfId, call.channelId,(long)CallEventCallerDial];
+    [HttpUtil HttpPost:stringUrl Param:param Callback:nil];
 }
 
 - (void) RequestPhoneCallInfo:(EventData) eventData{
@@ -417,7 +426,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
                     self.rtcToken = data[@"token"];
             
                     
-                    NSLog(@"Join to Robot channel:%@", self.channelId);
+                    DebugLog(DialTag,@"Join to Robot channel:%@", self.channelId);
                     
                     [RtcManager startAudioCall:data[@"appID"] user:self.userId channel:self.channelId   rtcToken:data[@"token"] callInstance:nil];
                     
@@ -425,7 +434,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
                 else
                 {
                     // deal with err
-                    NSLog(@"ACM incorrect robot param");
+                    ErrLog(DialTag,@"ACM incorrect robot param");
                     
                 }
             }
@@ -434,7 +443,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
                 self.userId = nil;
                 
                 // todo deal with failed
-                 NSLog(@"ACM incorrect robot request response");
+                 ErrLog(DialTag,@"ACM incorrect robot request response");
             }
             
             
@@ -442,7 +451,7 @@ static NSString *DialRobot = @"/dapi/call/robot";
         }
         else{
             // todo deal with failed
-            NSLog(@"ACM robot request error. state:%ld",(long)[(NSHTTPURLResponse *)response statusCode]);
+            ErrLog(DialTag,@"ACM robot request error. state:%ld",(long)[(NSHTTPURLResponse *)response statusCode]);
         }
     }] resume];
 }
@@ -514,6 +523,8 @@ static NSString *DialRobot = @"/dapi/call/robot";
 }
     
 - (void) quitDialingPhoneCall: (AcmCall *) call EndCode:(AcmDialCode) code  EventCode:(CallEventCode) eventCode NeedSendNotification:(BOOL) isNeedSendNotification{
+    
+    DebugLog(DialTag,@"quitDialingPhoneCall");
     
     if(call != nil && ( call.stage == Dialing || call.stage == PrepareOnphone )){
         [call updateStage:Finished];

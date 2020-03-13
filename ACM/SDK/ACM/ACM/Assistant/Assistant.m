@@ -21,7 +21,8 @@
 #import "DialAssistant.h"
 
 
-
+#import "../Log/AcmLog.h"
+#define AssistantTag  @"Assistant"
 
 
 @interface Assistant()
@@ -515,7 +516,7 @@ static Assistant *instance = nil;
                 
                 if(code == AssistantOK){
                     // 获取语音文件成功，继续更新服务器配置
-                     NSLog(@"TTS tts files are prepared, is going to update server config");
+                     InfoLog(AssistantTag,@"TTS tts files are prepared, is going to update server config");
                     [self updateAAssServerSetting:answerAssistant completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
                         if(delegate != nil)
                         {
@@ -574,7 +575,7 @@ static Assistant *instance = nil;
                 
                 if(code == AssistantOK){
                     // 获取语音文件成功，继续更新服务器配置
-                    NSLog(@"TTS tts files are prepared, is going to update server config");
+                    InfoLog(AssistantTag,@"TTS tts files are prepared, is going to update server config");
                     [self updateDAssServerSetting:dialAssistant completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
                         if(delegate != nil)
                         {
@@ -642,7 +643,7 @@ static Assistant *instance = nil;
             [_ttsFileMgr prepareVoiceFiles:updateAss.contents ttsManager:_ttsMgr Config:answerAssistant.config completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
                 if(code == AssistantOK){
                     // 获取语音文件成功，继续更新服务器配置
-                    NSLog(@"TTS tts files are prepared, is going to play them");
+                    InfoLog(AssistantTag,@"TTS tts files are prepared, is going to play them");
                     [self auditAssistantFiles:answerAssistant.contents VoiceSetting:answerAssistant.config completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
                         if(delegate != nil)
                         {
@@ -696,7 +697,7 @@ static Assistant *instance = nil;
             [_ttsFileMgr prepareVoiceFiles:dialAssistant.contents ttsManager:_ttsMgr Config:dialAssistant.config completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
                 if(code == AssistantOK){
                     // 获取语音文件成功，继续更新服务器配置
-                    NSLog(@"TTS tts files are prepared, is going to play them");
+                    InfoLog(AssistantTag,@"TTS tts files are prepared, is going to play them");
                     [self auditAssistantFiles:dialAssistant.contents VoiceSetting:dialAssistant.config completionBlock:^(AssistantCode code, NSError * _Nullable subCode) {
                         if(delegate != nil)
                         {

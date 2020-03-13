@@ -8,18 +8,21 @@
 
 #import <Foundation/Foundation.h>
 
+#import "AcmLog.h"
 #import "LogManager.h"
 //#import "ZipArchive.h"
 //#import "XGNetworking.h"
 
 // 日志保留最大天数
-static const int LogMaxSaveDay = 7;
+static const int LogMaxSaveDay = 3;
 // 日志文件保存目录
-static const NSString* LogFilePath = @"/Documents/OTKLog/";
+static const NSString* LogFilePath = @"/Documents/AcmLog/";
 // 日志压缩包文件名
 static NSString* ZipFileName = @"OTKLog.zip";
 
 static BOOL NSLogOutPut = TRUE;
+
+static NSInteger LogLevelThreld = INFO_LOG;
 
 @interface LogManager()
 
@@ -34,6 +37,12 @@ static BOOL NSLogOutPut = TRUE;
 @end
 
 @implementation LogManager
+
++ (void) setAcmLogConfig:(NSInteger) logLevel;{
+    if(logLevel >= 0){
+        LogLevelThreld = logLevel;
+    }
+}
 
 /**
  *  获取单例实例
@@ -87,6 +96,7 @@ static BOOL NSLogOutPut = TRUE;
         
         // 日志的目录路径
         self.basePath = [NSString stringWithFormat:@"%@%@",NSHomeDirectory(),LogFilePath];
+        [self clearExpiredLog];
     }
     return self;
 }
@@ -94,6 +104,9 @@ static BOOL NSLogOutPut = TRUE;
 #pragma mark - Method
 
 - (void)logInfo:(NSString*)module LogEvel:(NSInteger)logLevel LogFormat:(NSString*)logFormat, ...{
+    
+    if(LogLevelThreld < logLevel)
+        return;
     
 #pragma mark - 获取参数
     
@@ -125,11 +138,10 @@ static BOOL NSLogOutPut = TRUE;
         
         
         // 写入数据
-        /*
         [self writeFile:filePath stringData:writeStr];
         
-        NSLog(@"写入日志:%@",filePath);
-         */
+        //NSLog(@"写入日志:%@",filePath);
+        
     });
 }
 

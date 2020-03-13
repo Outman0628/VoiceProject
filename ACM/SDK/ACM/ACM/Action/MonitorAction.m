@@ -16,6 +16,9 @@
 #import "InComeDialAction.h"
 #import "LoginAction.h"
 
+#import "../Log/AcmLog.h"
+#define MonitorTag  @"Monitor"
+
 @interface MonitorAction()
 
 @property ActionManager* actionMgr;
@@ -37,7 +40,7 @@
 
 - (void) HandleEvent: (EventData) eventData
 {
-    //EventData eventData = {EventLogin, 0,0,0,userId,completionBlock,nil};
+    DebugLog(MonitorTag,@"HandleEvent:%ld",(long)eventData.type);
     
     if(eventData.type == EventGotRtmCall){
         [self HandleRtmCallReq:eventData];

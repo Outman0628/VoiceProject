@@ -18,6 +18,9 @@
 #import "../ASR/ACMAudioInputStream.h"
 #import "../ASR/ExternalAudio.h"
 
+#import "../Log/AcmLog.h"
+#define ActionMgrTag  @"ActionMgr"
+
 
 static ActionManager* actionMgrInstance = nil;
 
@@ -51,6 +54,7 @@ static ActionManager* actionMgrInstance = nil;
 }
 
 - (void) HandleEvent: (EventData) eventData{
+    DebugLog(ActionMgrTag,@"HandleEvent:%ld",(long)eventData.type);
     if(eventData.type == EventInitSDK && _activeAction == nil)
     {
         self.icmCallBack = eventData.param4;
@@ -128,7 +132,7 @@ static ActionManager* actionMgrInstance = nil;
             _isConnected = false;
             break;
         case AgoraRtmConnectionStateAborted:
-            [RunTimeMsgManager logoutACM];
+            [RunTimeMsgManager logoutRtm];
             _isConnected = false;
             break;
         case AgoraRtmConnectionStateConnected:

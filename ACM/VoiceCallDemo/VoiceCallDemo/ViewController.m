@@ -103,6 +103,8 @@
     }
    */
     
+    [ACM setAcmLogConfig:ACM_DEBUG_LOG];
+    
     #if (TARGET_IPHONE_SIMULATOR)
     [ACM initManager:hostUrl apnsToken:@"simulatorToken" acmCallback:self completion:^(AcmInitErrorCode errorCode) {
         if(errorCode == AcmInitOk){
@@ -125,6 +127,7 @@
 - (void) handleApnsToken: (nullable NSString *)token{
     if(token != nil)
     {
+        
         [ACM initManager:hostUrl apnsToken:token acmCallback:self completion:^(AcmInitErrorCode errorCode) {
             if(errorCode == AcmInitOk){
                 [ACM updateDialingTimer:self.callTimerCount];

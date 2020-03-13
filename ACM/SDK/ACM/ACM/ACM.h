@@ -166,4 +166,10 @@ FOUNDATION_EXPORT const unsigned char ACMVersionString[];
  */
 + (int)setEnableSpeakerphone:(BOOL)enableSpeaker;
 
+/**
+日志相关接口
+ @param logLevel 日志等级，参见AcmLogLevel
+ */
++ (void) setAcmLogConfig:(AcmLogLevel) logLevel;
+
 @end

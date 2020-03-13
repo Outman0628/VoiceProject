@@ -10,6 +10,10 @@
 #import "CallManager.h"
 #import "../Action/ActionManager.h"
 #import "../Message/HttpUtil.h"
+#import "CallEventEnum.h"
+
+#import "../Log/AcmLog.h"
+#define CallMgrTag  @"CallMgr"
 
 @interface CallManager()
 @property NSMutableArray * _Nullable validateCallList;  // 校验电话
@@ -253,7 +257,7 @@
                             NSString *extrMsg = data[i][@"extra_msg"];
                             if(extrMsg == nil)
                             {
-                                NSLog(@"ACM error, no extra msg for call!");
+                                ErrLog(CallMgrTag,@"ACM error, no extra msg for call!");
                                 continue;
                             }
                             NSError *errTest;
@@ -312,10 +316,10 @@
     
     if([self IsValidatedCall:channelId] == YES){
         if(isApnsCall){
-            NSLog(@"Drop phone call:%@ from APNS as same call already exist!", channelId);
+            InfoLog(CallMgrTag,@"Drop phone call:%@ from APNS as same call already exist!", channelId);
         }
         else{
-            NSLog(@"Drop phone call:%@ from RTM as same call already exist!", channelId);
+            InfoLog(CallMgrTag,@"Drop phone call:%@ from RTM as same call already exist!", channelId);
         }
         
         return;
@@ -343,10 +347,14 @@
                     
                     [itemCall updateStage:Validating];
                     
+                    NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, CallEventAPI];
+                    NSString *param = [NSString stringWithFormat:@"uid=%@&channel=%@&code=%ld", itemCall.selfId, itemCall.channelId,(long)CallEventReceverDialReq];
+                    [HttpUtil HttpPost:stringUrl Param:param Callback:nil];
+                    
                     // 加入eventChannel
                     [itemCall joinEventSyncChannel:^(AgoraRtmJoinChannelErrorCode errorCode) {
                         if(errorCode != AgoraRtmJoinChannelErrorOk && errorCode != AgoraRtmJoinChannelErrorAlreadyJoined){
-                            NSLog(@"ACC error: failed to joinEventSyncChannel:%ld",errorCode );
+                            ErrLog(CallMgrTag,@"ACC error: failed to joinEventSyncChannel:%ld",errorCode );
                             [itemCall updateStage:Finished];
                         }
                     }];

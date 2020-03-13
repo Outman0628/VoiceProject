@@ -13,6 +13,9 @@
 #import "LoginAction.h"
 #import "ActionManager.h"
 
+#import "../Log/AcmLog.h"
+#define ActionTag  @"Action"
+
 @implementation  ACMAction
 /**
  进入Action 时处理事宜
@@ -31,6 +34,7 @@
  Action 事件处理
  */
 - (void) HandleEvent: (EventData) eventData{
+    DebugLog(ActionTag,@"HandleEvent:%ld",(long)eventData.type);
     if(eventData.type == EventGetAuthority)
     {
         [self handleBaseEventGetAuthority:eventData];

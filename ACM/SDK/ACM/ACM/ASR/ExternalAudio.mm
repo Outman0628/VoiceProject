@@ -15,6 +15,8 @@
 
 #import "AudioStreamMgr.h"
 
+#import "../Log/AcmLog.h"
+#define ExtralAudioTag  @"ExtralAudio"
 
 @interface ExternalAudio () <AudioControllerDelegate>
 @property (nonatomic, strong) AudioController *audioController;
@@ -229,7 +231,7 @@ static AgoraAudioFrameObserver* s_audioFrameObserver;
 }
 
 - (void)dealloc {
-    NSLog(@"<ExternalAudio Log>ExAudio dealloc");
+    InfoLog(ExtralAudioTag,@"<ExternalAudio Log>ExAudio dealloc");
 }
 
 @end

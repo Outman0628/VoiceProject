@@ -13,6 +13,9 @@
 
 #import "AcmCall.h"
 
+#import "../Log/AcmLog.h"
+#define AcmCallTag  @"AcmCall"
+
 @interface AcmCall() <AgoraRtmChannelDelegate>
 
 // 通话事件同步通道
@@ -121,7 +124,7 @@
         {
             NSString *errNote =  [[NSString alloc] initWithString:[NSString stringWithFormat:@"Send asr data failed:%d", (int)errorCode]];
             
-            NSLog(@"%@",errNote);
+            ErrLog(AcmCallTag,@"%@",errNote);
         }
         
     }];
@@ -153,7 +156,7 @@
         {
             NSString *errNote =  [[NSString alloc] initWithString:[NSString stringWithFormat:@"Send leave event failed:%d", (int)errorCode]];
             
-            NSLog(@"%@",errNote);
+            ErrLog(AcmCallTag,@"%@",errNote);
         }
         
     }];
@@ -180,9 +183,9 @@
      
          if(errorCode != AgoraRtmSendPeerMessageErrorOk)
          {
-         NSString *errNote =  [[NSString alloc] initWithString:[NSString stringWithFormat:@"Send leave event failed:%d", (int)errorCode]];
-         
-         NSLog(@"%@",errNote);
+             NSString *errNote =  [[NSString alloc] initWithString:[NSString stringWithFormat:@"Send leave event failed:%d", (int)errorCode]];
+             
+             ErrLog(AcmCallTag,@"%@",errNote);
          }
          
          }];
@@ -206,7 +209,7 @@
         {
             NSString *errNote =  [[NSString alloc] initWithString:[NSString stringWithFormat:@"Send agreeCall event failed:%d", (int)errorCode]];
             
-            NSLog(@"%@",errNote);
+            ErrLog(AcmCallTag,@"%@",errNote);
         }
         
     }];
@@ -230,7 +233,7 @@
         {
             NSString *errNote =  [[NSString alloc] initWithString:[NSString stringWithFormat:@"Send robotAnswerCall event failed:%d", (int)errorCode]];
             
-            NSLog(@"%@",errNote);
+            ErrLog(AcmCallTag,@"%@",errNote);
         }
         
     }];
@@ -269,7 +272,7 @@
  * 事件频道事件消息
  */
 - (void)channel:(AgoraRtmChannel * _Nonnull)channel messageReceived:(AgoraRtmMessage * _Nonnull)message fromMember:(AgoraRtmMember * _Nonnull)member{
-    NSLog(@"event channel Message received msg: %@ from: %@", message.text, member.userId);
+    DebugLog(AcmCallTag,@"event channel Message received msg: %@ from: %@", message.text, member.userId);
     NSData *jsonData = [message.text dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
     NSString *title = dic[@"title"];
@@ -333,7 +336,7 @@
  */
 - (void)channel:(AgoraRtmChannel * _Nonnull)channel memberCount:(int)count{
     
-    NSLog(@"-----> event chanel member:%d",count);
+    DebugLog(AcmCallTag,@"-----> event chanel member:%d",count);
     
     /*
     EventData eventData = {EventEventChannelMemberCountUpdated, count,0,0,self};

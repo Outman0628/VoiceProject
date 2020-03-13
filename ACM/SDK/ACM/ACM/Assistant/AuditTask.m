@@ -12,6 +12,9 @@
 #import "TtsFileManager.h"
 #import <AVFoundation/AVFoundation.h>
 
+#import "../Log/AcmLog.h"
+#define AuditTaskTag  @"AuditTask"
+
 @interface  AuditTask() <AVAudioPlayerDelegate>
 @property NSMutableArray* auditContent;
 @property AssistantBlock callBack;
@@ -87,9 +90,9 @@
             
                     BOOL ret = NO;
                     ret = [self.player prepareToPlay];
-                    NSLog(@"play prepareToPlay result:%@", ret ? @"YES" : @"NO");
+                    InfoLog(AuditTaskTag,@"play prepareToPlay result:%@", ret ? @"YES" : @"NO");
                     ret = [self.player play];
-                    NSLog(@"play result:%@", ret ? @"YES" : @"NO");
+                    InfoLog(AuditTaskTag,@"play result:%@", ret ? @"YES" : @"NO");
            
             }
             else

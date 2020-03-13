@@ -13,7 +13,8 @@
 #import "IACMCallBack.h"
 #import "../Message/HttpUtil.h"
 
-
+#import "../Log/AcmLog.h"
+#define LoginTag  @"Login"
 
 @interface LoginAction()
 
@@ -40,7 +41,7 @@
 
 - (void) HandleEvent: (EventData) eventData
 {
-    //EventData eventData = {EventLogin, 0,0,0,userId,completionBlock,nil};
+    DebugLog(LoginTag,@"HandleEvent:%ld",(long)eventData.type);
     
     if(eventData.type == EventLogin)
     {
@@ -104,7 +105,7 @@
             else
             {
                 self.userId = nil;
-                [RunTimeMsgManager logoutACM];
+                [RunTimeMsgManager logoutRtm];
                 errCode = AcmLoginBackendErrorUnknow;
                 
             }
@@ -119,8 +120,9 @@
             
         }
         else{
+            ErrLog(LoginTag,@"Incorrect backend longin response code::%ld, error:%@",(long)[(NSHTTPURLResponse *)response statusCode],error);
             self.userId = nil;
-            [RunTimeMsgManager logoutACM];
+            [RunTimeMsgManager logoutRtm];
             dispatch_async(dispatch_get_main_queue(),^{
                 self.completionBlock(AcmLoginBackendErrorUnknow);
             });
@@ -185,6 +187,7 @@
             
         }
         else{
+            ErrLog(LoginTag,@"Incorrect backend rtm config data response code::%ld, error:%@",(long)[(NSHTTPURLResponse *)response statusCode],error);
             self.userId = nil;
             if(self.completionBlock != nil){
                 dispatch_async(dispatch_get_main_queue(),^{
@@ -204,24 +207,15 @@
      if (errorCode != AgoraRtmLoginErrorOk) {
      
          [self.actionMgr actionFailed:self];
-         NSLog(@"ACM Login failed:%ld", errorCode);
+         ErrLog(LoginTag,@"ACM Login failed:%ld", errorCode);
          if(self.completionBlock != nil)
          {
              self.completionBlock(errorCode);
          }
      }
      else{
-         NSLog(@"ACM Login succeeed!");
+         InfoLog(LoginTag,@"ACM Login succeeed!");
          
-         /*
-         [self.actionMgr setUserId:self.userId];
-         [self.actionMgr actionDone:self];
-         if(completionBlock != nil)
-         {
-             completionBlock(errorCode);
-         }
-          */
-         // Continue backend login
          [self BackendLogin];
      }
 }

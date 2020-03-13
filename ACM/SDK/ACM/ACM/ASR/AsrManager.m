@@ -14,6 +14,9 @@
 #import "ASRInputStream.h"
 #import "../Action/ActionManager.h"
 
+#import "../Log/AcmLog.h"
+#define AsrMgrTag  @"AsrMgr"
+
 NSString* ASR_APP_ID = @"18259540";
 NSString* ASR_API_KEY = @"gDYzkmc12uPVjUK6YLyPGLSC";
 NSString* ASR_SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
@@ -40,7 +43,7 @@ NSString* ASR_SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 
 - (void)initMgr{
     self.asrEventManager = [BDSEventManager createEventManagerWithName:BDS_ASR_NAME];
-    NSLog(@"ASR SDK version: %@", [self.asrEventManager libver]);
+    InfoLog(AsrMgrTag,@"ASR SDK version: %@", [self.asrEventManager libver]);
     self.onAsr = false;
     self.onFileAsr = false;
     self.fileAsrCallback = nil;
@@ -105,7 +108,7 @@ NSString* ASR_SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 - (void)stopAsr
 {
     if(self.onAsr){
-        NSLog(@"Stop Asr");
+        InfoLog(AsrMgrTag,@"Stop Asr");
         [self.asrEventManager sendCommand:BDS_ASR_CMD_CANCEL];
         self.onAsr = false;
     }
@@ -114,7 +117,7 @@ NSString* ASR_SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 - (void)repeatAsr{
     if(self.onAsr)
     {
-        NSLog(@"Asr repeat again");
+        DebugLog(AsrMgrTag,@"Asr repeat again");
         ASRInputStream *stream = [[ASRInputStream alloc] init];
         [self.asrEventManager setParameter:stream forKey:BDS_ASR_AUDIO_INPUT_STREAM];
         [self.asrEventManager setParameter:@"" forKey:BDS_ASR_AUDIO_FILE_PATH];
@@ -124,9 +127,9 @@ NSString* ASR_SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 }
 
 -(void)audioFileToText:(nonnull NSString*) filePath  CallBack:(AudioFileToTextBlock _Nonnull ) block{
-    NSLog(@"---> audioFileToText");
+    DebugLog(AsrMgrTag,@"---> audioFileToText");
     if(self.onAsr || self.onFileAsr){
-        NSLog(@"Ass is busy!");
+        InfoLog(AsrMgrTag,@"Ass is busy!");
         if(block != nil){
             block(AudioToFileCodeBusy,nil);
         }
@@ -167,14 +170,14 @@ NSString* ASR_SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
         case EVoiceRecognitionClientWorkStatusStart: {
             
             //[self printLogTextView:@"CALLBACK: detect voice start point.\n"];
-            NSLog(@"ASR detect voice start point");
+            DebugLog(AsrMgrTag,@"ASR detect voice start point");
             NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
             self.timestamp=[dat timeIntervalSince1970];
             break;
         }
         case EVoiceRecognitionClientWorkStatusEnd: {
             //[self printLogTextView:@"CALLBACK: detect voice end point.\n"];
-            NSLog(@"ASR detect voice end point");
+            DebugLog(AsrMgrTag,@"ASR detect voice end point");
             break;
         }
         case EVoiceRecognitionClientWorkStatusFlushData: {
@@ -210,7 +213,7 @@ NSString* ASR_SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
             }
             @catch(NSException *exception)
             {
-                NSLog(@"Asr error Parse flush data failed!");
+                ErrLog(AsrMgrTag,@"Asr error Parse flush data failed!");
             }
             break;
         }
@@ -266,7 +269,7 @@ NSString* ASR_SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
             }
             @catch(NSException *exception)
             {
-                NSLog(@"Asr error Parse flush data failed!");
+                ErrLog(AsrMgrTag,@"Asr error Parse flush data failed!");
             }
             [self repeatAsr];
             break;
@@ -298,7 +301,7 @@ NSString* ASR_SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
             [self printLogTextView:[NSString stringWithFormat:@"CALLBACK: encount error - %@.\n", (NSError *)aObj]];
             [self onEnd];
              */
-            NSLog(@"ASR error:%@", [NSString stringWithFormat:@"CALLBACK: encount error - %@.\n", (NSError *)aObj]);
+            ErrLog(AsrMgrTag,@"ASR error:%@", [NSString stringWithFormat:@"CALLBACK: encount error - %@.\n", (NSError *)aObj]);
             if( self.onFileAsr ){
                 if(self.fileAsrCallback != nil){
                     dispatch_async(dispatch_get_main_queue(),^{
@@ -313,12 +316,12 @@ NSString* ASR_SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
         }
         case EVoiceRecognitionClientWorkStatusLoaded: {
             //[self printLogTextView:@"CALLBACK: offline engine loaded.\n"];
-            NSLog(@"ASRoffline engine loaded");
+            InfoLog(AsrMgrTag,@"ASRoffline engine loaded");
             break;
         }
         case EVoiceRecognitionClientWorkStatusUnLoaded: {
             //[self printLogTextView:@"CALLBACK: offline engine unLoaded.\n"];
-            NSLog(@"ASRoffline engine unloaded");
+            InfoLog(AsrMgrTag, @"ASRoffline engine unloaded");
             break;
         }
         case EVoiceRecognitionClientWorkStatusChunkThirdData: {

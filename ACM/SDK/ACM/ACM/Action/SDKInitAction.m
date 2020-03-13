@@ -13,6 +13,9 @@
 #import "../ASR/AudioStreamMgr.h"
 #import "../Message/HttpUtil.h"
 
+#import "../Log/AcmLog.h"
+#define InitTag  @"Init"
+
 @interface SDKInitAction()
 
 @property ActionManager* actionMgr;
@@ -34,6 +37,7 @@
 
 - (void) HandleEvent: (EventData) eventData
 {
+    DebugLog(InitTag,@"HandleEvent:%ld",(long)eventData.type);
     if(eventData.type == EventInitSDK)
     {
         [AudioStreamMgr initMgr];
@@ -118,6 +122,7 @@
         }
         else{
             // 通知错误发生
+            ErrLog(InitTag,@"Incorrect backend system config response code::%ld, error:%@",(long)[(NSHTTPURLResponse *)response statusCode],error);
             IACMInitBlock block = eventData.param7;
             if(block != nil){
                 dispatch_async(dispatch_get_main_queue(),^{

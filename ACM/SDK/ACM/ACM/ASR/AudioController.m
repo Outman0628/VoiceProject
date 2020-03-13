@@ -13,6 +13,9 @@
 #define InputBus 1
 #define OutputBus 0
 
+#import "../Log/AcmLog.h"
+#define AudioCtrlTag  @"AudioCtrl"
+
 @interface AudioController ()
 @property (nonatomic, assign) OSStatus error;
 @property (nonatomic, assign) AudioUnit remoteIOUnit;
@@ -123,10 +126,10 @@ static OSStatus renderCallBack(void *inRefCon,
     NSError *error;
     BOOL success = [audioSession setActive:YES error:&error];
     if (!success) {
-        NSLog(@"<Error> audioSession setActive:YES error:nil");
+        ErrLog(AudioCtrlTag,@"<Error> audioSession setActive:YES error:nil");
     }
     if (error) {
-        NSLog(@"<Error> setUpAudioSessionWithSampleRate : %@", error.localizedDescription);
+        ErrLog(AudioCtrlTag,@"<Error> setUpAudioSessionWithSampleRate : %@", error.localizedDescription);
     }
 
     
@@ -287,7 +290,7 @@ static OSStatus renderCallBack(void *inRefCon,
         if ([self.delegate respondsToSelector:@selector(audioController:error:info:)]) {
             [self.delegate audioController:self error:error info:position];
         }
-        NSLog(@"<OSStatus> :%@", errorInfo);
+        InfoLog(AudioCtrlTag,@"<OSStatus> :%@", errorInfo);
     }
 }
 

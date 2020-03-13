@@ -15,7 +15,8 @@
 #import "DialAssistant.h"
 #import "../Message/HttpUtil.h"
 
-
+#import "../Log/AcmLog.h"
+#define UpdateConfigTag  @"UpdateConfig"
 
 @interface  UpDateConfigTask()
 @property NSMutableArray* updateItems;
@@ -220,7 +221,6 @@ static NSString *UpdateAnswerAssistantApi = @"/dapi/account/reject-tone";
     NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:httpPutRequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
         NSInteger code = [(NSHTTPURLResponse *)response statusCode];
-        NSLog(@"response code:%ldd", (long)code);
         
         if([(NSHTTPURLResponse *)response statusCode] == 200){
             
@@ -242,14 +242,14 @@ static NSString *UpdateAnswerAssistantApi = @"/dapi/account/reject-tone";
                         [self UploadAssFiles:completionHandler];
                         
                     }else{
-                        NSLog(@"TTS error update tts file to server failed!");
+                        ErrLog(UpdateConfigTag,@"TTS error update tts file to server failed!");
                         dispatch_async(dispatch_get_main_queue(),^{
                             completionHandler(AssistantErrorUdateSeverTTSfile, error);
                         });
                     }
                     
                 }else{
-                    NSLog(@"TTS error update tts file to server failed!");
+                    ErrLog(UpdateConfigTag,@"TTS error update tts file to server failed!");
                     dispatch_async(dispatch_get_main_queue(),^{
                         completionHandler(AssistantErrorUdateSeverTTSfile, error);
                     });
@@ -257,14 +257,14 @@ static NSString *UpdateAnswerAssistantApi = @"/dapi/account/reject-tone";
                 
             } else {
                 
-                NSLog(@"TTS error update tts file to server failed!");
+                ErrLog(UpdateConfigTag,@"TTS error update tts file to server failed!");
                 dispatch_async(dispatch_get_main_queue(),^{
                     completionHandler(AssistantErrorUdateSeverTTSfile, error);
                 });
             }
         }
         else{
-            NSLog(@"TTS error server error!");
+            ErrLog(UpdateConfigTag,@"TTS error server error!");
             
             dispatch_async(dispatch_get_main_queue(),^{
                 completionHandler(AssistantErrorUdateSeverTTSfile, error);
@@ -300,7 +300,7 @@ static NSString *UpdateAnswerAssistantApi = @"/dapi/account/reject-tone";
     
     [[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSInteger code = [(NSHTTPURLResponse *)response statusCode];
-        NSLog(@"response code:%ldd", (long)code);
+        
         if([(NSHTTPURLResponse *)response statusCode] == 200){
             NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
             NSData *jsonData = [str dataUsingEncoding:NSUTF8StringEncoding];

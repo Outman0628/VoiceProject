@@ -16,12 +16,13 @@
 #import "../Message/HttpUtil.h"
 #import "../Call/CallEventEnum.h"
 
-static NSString *AuthorityApi = @"/dapi/quit/robot";
+#import "../Log/AcmLog.h"
+#define OnPhoneTag  @"OnPhone"
+
 
 // 电话响铃Action
 @interface OnPhoneAction ()
 @property AcmCall *curCall;
-@property NSTimer *timer;
 @end
 
 @implementation OnPhoneAction
@@ -29,54 +30,27 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
 -(id _Nullable )init{
     if (self = [super init]) {
         self.type = ActionOnPhone;
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:3.0 repeats:YES block:^(NSTimer * _Nonnull timer) {
-           // [self CreateSubtitle];
-        }];
     }
     return self;
 }
 
 -(void)dealloc{
-    [self.timer invalidate];
-}
-
-- (void) CreateSubtitle{
-    /*
-    if(_curCall != nil)
-    {
-        NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
-        NSTimeInterval timestamp=[dat timeIntervalSince1970];
-        
-       
-        if(turn)
-        {
-            [_curCall.callback onSubTitleReceived:@"这是来自于拨号方的通话内容" userId:_curCall.callerId timeStamp:timestamp];
-        }
-        else
-        {
-            [_curCall.callback onSubTitleReceived:@"接听方的内容是这样的..." userId:_curCall.subscriberList[0] timeStamp:timestamp];
-        }
-        
-        turn = !turn;
-    }
-     */
 }
 
 
 - (void) HandleEvent: (EventData) eventData
 {
+    DebugLog(OnPhoneTag,@"HandleEvent:%ld",(long)eventData.type);
     if(eventData.type == EventBackendAgreeAudioCall)
     {
         [self JoinToChannelCall:eventData];
     }
     else if(eventData.type == EventLeaveCall)
     {
-        [self.timer invalidate];
         [self leaveCall:eventData];
     }
     else if(eventData.type == EventNoMemberEndCall)
     {
-        [self.timer invalidate];
         [self handleEventNoMemberEndCall:eventData];
     }
     else if(eventData.type == EventRobotAnsweredCall)
@@ -462,7 +436,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
 - (void) requestAuthority: (nonnull AcmCall *)call completion:(IRTCAGetAuthorityBlock _Nullable)completionBlock
 {
     
-    
+    /*
     NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, AuthorityApi];
     
     NSURL *url = [NSURL URLWithString:stringUrl];
@@ -522,6 +496,53 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
             }
         }
     }] resume];
+     */
+   NSString *stringUrl = [NSString stringWithFormat:@"%@%@",[ActionManager instance].host, AuthorityApi];
+    NSString *param = [NSString stringWithFormat:@"channel=%@&uid=%@", call.channelId, call.selfId]; //带一个参数key传给服务器
+    
+    [HttpUtil HttpPost:stringUrl Param:param Callback:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSInteger code = [(NSHTTPURLResponse *)response statusCode];
+        NSLog(@"response code:%ldd", (long)code);
+        if([(NSHTTPURLResponse *)response statusCode] == 200){
+            NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSData *jsonData = [str dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+            
+            BOOL ret = dic[@"success"];
+            
+            
+            if(ret == YES)
+            {
+                [RtcManager muteLocalAudioStream:false];
+                [RtcManager muteAllRemoteAudioStreams:false];
+                [call endObserverMode];
+                if(completionBlock != nil)
+                {
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        completionBlock(AcmPhoneCallOK);
+                    });
+                }
+            }
+            else
+            {
+                if(completionBlock != nil)
+                {
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        completionBlock(AcmPhoneCallErrorApplyAuthorityResponse);
+                    });
+                }
+                
+            }
+        }
+        else{
+            if(completionBlock != nil)
+            {
+                dispatch_async(dispatch_get_main_queue(),^{
+                    completionBlock(AcmPhoneCallErrorApplyAuthority);
+                });
+            }
+        }
+    }];
 }
 
 // 跳转回Monitor Action
@@ -535,6 +556,7 @@ static NSString *AuthorityApi = @"/dapi/quit/robot";
 
 - (void) quitOnPhoneCall: (AcmCall *) call {
     
+    DebugLog(OnPhoneTag,@"quitOnPhoneCall");
     if(call != nil && call.stage == OnPhone){
         [call updateStage:Finished];
         if(call.channelId != nil)

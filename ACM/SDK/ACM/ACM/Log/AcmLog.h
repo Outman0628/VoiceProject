@@ -19,8 +19,8 @@
 
 
 //#define LLog(module,level,...) [[LogManager sharedInstance] logInfo:module LogEvel:level logStr:__VA_ARGS__,nil]
-#define ERRLOG(module,...) [[LogManager sharedInstance] logInfo:module LogEvel:ERR_LOG LogFormat:__VA_ARGS__,nil]
-#define WanLog(module,...) [[LogManager sharedInstance] logInfo:module LogEvel:WARN_LOG LogFormat:__VA_ARGS__,nil]
+#define ErrLog(module,...) [[LogManager sharedInstance] logInfo:module LogEvel:ERR_LOG LogFormat:__VA_ARGS__,nil]
+#define WarnLog(module,...) [[LogManager sharedInstance] logInfo:module LogEvel:WARN_LOG LogFormat:__VA_ARGS__,nil]
 #define InfoLog(module,...) [[LogManager sharedInstance] logInfo:module LogEvel:INFO_LOG LogFormat:__VA_ARGS__,nil]
 #define DebugLog(module,...) [[LogManager sharedInstance] logInfo:module LogEvel:DEBUG_LOG LogFormat:__VA_ARGS__,nil]
 

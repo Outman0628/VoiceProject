@@ -12,6 +12,9 @@
 #import <AVFoundation/AVFoundation.h>
 #import "../Assistant/TtsFileTasks.h"
 
+#import "../Log/AcmLog.h"
+#define TTSTag  @"TTS"
+
 NSString* APP_ID = @"18259540";
 NSString* API_KEY = @"gDYzkmc12uPVjUK6YLyPGLSC";
 NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
@@ -45,7 +48,7 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 
 
 -(void)configureSDK{
-    NSLog(@"TTS version info: %@", [BDSSpeechSynthesizer version]);
+    InfoLog(TTSTag,@"TTS version info: %@", [BDSSpeechSynthesizer version]);
     [BDSSpeechSynthesizer setLogLevel:BDS_PUBLIC_LOG_VERBOSE];
     [[BDSSpeechSynthesizer sharedInstance] setSynthesizerDelegate:self];
     [self configureOnlineTTS];
@@ -89,7 +92,7 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
         // [self updateSynthProgress];
     }
     else{
-        NSLog(@"TTS add sentence error:%@",errCode);
+        ErrLog(TTSTag,@"TTS add sentence error:%@",errCode);
     }
     
     *err = errCode;
@@ -108,11 +111,11 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 
 #pragma mark - implement BDSSpeechSynthesizerDelegate
 - (void)synthesizerStartWorkingSentence:(NSInteger)SynthesizeSentence{
-    NSLog(@"TTS Did start synth %ld", SynthesizeSentence);
+    DebugLog(TTSTag,@"TTS Did start synth %ld", SynthesizeSentence);
 }
 
 - (void)synthesizerFinishWorkingSentence:(NSInteger)SynthesizeSentence{
-    NSLog(@"TTS Did finish synth, %ld", SynthesizeSentence);
+    DebugLog(TTSTag,@"TTS Did finish synth, %ld", SynthesizeSentence);
     //if(!_isSpeek)
     {
         if(self.synthesisTexts.count > 0 &&
@@ -125,7 +128,7 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
             [task TaskFinish:SynthesizeSentence isError:NO errorCode:nil];
         }
         else{
-            NSLog(@"TTS Sentence ID mismatch??? received ID: %ld\nKnown sentences:", (long)SynthesizeSentence);
+            ErrLog(TTSTag,@"TTS Sentence ID mismatch??? received ID: %ld\nKnown sentences:", (long)SynthesizeSentence);
             /*
             for(NSDictionary* dict in self.synthesisTexts){
                 NSLog(@"ID: %ld Text:\"%@\"", [[dict objectForKey:@"ID"] integerValue], [((NSAttributedString*)[dict objectForKey:@"TEXT"]) string]);
@@ -136,11 +139,11 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 }
 
 - (void)synthesizerSpeechStartSentence:(NSInteger)SpeakSentence{
-    NSLog(@"TTS Did start speak %ld", SpeakSentence);
+    DebugLog(TTSTag,@"TTS Did start speak %ld", SpeakSentence);
 }
 
 - (void)synthesizerSpeechEndSentence:(NSInteger)SpeakSentence{
-    NSLog(@"TTS Did end speak %ld", SpeakSentence);
+    DebugLog(TTSTag,@"TTS Did end speak %ld", SpeakSentence);
     if(self.synthesisTexts.count > 0 &&
        SpeakSentence == [[[self.synthesisTexts objectAtIndex:0] objectForKey:@"ID"] integerValue]){
         //[self.synthesisTexts removeObjectAtIndex:0];
@@ -152,7 +155,7 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
         [task TaskFinish:SpeakSentence isError:NO errorCode:nil];
     }
     else{
-        NSLog(@"TTS Sentence ID mismatch??? received ID: %ld\nKnown sentences:", (long)SpeakSentence);
+        ErrLog(TTSTag,@"TTS Sentence ID mismatch??? received ID: %ld\nKnown sentences:", (long)SpeakSentence);
     }
 }
 
@@ -160,7 +163,7 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
                        DataFormat:(BDSAudioFormat)fmt
                    characterCount:(int)newLength
                    sentenceNumber:(NSInteger)SynthesizeSentence{
-    NSLog(@"TTS NewData arrive fmt: %d", fmt);
+    DebugLog(TTSTag,@"TTS NewData arrive fmt: %d", fmt);
     NSMutableDictionary* sentenceDict = nil;
     for(NSMutableDictionary *dict in self.synthesisTexts){
         if([[dict objectForKey:@"ID"] integerValue] == SynthesizeSentence){
@@ -169,7 +172,7 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
         }
     }
     if(sentenceDict == nil){
-        NSLog(@"TTS data arrived Sentence ID mismatch??? received ID: %ld\nKnown sentences:", (long)SynthesizeSentence);
+        ErrLog(TTSTag,@"TTS data arrived Sentence ID mismatch??? received ID: %ld\nKnown sentences:", (long)SynthesizeSentence);
         
         return;
     }
@@ -209,17 +212,17 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
             [fileHandler closeFile];
         }
     */
-        NSLog(@"TTS create tts file:%@", fName);
+        DebugLog(TTSTag,@"TTS create tts file:%@", fName);
         NSError *error = nil;
         BOOL written = [newData writeToFile:filePath options:NSDataWritingAtomic error:&error];
         
         
         if (!written) {
-            NSLog(@"write failed: %@", [error localizedDescription]);
+            ErrLog(TTSTag,@"write failed: %@", [error localizedDescription]);
         }
     }
     else{
-        NSLog(@"TTS update tts file:%@", fName);
+        DebugLog(TTSTag,@"TTS update tts file:%@", fName);
         fileHandler = [NSFileHandle fileHandleForUpdatingAtPath:filePath];
         if(fileHandler != nil)
         {
@@ -232,7 +235,7 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 
 - (void)synthesizerTextSpeakLengthChanged:(int)newLength
                            sentenceNumber:(NSInteger)SpeakSentence{
-    NSLog(@"TTS SpeakLen %ld, %d", SpeakSentence, newLength);
+    DebugLog(TTSTag,@"TTS SpeakLen %ld, %d", SpeakSentence, newLength);
     NSMutableDictionary* sentenceDict = nil;
     for(NSMutableDictionary *dict in self.synthesisTexts){
         if([[dict objectForKey:@"ID"] integerValue] == SpeakSentence){
@@ -241,7 +244,7 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
         }
     }
     if(sentenceDict == nil){
-        NSLog(@"TTS speeak length changed Sentence ID mismatch??? received ID: %ld\nKnown sentences:", (long)SpeakSentence);
+        ErrLog(TTSTag,@"TTS speeak length changed Sentence ID mismatch??? received ID: %ld\nKnown sentences:", (long)SpeakSentence);
         
         return;
     }
@@ -250,22 +253,22 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 }
 
 - (void)synthesizerdidPause{
-    NSLog(@"TTS Did pause");
+    DebugLog(TTSTag,@"TTS Did pause");
 }
 
 - (void)synthesizerResumed{
-    NSLog(@"TTS Did resume");
+    DebugLog(TTSTag,@"TTS Did resume");
   
 }
 
 - (void)synthesizerCanceled{
-    NSLog(@"TTS Did cancel");
+    DebugLog(TTSTag,@"TTS Did cancel");
 }
 
 - (void)synthesizerErrorOccurred:(NSError *)error
                         speaking:(NSInteger)SpeakSentence
                     synthesizing:(NSInteger)SynthesizeSentence{
-    NSLog(@"TTS Did error %@ %ld, %ld", error, SpeakSentence, SynthesizeSentence);
+    ErrLog(TTSTag,@"TTS Did error %@ %ld, %ld", error, SpeakSentence, SynthesizeSentence);
 
     NSMutableDictionary* sentenceDict = nil;
     for(NSMutableDictionary *dict in self.synthesisTexts){

@@ -12,6 +12,9 @@
 //#import <AVFoundation/AVAudioSession.h>
 #import "../RTC/RtcManager.h"
 
+#import "../Log/AcmLog.h"
+#define AcmAudioInputTag  @"AcmAudioInput"
+
 const int kk_recorder_buffers_number         = 3;
 const int kk_recorder_channels_per_frame     = 1;
 const int kk_recorder_bits_per_channel       = 16;
@@ -181,7 +184,7 @@ const int kk_recorder_frames_per_package     = 1;
             audioData->queueAudio((const uint8_t *)inBuffer->mAudioData, inBuffer->mAudioDataByteSize);
         }
          */
-        NSLog(@"Got record data len:%d", inBuffer->mAudioDataByteSize);
+        DebugLog(AcmAudioInputTag,@"Got record data len:%d", inBuffer->mAudioDataByteSize);
         //NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
         
         

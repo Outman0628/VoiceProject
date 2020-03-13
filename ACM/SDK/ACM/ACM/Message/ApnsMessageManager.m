@@ -11,6 +11,9 @@
 #import "../Action/EventData.h"
 #import "../Action/ActionManager.h"
 
+#import "../Log/AcmLog.h"
+#define APNSTAG  @"APNS"
+
 @interface ApnsMessageManager()
 @end
 
@@ -34,24 +37,10 @@
         {
             
             //- (void)onCallReceived:(NSString * _Nonnull)channel fromPeer:(NSString * _Nonnull)peerId;
-            NSLog(@"apns audio call from:%@", userInfo[@"accountCaller"] );
+            InfoLog(APNSTAG,@"apns audio call from:%@", userInfo[@"accountCaller"] );
             
             
-            
-            /*
-            if([actionMgr.callMgr IsActiveCall:userInfo[@"channel"]] == YES) // 通话已经在处理中，丢弃后到的通话
-            {
-                NSLog(@"phone call:%@ from APNS drop as same call already exist!", userInfo[@"channel"]);
-                ret = NO;
-            }
-            else
-            {
-                AcmCall  *instance = [actionMgr.callMgr createReceveCall:userInfo userAccount:[ActionManager instance].userId];
-                EventData eventData = {EventGotApnsAudioCall, 0,0,0,instance};
-                [actionMgr HandleEvent:eventData];
-            }
-             */
-            //AcmCall *instance =  [actionMgr.callMgr createReceveCall:userInfo userAccount:[ActionManager instance].userId];
+                       
             [actionMgr.callMgr ValidateIncomeCall:userInfo[@"channel"] IsApnsCall:YES];
             ret = YES;
         }

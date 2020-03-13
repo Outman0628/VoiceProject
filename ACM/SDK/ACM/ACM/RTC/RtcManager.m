@@ -10,6 +10,8 @@
 #import "RtcManager.h"
 #import "../Action/ActionManager.h"
 #import "../ASR/AudioStreamMgr.h"
+#import "../Log/AcmLog.h"
+#define RTCTAG  @"RTC"
 
 static AgoraRtcEngineKit *_rtcKit = nil;
 static RtcManager *instance = nil;
@@ -23,7 +25,7 @@ static BOOL localMuteState = NO;
 
 + (void) startAudioCall: ( nullable NSString *) appId  user:(nullable NSString *)userID  channel:(nullable NSString *)channelId rtcToken:(nullable NSString *)token callInstance:(nonnull AcmCall *) call{
     
-    NSLog(@"RTC start audio call. appID:%@  user:%@  channel:%@  rtcToken:%@", appId, userID, channelId, token);
+    InfoLog(RTCTAG,@"RTC start audio call. appID:%@  user:%@  channel:%@  rtcToken:%@", appId, userID, channelId, token);
     
     if(_rtcKit == nil)
     {
@@ -56,11 +58,10 @@ static BOOL localMuteState = NO;
     
     [instance.channelMemberList removeAllObjects];
     
-    [_rtcKit joinChannelByUserAccount:userID token:token channelId:channelId joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {
-        NSLog(@"Succeed to join RTC channel");
+    [_rtcKit joinChannelByUserAccount:userID token:token channelId:channelId joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {  InfoLog(RTCTAG,@"Succeed to join RTC channel");
         
         int retValue = [_rtcKit setEnableSpeakerphone:[ActionManager instance].isSpeakerphoneEnabled];
-        NSLog(@"setEnableSpeakerphone %d",retValue);
+        DebugLog(RTCTAG,@"setEnableSpeakerphone %d",retValue);
         
         if(!localMuteState){
             [AudioStreamMgr startWork];
@@ -75,8 +76,7 @@ static BOOL localMuteState = NO;
 }
 
 + (void) startVideoCall: ( nullable NSString *) appId  callInstance:(nonnull AcmCall *) call{
-    NSLog(@"RTC start video call. ");
-    
+    InfoLog(RTCTAG,@"start video call");
     if(_rtcKit == nil)
     {
         instance = [RtcManager alloc];
@@ -108,10 +108,10 @@ static BOOL localMuteState = NO;
     [instance.channelMemberList removeAllObjects];
     
     [_rtcKit joinChannelByUserAccount:call.selfId token:call.token channelId:call.channelId joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {
-        NSLog(@"Succeed to join RTC video channel");
+        InfoLog(RTCTAG,@"Succeed to join RTC video channel");
         
         int retValue = [_rtcKit setEnableSpeakerphone:[ActionManager instance].isSpeakerphoneEnabled];
-        NSLog(@"setEnableSpeakerphone %d",retValue);
+        DebugLog(RTCTAG,@"setEnableSpeakerphone %d",retValue);
         
         if(!localMuteState){
             [AudioStreamMgr startWork];
@@ -237,13 +237,13 @@ static BOOL localMuteState = NO;
 {
     EventData eventData = {EventDidRtcOccurWarning, warningCode};
     [[ActionManager instance]  HandleEvent:eventData];
-    NSLog(@"RTC warning:%ld", (long)warningCode);
+    WarnLog(RTCTAG,@"RTC warning:%ld", (long)warningCode);
 }
 - (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didOccurError:(AgoraErrorCode)errorCode
 {
     EventData eventData = {EventDidRtcOccurError, errorCode};
     [[ActionManager instance]  HandleEvent:eventData];
-    NSLog(@"RTC error:%ld", (long)errorCode);
+    ErrLog(RTCTAG,@"RTC error:%ld", (long)errorCode);
 }
 
 - (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didJoinChannel:(NSString * _Nonnull)channel withUid:(NSUInteger)uid elapsed:(NSInteger) elapsed
@@ -256,12 +256,12 @@ static BOOL localMuteState = NO;
 }
 
 - (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didAudioRouteChanged:(AgoraAudioOutputRouting)routing{
-    NSLog(@"RTC didAudioRouteChanged:%ld",(long)routing);
+    InfoLog(RTCTAG,@"RTC didAudioRouteChanged:%ld",(long)routing);
 }
 
 - (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didJoinedOfUid:(NSUInteger)uid elapsed:(NSInteger)elapsed
 {
-    NSLog(@"RTC didJoinedOfUid: userID:%lu, elapsed:%ld", (unsigned long)uid,(long)elapsed);
+    InfoLog(RTCTAG,@"RTC didJoinedOfUid: userID:%lu, elapsed:%ld", (unsigned long)uid,(long)elapsed);
     NSNumber *num = [NSNumber numberWithInteger:uid];
     NSString *userAccount = [_channelMemberList objectForKey:num];
     
@@ -276,12 +276,12 @@ static BOOL localMuteState = NO;
 
 
 - (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didRegisteredLocalUser:(NSString * _Nonnull)userAccount withUid:(NSUInteger)uid{
-    NSLog(@"didRegisteredLocalUser userAccount:%@  uid:%lu", userAccount, (unsigned long)uid);
+    InfoLog(RTCTAG,@"didRegisteredLocalUser userAccount:%@  uid:%lu", userAccount, (unsigned long)uid);
 }
 
 
 - (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didUpdatedUserInfo:(AgoraUserInfo * _Nonnull)userInfo withUid:(NSUInteger)uid{
-    NSLog(@"didUpdatedUserInfo userAccount:%@  uid:%lu", userInfo.userAccount, (unsigned long)userInfo.uid);
+    InfoLog(RTCTAG,@"didUpdatedUserInfo userAccount:%@  uid:%lu", userInfo.userAccount, (unsigned long)userInfo.uid);
     NSNumber *num = [NSNumber numberWithInteger:userInfo.uid];
     NSString *userAccount = [_channelMemberList objectForKey:num];
     
@@ -295,7 +295,7 @@ static BOOL localMuteState = NO;
 }
 
 - (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didOfflineOfUid:(NSUInteger)uid reason:(AgoraUserOfflineReason)reason{
-    NSLog(@"didOfflineOfUid userAccount:%lu  reason:%lu", (unsigned long)uid , reason);
+    InfoLog(RTCTAG,@"didOfflineOfUid userAccount:%lu  reason:%lu", (unsigned long)uid , reason);
     NSNumber *num = [NSNumber numberWithInteger:uid];
     NSString *userAccount = [_channelMemberList objectForKey:num];
     
@@ -304,6 +304,7 @@ static BOOL localMuteState = NO;
 }
 
 - (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine didRejoinChannel:(NSString * _Nonnull)channel withUid:(NSUInteger)uid elapsed:(NSInteger) elapsed{
+    InfoLog(RTCTAG,@"didRejoinChannel userAccount:%lu ", (unsigned long)uid );
     NSNumber *num = [NSNumber numberWithInteger:uid];
     NSString *userAccount = [_channelMemberList objectForKey:num];
     if(userAccount != nil){
@@ -313,6 +314,7 @@ static BOOL localMuteState = NO;
 }
 
 - (void)rtcEngine:(AgoraRtcEngineKit *)engine firstRemoteVideoDecodedOfUid:(NSUInteger)uid size: (CGSize)size elapsed:(NSInteger)elapsed {
+    InfoLog(RTCTAG,@"firstRemoteVideoDecodedOfUid userAccount:%lu ", (unsigned long)uid );
     NSNumber *num = [NSNumber numberWithInteger:uid];
     NSString *userAccount = [_channelMemberList objectForKey:num];
     
@@ -321,7 +323,8 @@ static BOOL localMuteState = NO;
         EventData eventData = {EventFirstRemoteVideoDecodedOfUid, (int)uid,(int)elapsed,0,userAccount,[NSNumber numberWithFloat:size.width],[NSNumber numberWithFloat:size.height]};
         [[ActionManager instance]  HandleEvent:eventData];
     }else{
-        NSLog(@"RTC first remote video user account not cached:%lu", (unsigned long)uid);
+       
+        WarnLog(RTCTAG,@"RTC first remote video user account not cached:%lu", (unsigned long)uid );
     }
 }
 

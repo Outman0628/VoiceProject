@@ -281,4 +281,28 @@ typedef NS_ENUM(NSInteger, AcmMsgType) {
     AcmMsgDialEndTimeout = 2,
 };
 
+/*
+ 日志等级
+ */
+
+typedef NS_ENUM(NSInteger, AcmLogLevel) {
+    
+    // 关闭日志，无输出
+    ACM_LOG_NONE = 0,
+    
+    
+    // 错误日志,可能会引起系统异常
+    ACM_ERR_LOG = 1,
+    
+    // 进入一个异常分支，但并不会引起程序错误
+    ACM_WARN_LOG = 2,
+    
+    // 日常运行提示信息，比如登录、退出日志
+    ACM_INFO_LOG = 3,
+    
+    // 调试信息，打印比较频繁，打印内容较多的日志
+    
+    ACM_DEBUG_LOG = 4
+};
+
 #endif /* IACMEnums_h */

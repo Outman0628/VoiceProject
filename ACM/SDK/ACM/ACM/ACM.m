@@ -17,6 +17,7 @@
 #import "Message/ApnsMessageManager.h"
 
 #import "Log/AcmLog.h"
+#define ACMTAG  @"ACM"
 
 static ActionManager *actionMgr = nil;
 
@@ -25,11 +26,9 @@ static ActionManager *actionMgr = nil;
 
 
 + (void) initManager: (nullable NSString *)host apnsToken:(nullable NSString *)token acmCallback:(id <IACMCallBack> _Nullable)delegate completion:(IACMInitBlock _Nullable)completionBlock{
-     NSLog(@"init manager4");
-    /*
-    NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
-    InfoLog(@"Acm",@"inforlogtest %@", dat);
-    */
+    
+    InfoLog(ACMTAG,@"init manager");
+
     if(actionMgr == nil)
     {
         EventData eventData = {EventInitSDK, 0,0,0,delegate,host,token,completionBlock};
@@ -39,10 +38,8 @@ static ActionManager *actionMgr = nil;
 }
 
 + (void) loginACM: ( nullable NSString *) userId completion:(IACMLoginBlock _Nullable)completionBlock{
-    /*
-    UserId = userId;
-    [RunTimeMsgManager loginACM:userId completion:completionBlock];
-     */
+
+    DebugLog(ACMTAG,@"login acm");
     if(actionMgr != nil)
     {
         EventData eventData = {EventLogin, 0,0,0,userId,completionBlock,nil};
@@ -264,6 +261,10 @@ static ActionManager *actionMgr = nil;
     }else{
         return -1;
     }
+}
+
++ (void) setAcmLogConfig:(AcmLogLevel) logLevel{
+    [LogManager setAcmLogConfig:logLevel];
 }
 
 

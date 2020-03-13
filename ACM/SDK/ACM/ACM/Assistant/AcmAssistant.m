@@ -15,6 +15,9 @@
 
 #import "VoiceConfig.h"
 
+#import "../Log/AcmLog.h"
+#define AcmAssTag  @"AcmAss"
+
 @interface AcmAssistant()
 @property TtsManager *ttsMgr;
 @property TtsFileManager *ttsFileMgr;
@@ -77,7 +80,7 @@ static AcmAssistant *instance = nil;
 
 
 + (void) audioFileToText: (nonnull NSString *)filePath  CallBack:(AcmAssistantAudioToTextBlock _Nonnull ) block{
-    NSLog(@"audio file to text");
+    InfoLog(AcmAssTag,@"audio file to text");
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if([fileManager fileExistsAtPath:filePath])
     {
@@ -90,7 +93,7 @@ static AcmAssistant *instance = nil;
         }];
     }
     else{
-        NSLog(@"file not exist!");
+        ErrLog(AcmAssTag,@"file not exist!");
         if(block != nil){
             block(AssistantErrorFileNotExist,nil);
         }
@@ -209,7 +212,7 @@ static AcmAssistant *instance = nil;
     }
     
     
-    NSLog(@"PCM file path : %@",filePath); //pcm文件的路径
+    InfoLog(AcmAssTag,@"PCM file path : %@",filePath); //pcm文件的路径
     
     FILE *fout;
     
@@ -227,7 +230,7 @@ static AcmAssistant *instance = nil;
     
     if((fout = fopen([wavFilePath cStringUsingEncoding:1], "w")) == NULL)
     {
-        printf("Error opening out file ");
+        ErrLog(AcmAssTag,@"Error opening out file ");
         return nil;
     }
     
