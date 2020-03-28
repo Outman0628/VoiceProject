@@ -305,9 +305,12 @@ static NSString *DialRobot = @"/dapi/call/robot";
     
     NSString *jsonString = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
     
+    NSNumber *groupId = [NSNumber numberWithInt:eventData.param1];
+    
     NSDictionary * phoneCallParam =
     @{@"src_uid": [ActionManager instance].userId,
       @"dst_uid": call.subscriberList,
+      @"call_group":groupId,
       @"extra_msg": jsonString,
       };
     

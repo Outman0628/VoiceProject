@@ -58,6 +58,7 @@ static BOOL localMuteState = NO;
     
     [instance.channelMemberList removeAllObjects];
     
+    
     [_rtcKit joinChannelByUserAccount:userID token:token channelId:channelId joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {  InfoLog(RTCTAG,@"Succeed to join RTC channel");
         
         int retValue = [_rtcKit setEnableSpeakerphone:[ActionManager instance].isSpeakerphoneEnabled];
@@ -71,6 +72,30 @@ static BOOL localMuteState = NO;
         EventData eventData = {EventSelfInChannelSucceed, 0,0,0,call};
         [[ActionManager instance]  HandleEvent:eventData];
     }];
+     
+    
+    
+    /* test code
+    
+    [_rtcKit setChannelProfile:AgoraChannelProfileCommunication];
+    [_rtcKit setAudioProfile:AgoraAudioProfileDefault scenario:AgoraAudioScenarioDefault];
+    [_rtcKit setClientRole:AgoraClientRoleBroadcaster];
+    
+    
+    [_rtcKit joinChannelByUserAccount:userID token:token channelId:channelId joinSuccess:^(NSString * _Nonnull channel, NSUInteger uid, NSInteger elapsed) {  InfoLog(RTCTAG,@"Succeed to join RTC channel");
+        
+        int retValue = [_rtcKit setEnableSpeakerphone:[ActionManager instance].isSpeakerphoneEnabled];
+        DebugLog(RTCTAG,@"setEnableSpeakerphone routing value:%d, ret value:%d",[ActionManager instance].isSpeakerphoneEnabled,retValue);
+        
+        if(!localMuteState){
+            [AudioStreamMgr startWork];
+            [[ActionManager instance].asrMgr startAsr];
+        }
+        
+        EventData eventData = {EventSelfInChannelSucceed, 0,0,0,call};
+        [[ActionManager instance]  HandleEvent:eventData];
+    }];
+     test end */
     
 
 }

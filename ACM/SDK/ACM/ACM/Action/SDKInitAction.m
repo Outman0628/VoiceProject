@@ -86,13 +86,30 @@
             if(ret == YES)
             {
                 NSDictionary *data = dic[@"data"];
-                if(data != nil && data[@"channel_heartbeat"] != nil && data[@"agora_appid"] != nil)
+                if(data != nil && data[@"channel_heartbeat"] != nil && data[@"agora_appid"] != nil && data[@"baiduai_key"] != nil)
                 {
-                   
                     [ActionManager instance].onPhoneHeartInterval = ((NSNumber *)data[@"channel_heartbeat"]).integerValue;
                     [ActionManager instance].appId = data[@"agora_appid"];
                     
+                    NSDictionary *baiduAiData = data[@"baiduai_key"];
+                    
+                    if(baiduAiData == nil || baiduAiData[@"APPID"] == nil || baiduAiData[@"API_KEY"] == nil || baiduAiData[@"SECRECT_KEY"] == nil){
+                        // 通知错误发生
+                        IACMInitBlock block = eventData.param7;
+                        if(block != nil){
+                            dispatch_async(dispatch_get_main_queue(),^{
+                                block(AcmInitBackendResponseError);
+                            });
+                        }
+                        return;
+                    }
+                    
+                    [ActionManager instance].baiduAppId = baiduAiData[@"APPID"];
+                    [ActionManager instance].baiduApiKey = baiduAiData[@"API_KEY"];
+                    [ActionManager instance].baiduSecrectKey = baiduAiData[@"SECRECT_KEY"];
+                    
                     dispatch_async(dispatch_get_main_queue(),^{
+                        [[ActionManager instance] initBaiduAI];
                         [self InitRtm:eventData];
                     });
                 }

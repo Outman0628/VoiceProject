@@ -18,7 +18,7 @@
 #endif
 #import "../VideoChat/VideoChatViewController.h"
 #import <UIKit/UIKit.h>
-
+#import <ACM/CallMember.h>
 
 
 
@@ -400,7 +400,7 @@
     }
     
     NSArray *peersList = [self.remoteUserIdTextField.text componentsSeparatedByString:@";"];
-    self.outComeCall = [ACM ringGroupAudioCall:peersList ircmCallback:self];
+    self.outComeCall = [ACM ringGroupAudioCall:peersList ircmCallback:self GroupId:1234679];
     /*
     NSString *remoteUid = self.remoteUserIdTextField.text;
     self.outComeCall = [ACM ringAudioCall:remoteUid ircmCallback:self];
@@ -623,7 +623,7 @@
 
 
 
-- (void)onCallReceived:(nonnull Call *)call{
+- (void)onCallReceived:(nonnull Call *)call MemberList:(NSArray *_Nullable)memList{
    
     self.inComeCall = call;
     

@@ -58,6 +58,13 @@
  */
 - (void) broadcastRobotAnswerPhoneCall;
 
+/*
+ * 生成成员列表Json
+ * @param exceptP2PCall true 一对一时返回空
+ */
+- (NSArray *_Nullable) getMemberList:(BOOL) exceptP2PCall;
+
+
 @end
 
 #endif /* AcmCall_h */

@@ -27,6 +27,9 @@
 @property NSString * _Nullable apnsToken;
 @property BOOL  isConnected;
 @property BOOL  isSpeakerphoneEnabled;     // 外放设置
+@property NSString * _Nullable baiduAppId;
+@property NSString * _Nullable baiduApiKey;
+@property NSString * _Nullable baiduSecrectKey;
 
 +(ActionManager *_Nullable)instance;
 
@@ -34,6 +37,11 @@
  初始化
  */
 -(id _Nullable )init;
+
+/*
+ 初始化百度方案
+ */
+-(void) initBaiduAI;
 
 /*
  处理事件

@@ -93,10 +93,11 @@ FOUNDATION_EXPORT const unsigned char ACMVersionString[];
  
  @param peerList 接听方ID list
  @param delegate 通话回调
+ @param groupId  通话群组
  @return 拨打对象
  
  */
-+ (nullable Call *) ringGroupAudioCall: (nonnull NSArray *)peerList ircmCallback:(id <IRTCCallBack> _Nullable)delegate;
++ (nullable Call *) ringGroupAudioCall: (nonnull NSArray *)peerList ircmCallback:(id <IRTCCallBack> _Nullable)delegate GroupId:(NSInteger) groupId;
 
 
 /**

@@ -206,7 +206,7 @@
     id<IACMCallBack> callBack =  [ActionManager instance].icmCallBack;
     if(callBack != nil)
     {
-        [callBack onCallReceived:call];
+        [callBack onCallReceived:call MemberList:[call getMemberList:YES]];
     }
 }
 -(void) HandleApnsCallReq: (EventData) eventData{
@@ -215,9 +215,10 @@
     
     if(callBack != nil)
     {
-        [callBack onCallReceived:call];
+        [callBack onCallReceived:call MemberList:[call getMemberList:YES]];
     }
 }
+
 
 - (void) RequestAcceptDial: (EventData) eventData{
     AcmCall *call = eventData.param4;

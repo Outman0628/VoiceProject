@@ -11,13 +11,16 @@
 #import "BDSClientHeaders/TTS/BDSSpeechSynthesizer.h"
 #import <AVFoundation/AVFoundation.h>
 #import "../Assistant/TtsFileTasks.h"
+#import "../Action/ActionManager.h"
 
 #import "../Log/AcmLog.h"
 #define TTSTag  @"TTS"
 
+/*
 NSString* APP_ID = @"18259540";
 NSString* API_KEY = @"gDYzkmc12uPVjUK6YLyPGLSC";
 NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
+ */
 
 @interface  TtsManager() <BDSSpeechSynthesizerDelegate>
 @property BOOL isSpeek;
@@ -58,7 +61,8 @@ NSString* SECRET_KEY = @"6st1dOmHOrlCmBWKEdgoVwBlrlUxy1v3";
 
 -(void)configureOnlineTTS{
     
-    [[BDSSpeechSynthesizer sharedInstance] setApiKey:API_KEY withSecretKey:SECRET_KEY];
+    //[[BDSSpeechSynthesizer sharedInstance] setApiKey:API_KEY withSecretKey:SECRET_KEY];
+    [[BDSSpeechSynthesizer sharedInstance] setApiKey:[ActionManager instance].baiduApiKey withSecretKey:[ActionManager instance].baiduSecrectKey];
     
     [[AVAudioSession sharedInstance]setCategory:AVAudioSessionCategoryPlayback error:nil];
     [[BDSSpeechSynthesizer sharedInstance] setSynthParam:@(BDS_SYNTHESIZER_SPEAKER_FEMALE) forKey:BDS_SYNTHESIZER_PARAM_SPEAKER];

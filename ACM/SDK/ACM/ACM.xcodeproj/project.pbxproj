@@ -114,6 +114,8 @@
 		63B357CC23C8BC970034F54B /* OnPhoneAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B357CB23C8BC970034F54B /* OnPhoneAction.h */; };
 		63B357CE23C8BCAC0034F54B /* OnPhoneAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B357CD23C8BCAC0034F54B /* OnPhoneAction.m */; };
 		63C8F0FA23F69F790028D7C7 /* CallEventEnum.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C8F0F923F69F790028D7C7 /* CallEventEnum.h */; };
+		63E508F824222551006DFFA5 /* CallMember.h in Headers */ = {isa = PBXBuildFile; fileRef = 63E508F724222551006DFFA5 /* CallMember.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		63E508FA242228C7006DFFA5 /* CallMember.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E508F9242228C7006DFFA5 /* CallMember.m */; };
 		63FE533623E2DF3B009D4F1E /* AcmCall.h in Headers */ = {isa = PBXBuildFile; fileRef = 63FE533523E2DF3B009D4F1E /* AcmCall.h */; };
 		63FE533823E2E094009D4F1E /* AcmCall.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FE533723E2E094009D4F1E /* AcmCall.m */; };
 /* End PBXBuildFile section */
@@ -240,6 +242,8 @@
 		63B357CB23C8BC970034F54B /* OnPhoneAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OnPhoneAction.h; sourceTree = "<group>"; };
 		63B357CD23C8BCAC0034F54B /* OnPhoneAction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OnPhoneAction.m; sourceTree = "<group>"; };
 		63C8F0F923F69F790028D7C7 /* CallEventEnum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CallEventEnum.h; sourceTree = "<group>"; };
+		63E508F724222551006DFFA5 /* CallMember.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CallMember.h; sourceTree = "<group>"; };
+		63E508F9242228C7006DFFA5 /* CallMember.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CallMember.m; sourceTree = "<group>"; };
 		63FE533523E2DF3B009D4F1E /* AcmCall.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AcmCall.h; sourceTree = "<group>"; };
 		63FE533723E2E094009D4F1E /* AcmCall.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AcmCall.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -518,6 +522,8 @@
 				63FE533523E2DF3B009D4F1E /* AcmCall.h */,
 				63FE533723E2E094009D4F1E /* AcmCall.m */,
 				63C8F0F923F69F790028D7C7 /* CallEventEnum.h */,
+				63E508F724222551006DFFA5 /* CallMember.h */,
+				63E508F9242228C7006DFFA5 /* CallMember.m */,
 			);
 			path = Call;
 			sourceTree = "<group>";
@@ -537,6 +543,7 @@
 				6349E90123D341A8009EEE99 /* TtsFileTasks.h in Headers */,
 				63B3579123C45F290034F54B /* ACMAction.h in Headers */,
 				6349E8F723D1CAB9009EEE99 /* AssistantEnum.h in Headers */,
+				63E508F824222551006DFFA5 /* CallMember.h in Headers */,
 				63B0C3DA23FD277C002C53F0 /* VoiceConfig.h in Headers */,
 				63A040A92417750F0062E622 /* AcmLog.h in Headers */,
 				63A24F4823CB5A9200D2ADC4 /* Assistant.h in Headers */,
@@ -715,6 +722,7 @@
 				63B356BE23BE55290034F54B /* RunTimeMsgManager.m in Sources */,
 				63FE533823E2E094009D4F1E /* AcmCall.m in Sources */,
 				63A24F5023CC7B3300D2ADC4 /* AudioInputStream.mm in Sources */,
+				63E508FA242228C7006DFFA5 /* CallMember.m in Sources */,
 				63B0C3D823FD1AC5002C53F0 /* AcmAssistant.m in Sources */,
 				6349E8ED23D18490009EEE99 /* Assistant.m in Sources */,
 				63A24F5923CC7D9900D2ADC4 /* ACMAudioInputStream.m in Sources */,

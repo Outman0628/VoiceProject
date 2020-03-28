@@ -40,7 +40,7 @@
  @param call 通话请求对象
  
  */
-- (void)onCallReceived:(nonnull Call *)call;
+- (void)onCallReceived:(nonnull Call *)call MemberList:(NSArray *_Nullable)memList;
 
 /**
  接听方拨号响应结束

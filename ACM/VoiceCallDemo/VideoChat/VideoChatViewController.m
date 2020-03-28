@@ -23,7 +23,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [self hideControlButtons];
     [self setupButtons];
     [self hideVideoMuted];
     [self setupLocalVideo];
@@ -85,10 +85,12 @@
 }
 
 - (void)remoteVideoTapped:(UITapGestureRecognizer *)recognizer {
+    /*
     if (self.controlButtons.hidden) {
         self.controlButtons.hidden = false;
         [self performSelector:@selector(hideControlButtons) withObject:nil afterDelay:3];
     }
+     */
 }
 
 - (void)resetHideButtonsTimer {

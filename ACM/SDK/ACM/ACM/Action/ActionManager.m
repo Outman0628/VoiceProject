@@ -44,13 +44,16 @@ static ActionManager* actionMgrInstance = nil;
     if (self = [super init]) {
         actionMgrInstance = self;
         self.callMgr = [[CallManager alloc]init];
-        self.asrMgr = [[AsrManager alloc]init];
         self.dialingTimetout = 60;
         self.isConnected = NO;
         self.onPhoneHeartInterval = 31;
         self.isSpeakerphoneEnabled = NO;
     }
     return self;
+}
+
+-(void) initBaiduAI{
+    self.asrMgr = [[AsrManager alloc]init];
 }
 
 - (void) HandleEvent: (EventData) eventData{

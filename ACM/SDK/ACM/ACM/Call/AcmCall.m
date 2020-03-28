@@ -10,6 +10,7 @@
 #import "../Message/RunTimeMsgManager.h"
 #import "../Action/EventData.h"
 #import "../Action/ActionManager.h"
+#import "CallMember.h"
 
 #import "AcmCall.h"
 
@@ -237,6 +238,32 @@
         }
         
     }];
+}
+
+- (NSArray *_Nullable) getMemberList:(BOOL) exceptP2PCall{
+    
+    if(exceptP2PCall && self.subscriberList.count <= 1)
+    {
+        return nil;
+    }
+    
+    NSMutableArray *membArra = [NSMutableArray array];
+    
+    CallMember *caller = [[CallMember alloc] init];
+    caller.uid = self.callerId;
+    caller.isCaller = true;
+    
+    [membArra addObject:caller];
+    
+    for(int i = 0; i < self.subscriberList.count; i++){
+        CallMember *member = [[CallMember alloc] init];
+        member.uid = self.subscriberList[i];
+        member.isCaller = false;
+        [membArra addObject:member];
+    }
+    
+    
+    return membArra;
 }
 
 
